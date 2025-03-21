@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sign in & Sign up Form</title>
+    <link href="/static/styles/signup.css" rel="stylesheet"/>
+</head>
+<body>
+<main>
+    <div class="box">
+        <div class="inner-box">
+            <div class="forms-wrap">
+                <form action="index.html" autocomplete="off" class="sign-in-form">
+                    <div class="logo">
+                        <img alt="easyclass" src="/static/images/logo.png"/>
+                        <h4>easyclass</h4>
+                    </div>
+
+                    <div class="heading">
+                        <h2>Welcome Back</h2>
+                        <h6>Not registred yet?</h6>
+                        <a class="toggle" href="#">Sign up</a>
+                    </div>
+
+                    <div class="actual-form">
+                        <div class="input-wrap">
+                            <label>
+                                <input
+                                        autocomplete="off"
+                                        class="input-field"
+                                        minlength="4"
+                                        required
+                                        type="text"
+                                />
+                            </label>
+                            <label>Name</label>
+                        </div>
+
+                        <div class="input-wrap">
+                            <label>
+                                <input
+                                        autocomplete="off"
+                                        class="input-field"
+                                        minlength="4"
+                                        required
+                                        type="password"
+                                />
+                            </label>
+                            <label>Password</label>
+                        </div>
+
+                        <input class="sign-btn" type="submit" value="Sign In"/>
+
+                        <p class="text">
+                            Forgotten your password or you log in datails?
+                            <a href="#">Get help</a> signing in
+                        </p>
+                    </div>
+                </form>
+
+                <form action="index.html" autocomplete="off" class="sign-up-form">
+                    <div class="logo">
+                        <img alt="easyclass" src="/static/images/logo.png"/>
+                        <h4>easyclass</h4>
+                    </div>
+
+                    <div class="heading">
+                        <h2>Get Started</h2>
+                        <h6>Already have an account?</h6>
+                        <a class="toggle" href="#">Sign in</a>
+                    </div>
+
+                    <div class="actual-form">
+                        <div class="input-wrap">
+                            <label>
+                                <input
+                                        autocomplete="off"
+                                        class="input-field"
+                                        minlength="4"
+                                        required
+                                        type="text"
+                                />
+                            </label>
+                            <label>Name</label>
+                        </div>
+
+                        <div class="input-wrap">
+                            <label>
+                                <input
+                                        autocomplete="off"
+                                        class="input-field"
+                                        required
+                                        type="email"
+                                />
+                            </label>
+                            <label>Email</label>
+                        </div>
+
+                        <div class="input-wrap">
+                            <label>
+                                <input
+                                        autocomplete="off"
+                                        class="input-field"
+                                        minlength="4"
+                                        required
+                                        type="password"
+                                />
+                            </label>
+                            <label>Password</label>
+                        </div>
+
+                        <input class="sign-btn" type="submit" value="Sign Up"/>
+
+                        <p class="text">
+                            By signing up, I agree to the
+                            <a href="#">Terms of Services</a> and
+                            <a href="#">Privacy Policy</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <div class="carousel">
+                <div class="images-wrapper">
+                    <img alt="" class="image img-1 show" src="/static/images/image1.png"/>
+                    <img alt="" class="image img-2" src="/static/images/image2.png"/>
+                    <img alt="" class="image img-3" src="/static/images/image3.png"/>
+                </div>
+
+                <div class="text-slider">
+                    <div class="text-wrap">
+                        <div class="text-group">
+                            <h2>Create your own courses</h2>
+                            <h2>Customize as you like</h2>
+                            <h2>Invite students to your class</h2>
+                        </div>
+                    </div>
+
+                    <div class="bullets">
+                        <span class="active" data-value="1"></span>
+                        <span data-value="2"></span>
+                        <span data-value="3"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Javascript file -->
+
+<script src="/static/scripts/signup.js"></script>
+</body>
+</html>
