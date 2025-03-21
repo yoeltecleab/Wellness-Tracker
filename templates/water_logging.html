@@ -1,0 +1,180 @@
+<!doctype html>
+
+{% load static %}
+
+<html lang="en" class="">
+<link type="text/css" id="dark-mode" rel="stylesheet" href="">
+<!--<link rel="stylesheet" href="{% static 'styles/style.css' %}"/>-->
+<link rel="stylesheet" href="/static/styles/water_logging.css"/>
+<script src="/static/js/water_logging.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Logging</title>
+</head>
+<body>
+<div id="root">
+    <div class="min-h-screen bg-gray-900 p-6 text-white">
+        <div class="max-w-2xl mx-auto bg-gray-800 rounded-2xl shadow-xl p-8">
+            <div class="flex items-center justify-between mb-8">
+                <h1 class="text-3xl font-bold text-blue-400 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-droplets h-8 w-8">
+                        <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"></path>
+                        <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"></path>
+                    </svg>
+                    Water Tracker
+                </h1>
+                <button class="text-gray-400 hover:text-red-400 transition-colors" title="Reset tracking">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-trash2 h-6 w-6">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        <line x1="10" x2="10" y1="11" y2="17"></line>
+                        <line x1="14" x2="14" y1="11" y2="17"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="flex flex-col items-center mb-8">
+                <div class="relative w-64 h-64">
+                    <svg class="transform -rotate-90 w-64 h-64">
+                        <circle cx="128" cy="128" r="120" fill="none" stroke="#1e40af" stroke-width="16"
+                                class="opacity-25"></circle>
+                        <circle cx="128" cy="128" r="120" fill="none" stroke="#60a5fa" stroke-width="16"
+                                stroke-dasharray="753.9822368615503" stroke-dashoffset="753.9822368615503"
+                                class="transition-all duration-500 ease-out" stroke-linecap="round"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center flex-col"><span
+                            class="text-4xl font-bold text-blue-400">0ml</span><span class="text-blue-300">of 2000ml daily goal</span>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                <button class="group bg-gray-700 p-6 rounded-xl transition-all hover:bg-gray-600 hover:scale-105 flex flex-col items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-glasses w-12 h-12 text-blue-400 group-hover:text-blue-300 transition-colors">
+                        <circle cx="6" cy="15" r="4"></circle>
+                        <circle cx="18" cy="15" r="4"></circle>
+                        <path d="M14 15a2 2 0 0 0-2-2 2 2 0 0 0-2 2"></path>
+                        <path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2"></path>
+                        <path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2"></path>
+                    </svg>
+                    <div class="text-center">
+                        <div class="font-semibold text-blue-100">Small Cup</div>
+                        <div class="text-sm text-blue-300">150ml</div>
+                    </div>
+                </button>
+                <button class="group bg-gray-700 p-6 rounded-xl transition-all hover:bg-gray-600 hover:scale-105 flex flex-col items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-cup-soda w-12 h-12 text-blue-400 group-hover:text-blue-300 transition-colors">
+                        <path d="m6 8 1.75 12.28a2 2 0 0 0 2 1.72h4.54a2 2 0 0 0 2-1.72L18 8"></path>
+                        <path d="M5 8h14"></path>
+                        <path d="M7 15a6.47 6.47 0 0 1 5 0 6.47 6.47 0 0 0 5 0"></path>
+                        <path d="m12 8 1-6h2"></path>
+                    </svg>
+                    <div class="text-center">
+                        <div class="font-semibold text-blue-100">Regular Cup</div>
+                        <div class="text-sm text-blue-300">250ml</div>
+                    </div>
+                </button>
+                <button class="group bg-gray-700 p-6 rounded-xl transition-all hover:bg-gray-600 hover:scale-105 flex flex-col items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-beer w-12 h-12 text-blue-400 group-hover:text-blue-300 transition-colors">
+                        <path d="M17 11h1a3 3 0 0 1 0 6h-1"></path>
+                        <path d="M9 12v6"></path>
+                        <path d="M13 12v6"></path>
+                        <path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 2 11 2s2 1.5 3 1.5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5Z"></path>
+                        <path d="M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path>
+                    </svg>
+                    <div class="text-center">
+                        <div class="font-semibold text-blue-100">Large Cup</div>
+                        <div class="text-sm text-blue-300">350ml</div>
+                    </div>
+                </button>
+                <button class="group bg-gray-700 p-6 rounded-xl transition-all hover:bg-gray-600 hover:scale-105 flex flex-col items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-bot w-12 h-12 text-blue-400 group-hover:text-blue-300 transition-colors">
+                        <path d="M12 8V4H8"></path>
+                        <rect width="16" height="12" x="4" y="8" rx="2"></rect>
+                        <path d="M2 14h2"></path>
+                        <path d="M20 14h2"></path>
+                        <path d="M15 13v2"></path>
+                        <path d="M9 13v2"></path>
+                    </svg>
+                    <div class="text-center">
+                        <div class="font-semibold text-blue-100">Water Bottle</div>
+                        <div class="text-sm text-blue-300">500ml</div>
+                    </div>
+                </button>
+            </div>
+            <div class="space-y-6">
+                <div class="bg-gray-700 p-4 rounded-xl">
+                    <h2 class="text-lg font-semibold text-blue-400 mb-3 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-cup-soda h-5 w-5">
+                            <path d="m6 8 1.75 12.28a2 2 0 0 0 2 1.72h4.54a2 2 0 0 0 2-1.72L18 8"></path>
+                            <path d="M5 8h14"></path>
+                            <path d="M7 15a6.47 6.47 0 0 1 5 0 6.47 6.47 0 0 0 5 0"></path>
+                            <path d="m12 8 1-6h2"></path>
+                        </svg>
+                        Cups (250ml each)
+                    </h2>
+                    <div class="flex items-center gap-4">
+                        <button class="bg-blue-900 hover:bg-blue-800 text-blue-300 p-2 rounded-lg transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="lucide lucide-minus h-6 w-6">
+                                <path d="M5 12h14"></path>
+                            </svg>
+                        </button>
+                        <span class="text-2xl font-bold text-blue-400 min-w-[3ch] text-center">0</span>
+                        <button class="bg-blue-900 hover:bg-blue-800 text-blue-300 p-2 rounded-lg transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="lucide lucide-plus h-6 w-6">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5v14"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-gray-700 p-4 rounded-xl"><h2 class="text-lg font-semibold text-blue-400 mb-3">Custom
+                    Amount (ml)</h2>
+                    <div class="flex items-center gap-4">
+                        <button class="bg-blue-900 hover:bg-blue-800 text-blue-300 p-2 rounded-lg transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="lucide lucide-minus h-6 w-6">
+                                <path d="M5 12h14"></path>
+                            </svg>
+                        </button>
+                        <label>
+                            <input type="number"
+                                   class="w-24 text-center text-2xl font-bold bg-gray-800 rounded-lg border-2 border-blue-900 focus:border-blue-700 focus:outline-none py-1 text-blue-400"
+                                   value="0">
+                        </label>
+                        <button class="bg-blue-900 hover:bg-blue-800 text-blue-300 p-2 rounded-lg transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="lucide lucide-plus h-6 w-6">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5v14"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
