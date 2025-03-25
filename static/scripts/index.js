@@ -1,179 +1,52 @@
-// SIDEBAR DROPDOWN
-const allDropdown = document.querySelectorAll('#sidebar .side-dropdown');
-const sidebar = document.getElementById('sidebar');
+const menuBtn = document.getElementById("menu-btn");
+const navLinks = document.getElementById("nav-links");
+const menuBtnIcon = menuBtn.querySelector("i");
 
-allDropdown.forEach(item => {
-    const a = item.parentElement.querySelector('a:first-child');
-    a.addEventListener('click', function (e) {
-        e.preventDefault();
+menuBtn.addEventListener("click", (e) => {
+    navLinks.classList.toggle("open");
 
-        if (!this.classList.contains('active')) {
-            allDropdown.forEach(i => {
-                const aLink = i.parentElement.querySelector('a:first-child');
+    const isOpen = navLinks.classList.contains("open");
+    menuBtnIcon.setAttribute("class", isOpen ? "ri-close-line" : "ri-menu-line");
+});
 
-                aLink.classList.remove('active');
-                i.classList.remove('show');
-            })
-        }
+navLinks.addEventListener("click", (e) => {
+    navLinks.classList.remove("open");
+    menuBtnIcon.setAttribute("class", "ri-menu-line");
+});
 
-        this.classList.toggle('active');
-        item.classList.toggle('show');
-    })
-})
-
-
-// SIDEBAR COLLAPSE
-const toggleSidebar = document.querySelector('nav .toggle-sidebar');
-const allSideDivider = document.querySelectorAll('#sidebar .divider');
-
-if (sidebar.classList.contains('hide')) {
-    allSideDivider.forEach(item => {
-        item.textContent = '-'
-    })
-    allDropdown.forEach(item => {
-        const a = item.parentElement.querySelector('a:first-child');
-        a.classList.remove('active');
-        item.classList.remove('show');
-    })
-} else {
-    allSideDivider.forEach(item => {
-        item.textContent = item.dataset.text;
-    })
-}
-
-toggleSidebar.addEventListener('click', function () {
-    sidebar.classList.toggle('hide');
-
-    if (sidebar.classList.contains('hide')) {
-        allSideDivider.forEach(item => {
-            item.textContent = '-'
-        })
-
-        allDropdown.forEach(item => {
-            const a = item.parentElement.querySelector('a:first-child');
-            a.classList.remove('active');
-            item.classList.remove('show');
-        })
-    } else {
-        allSideDivider.forEach(item => {
-            item.textContent = item.dataset.text;
-        })
-    }
-})
-
-
-sidebar.addEventListener('mouseleave', function () {
-    if (this.classList.contains('hide')) {
-        allDropdown.forEach(item => {
-            const a = item.parentElement.querySelector('a:first-child');
-            a.classList.remove('active');
-            item.classList.remove('show');
-        })
-        allSideDivider.forEach(item => {
-            item.textContent = '-'
-        })
-    }
-})
-
-
-sidebar.addEventListener('mouseenter', function () {
-    if (this.classList.contains('hide')) {
-        allDropdown.forEach(item => {
-            const a = item.parentElement.querySelector('a:first-child');
-            a.classList.remove('active');
-            item.classList.remove('show');
-        })
-        allSideDivider.forEach(item => {
-            item.textContent = item.dataset.text;
-        })
-    }
-})
-
-
-// PROFILE DROPDOWN
-const profile = document.querySelector('nav .profile');
-const imgProfile = profile.querySelector('img');
-const dropdownProfile = profile.querySelector('.profile-link');
-
-imgProfile.addEventListener('click', function () {
-    dropdownProfile.classList.toggle('show');
-})
-
-
-// MENU
-const allMenu = document.querySelectorAll('main .content-data .head .menu');
-
-allMenu.forEach(item => {
-    const icon = item.querySelector('.icon');
-    const menuLink = item.querySelector('.menu-link');
-
-    icon.addEventListener('click', function () {
-        menuLink.classList.toggle('show');
-    })
-})
-
-
-window.addEventListener('click', function (e) {
-    if (e.target !== imgProfile) {
-        if (e.target !== dropdownProfile) {
-            if (dropdownProfile.classList.contains('show')) {
-                dropdownProfile.classList.remove('show');
-            }
-        }
-    }
-
-    allMenu.forEach(item => {
-        const icon = item.querySelector('.icon');
-        const menuLink = item.querySelector('.menu-link');
-
-        if (e.target !== icon) {
-            if (e.target !== menuLink) {
-                if (menuLink.classList.contains('show')) {
-                    menuLink.classList.remove('show')
-                }
-            }
-        }
-    })
-})
-
-
-// PROGRESSBAR
-const allProgress = document.querySelectorAll('main .card .progress');
-
-allProgress.forEach(item => {
-    item.style.setProperty('--value', item.dataset.value)
-})
-
-
-// APEXCHART
-const options = {
-    series: [{
-        name: 'series1',
-        data: [31, 40, 28, 51, 42, 109, 100]
-    }, {
-        name: 'series2',
-        data: [11, 32, 45, 32, 34, 52, 41]
-    }],
-    chart: {
-        height: 350,
-        type: 'area'
-    },
-    dataLabels: {
-        enabled: false
-    },
-    stroke: {
-        curve: 'smooth'
-    },
-    xaxis: {
-        type: 'datetime',
-        categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-    },
-    tooltip: {
-        x: {
-            format: 'dd/MM/yy HH:mm'
-        },
-    },
+const scrollRevealOption = {
+    distance: "50px",
+    origin: "bottom",
+    duration: 1000,
 };
 
-const chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();
+ScrollReveal().reveal(".header__image img", {
+    ...scrollRevealOption,
+    origin: "right",
+});
+
+ScrollReveal().reveal(".header__content h1", {
+    ...scrollRevealOption,
+    delay: 500,
+});
+
+ScrollReveal().reveal(".header__content p", {
+    ...scrollRevealOption,
+    delay: 1000,
+});
+
+ScrollReveal().reveal(".header__content form", {
+    ...scrollRevealOption,
+    delay: 1500,
+});
+
+ScrollReveal().reveal(".header__content .bar", {
+    ...scrollRevealOption,
+    delay: 2000,
+});
+
+ScrollReveal().reveal(".header__image__card", {
+    duration: 1000,
+    interval: 500,
+    delay: 2500,
+});

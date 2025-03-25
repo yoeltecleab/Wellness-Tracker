@@ -17,7 +17,7 @@ main {
     width: 100%;
     min-height: 100vh;
     overflow: hidden;
-    background-color: #ff8c6b;
+    background: linear-gradient(130deg, #1e549f, #081f37, #1e549f);
     padding: 2rem;
     display: flex;
     align-items: center;
@@ -29,7 +29,7 @@ main {
     width: 100%;
     max-width: 1020px;
     height: 640px;
-    background-color: #fff;
+    background: linear-gradient(to right, #1e549f, #5fc9f3, #1e549f);
     border-radius: 3.3rem;
     box-shadow: 0 60px 40px -30px rgba(0, 0, 0, 0.27);
 }
@@ -79,15 +79,18 @@ form.sign-up-form {
 }
 
 .logo img {
-    width: 27px;
-    margin-right: 0.3rem;
+    width: 48px;
+    margin-right: 0.9rem;
 }
 
 .logo h4 {
-    font-size: 1.1rem;
-    margin-top: -9px;
-    letter-spacing: -0.5px;
-    color: #151111;
+    font-size: 1.4rem;
+    margin-top: 14px;
+    letter-spacing: -0.3px;
+    background: linear-gradient(to top, #031331, #1d5dd7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .heading h2 {
@@ -97,7 +100,7 @@ form.sign-up-form {
 }
 
 .heading h6 {
-    color: #bababa;
+    color: #1c0202;
     font-weight: 400;
     font-size: 0.75rem;
     display: inline;
@@ -106,13 +109,14 @@ form.sign-up-form {
 .toggle {
     color: #151111;
     text-decoration: none;
-    font-size: 0.75rem;
+    font-size: 1rem;
     font-weight: 500;
     transition: 0.3s;
 }
 
 .toggle:hover {
-    color: #8371fd;
+    color: #2109ef;
+    height: 150px;
 }
 
 .input-wrap {
@@ -128,10 +132,10 @@ form.sign-up-form {
     background: none;
     border: none;
     outline: none;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid #14d70e;
     padding: 0;
     font-size: 0.95rem;
-    color: #151111;
+    color: #d31717;
     transition: 0.4s;
 }
 
@@ -141,13 +145,13 @@ label {
     top: 50%;
     transform: translateY(-50%);
     font-size: 0.95rem;
-    color: #bbb;
+    color: #ffffff;
     pointer-events: none;
     transition: 0.4s;
 }
 
 .input-field.active {
-    border-bottom-color: #151111;
+    border-bottom-color: #17d90f;
 }
 
 .input-field.active + label {
@@ -174,17 +178,17 @@ label {
 }
 
 .text {
-    color: #bbb;
-    font-size: 0.7rem;
+    color: #ffe0d2;
+    font-size: 0.9rem;
 }
 
 .text a {
-    color: #bbb;
+    color: #fdc2c2;
     transition: 0.3s;
 }
 
 .text a:hover {
-    color: #8371fd;
+    color: #afa4f5;
 }
 
 main.sign-up-mode form.sign-in-form {
