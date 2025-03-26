@@ -1,17 +1,27 @@
 from django.shortcuts import render
 
 # Create your views here.
-def home(request):
-    return render(request, 'dashboard.html')
+
+
+def dashboard(request):
+    return render(request, 'core/dashboard.html')
+
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'core/index.html')
+
 
 def signUp(request):
-    return render(request, 'signup.html')
+    return render(request, 'core/signup.html')
+
+
+def signin(request):
+    return render(request, 'core/signup.html')
+
 
 def storePage(request):
-    return render(request, 'storePage.html')
+    return render(request, 'core/storePage.html')
+
 
 def waterLogging(request):
-    return render(request, 'water_logging.html')
+    return render(request, 'core/water_logging.html')

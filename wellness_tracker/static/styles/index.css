@@ -125,7 +125,7 @@ nav {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-image: url("/static/images/index/header-bg.png");
+    background-image: url("/wellness_tracker/static/images/index/header-bg.png");
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
