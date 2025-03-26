@@ -19,9 +19,10 @@ def signin(request):
     return render(request, 'core/signup.html')
 
 
-def storePage(request):
-    return render(request, 'core/storePage.html')
-
 
 def waterLogging(request):
     return render(request, 'core/water_logging.html')
+
+
+def onboarding_quiz(request):
+    return render(request, 'core/onboarding_quiz.html')

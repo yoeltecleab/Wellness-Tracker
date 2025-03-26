@@ -121,10 +121,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'wellness_tracker/static',
+    BASE_DIR / 'wellness_tracker/../static',
 ]
 
-MEDIA_ROOT = BASE_DIR / 'static/images'
+MEDIA_ROOT = BASE_DIR / 'wellness_tracker/static/images'
 MEDIA_URL = '/images/'
 
 # Default primary key field type
