@@ -7,7 +7,7 @@ const prevButton = form.querySelector(".prev-btn");
 const nextButton = form.querySelector(".next-btn");
 const submitButton = form.querySelector(".submit-btn");
 
-document.documentElement.style.setProperty("--steps", stepIndicators.length);
+document.documentElement.style.setProperty("--steps", stepIndicators.length.toString());
 
 let currentStep = 0;
 
@@ -82,7 +82,7 @@ form.addEventListener("submit", (e) => {
   // mimic a server request
   setTimeout(() => {
     form.querySelector(".completed").hidden = false;
-  }, 3000);
+  }, 600);
 });
 
 prevButton.addEventListener("click", (e) => {

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 
+
 # Create your views here.
 
 
@@ -15,9 +16,8 @@ def signUp(request):
     return render(request, 'core/signup.html')
 
 
-def signin(request):
-    return render(request, 'core/signup.html')
-
+def login(request):
+    return render(request, 'core/login.html')
 
 
 def waterLogging(request):

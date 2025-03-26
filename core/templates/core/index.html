@@ -4,96 +4,347 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CoffeeNepal</title>
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="{% static 'styles/index.css' %}"/>
+    <!-- Box Icon Link for Icons -->
     <link
-            href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
             rel="stylesheet"
     />
-    <link rel="stylesheet" href="{% static 'styles/index.css' %}"/>
-    <title>Wellness Tracker</title>
 </head>
 <body>
-<nav>
-    <div class="nav__header">
-        <div class="nav__logo">
+<!-- Header & Navbar Section -->
+<header>
+    <nav>
+        <div class="nav_logo">
             <a href="#">
-                <img alt="Wellness Tracker" src="{% static '/images/logos/Logo5.png' %}"/>
-                Wellness<span>Tracker</span>.</a>
+                <img src="{% static 'images/index/coffee_logo.png' %}" alt="Coffee Logo"/>
+                <h2>Wellness Tracker</h2>
+            </a>
         </div>
-        <div class="nav__menu__btn" id="menu-btn">
-            <span><i class="ri-menu-line"></i></span>
+
+        <input type="checkbox" id="click"/>
+        <label for="click">
+            <i class="menu_btn bx bx-menu"></i>
+            <i class="close_btn bx bx-x"></i>
+        </label>
+
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#service">Services</a></li>
+            <li><a href="#why">Why Us</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="{% url 'signup' %}" class="login">Login</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Hero Section -->
+<section class="hero_section">
+    <div class="section_container">
+        <div class="hero_container">
+            <div class="text_section">
+                <h2>Fuel Your Passion</h2>
+                <h3>Discover the Magic in Every Cup</h3>
+                <p>
+                    Welcome to our coffee paradise, where every bean tells a story and
+                    every cup sparks.
+                </p>
+
+                <div class="hero_section_button">
+                    <button class="button">Order Online</button>
+                    <button class="button">Book A Table</button>
+                </div>
+            </div>
+
+            <div class="image_section">
+                <img src="{% static 'images/index/cofffee_image.png' %}" alt="Coffee"/>
+            </div>
         </div>
     </div>
-    <!--    <ul class="nav__links" id="nav-links">-->
-    <!--        <li><a href="#">Destination</a></li>-->
-    <!--        <li><a href="#">Package</a></li>-->
-    <!--        <li><a href="#">Blog</a></li>-->
-    <!--        <li><a href="#">About Us</a></li>-->
-    <!--        <li><a href="#">Contact</a></li>-->
-    <!--    </ul>-->
-    <div class="nav__btns">
-        <a href="{% url 'signup' %}">
-            <button class="btn sign__up">Sign Up</button>
-        </a>
-        <a href="{% url 'signup' %}">
-            <button class="btn sign__in">Sign In</button>
-        </a>
+</section>
+
+<!-- About Us Section -->
+<section class="about_us" id="about">
+    <div class="section_container">
+        <div class="about_container">
+            <div class="text_section">
+                <h2 class="section_title">About Us</h2>
+                <p>
+                    We at CoffeeNepal, located in New Baneshwor, Kathmandu are one of the
+                    favorite hangouts for coffee and conversations. Our goal is to
+                    offer the best experience to our guests, ensuring an authentic
+                    coffee drinking experience in a warm, friendly, and relaxed
+                    environment. We aim to bring a sense of relaxation to the city
+                    with our cozy space, complete with comfortable couches to lounge
+                    in while you enjoy your coffee.
+                </p>
+            </div>
+
+            <div class="image_section">
+                <img src="{% static 'images/index/about_coffee.png' %}" alt="coffee"/>
+            </div>
+        </div>
     </div>
-</nav>
-<header class="header__container">
-    <div class="header__image">
-        <div class="header__image__card header__image__card-1">
-            <span><i class="ri-key-line"></i></span>
-            Water Logging
+</section>
+
+<!-- Services Section -->
+<section class="services" id="service">
+    <h2 class="section_title">Our Services</h2>
+    <div class="section_container">
+        <div class="service_container">
+            <div class="services_items">
+                <img src="{% static 'images/index/hot_beverages.png' %}" alt="Hot Beverages"/>
+                <div class="services_text">
+                    <h3>Hot Beverages</h3>
+                    <p>
+                        Wide range of Steaming hot coffees to make you fresh and light.
+                    </p>
+                </div>
+            </div>
+            <div class="services_items">
+                <img src="{% static 'images/index/cold_beverages.png' %}" alt="Cold Beverages"/>
+                <div class="services_text">
+                    <h3>Cold Beverages</h3>
+                    <p>
+                        Creamy and frothy cold coffee to make you feel cool from inside.
+                    </p>
+                </div>
+            </div>
+            <div class="services_items">
+                <img src="{% static 'images/index/refreshment.png' %}" alt="Refreshment"/>
+                <div class="services_text">
+                    <h3>Refreshment</h3>
+                    <p>Fruit and icy refreshing drink to make you feel good.</p>
+                </div>
+            </div>
+            <div class="services_items">
+                <img src="{% static 'images/index/special_combos.png' %}" alt="Special Combos"/>
+                <div class="services_text">
+                    <h3>Special Combos</h3>
+                    <p>
+                        Now it's really easy to chose your favourite eating and drinking
+                        combinations.
+                    </p>
+                </div>
+            </div>
+            <div class="services_items">
+                <img
+                        src="{% static 'images/index/burger_frenchFries.png' %}"
+                        alt="Burger & French Fries"
+                />
+                <div class="services_text">
+                    <h3>Burger & French Fries</h3>
+                    <p>Yummy! Quick bites to satisfy your small size hunger.</p>
+                </div>
+            </div>
+            <div class="services_items">
+                <img src="{% static 'images/index/dessert.png' %}" alt="Desserts"/>
+                <div class="services_text">
+                    <h3>Desserts</h3>
+                    <p>
+                        This for sure would satiate your palate and take you on a
+                        culinary treat.
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="header__image__card header__image__card-2">
-            <span><i class="ri-passport-line"></i></span>
-            Healthy Meal Recipes
-        </div>
-        <div class="header__image__card header__image__card-3">
-            <span><i class="ri-map-2-line"></i></span>
-            Nearby Stores
-        </div>
-        <div class="header__image__card header__image__card-4">
-            <span><i class="ri-guide-line"></i></span>
-            Nutrition Tracking
-        </div>
-        <img src="{% static '/images/index/header.png' %}" alt="header"/>
-        <img src="{% static '/images/index/header-bg.png' %}" alt="header-bg" style="display: none"/>
     </div>
-    <div class="header__content">
-        <h1>LET'S GO!<br/>THE <span>ADVENTURE</span> IS WAITING FOR YOU</h1>
-        <p>
-            Embark on Your Journey Today and Discover Uncharted Wonders Around the
-            World - Your Adventure Awaits with Exciting Experiences, Unforgettable
-            Memories, and Endless Opportunities
-        </p>
-        <form action="{% url 'signin' %}">
-            <div class="input__row">
-                <div class="input__group">
-                    <h5>Goal</h5>
-                    <div>
-                        <span><i class="ri-map-pin-line"></i></span>
-                        <input type="text" placeholder="3000 ml" id="goal"/>
-                        <label for="goal"></label>
+</section>
+
+<!-- Why Us Section -->
+<section class="why_us" id="why">
+    <h2 class="section_title">Why Us?</h2>
+    <div class="section_container">
+        <div class="why_container">
+            <div class="why_items">
+                <img src="{% static 'images/index/delicious.png' %}" alt="Delicious"/>
+                <div class="why_us_text">
+                    <h3>Delicious Food</h3>
+                    <p>
+                        With a lavish spread of finger licking food, we serve to satisfy
+                        your palate and take you on a culinary treat.
+                    </p>
+                </div>
+            </div>
+            <div class="why_items">
+                <img src="{% static 'images/index/pleasant.png' %}" alt="Pleasant"/>
+                <div class="why_us_text">
+                    <h3>Pleasant Ambience</h3>
+                    <p>
+                        We seek to serve all our guests with the perfect dining
+                        experience. We provide perfect ambbience to cherish special
+                        moments.
+                    </p>
+                </div>
+            </div>
+            <div class="why_items">
+                <img src="{% static 'images/index/hospitality.png' %}" alt="Hospitality"/>
+                <div class="why_us_text">
+                    <h3>Hospitality</h3>
+                    <p>
+                        Our staff members are happy to help. We go the extra mile to
+                        make you happy.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section class="gallery" id="gallery">
+    <h2 class="section_title">Gallery</h2>
+    <div class="section_container">
+        <div class="gallery_container">
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_1.jpg' %}" alt="Gallery Image"/>
+            </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_2.jpg' %}" alt="Gallery Image"/>
+            </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_3.jpg' %}" alt="Gallery Image"/>
+            </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_4.jpg' %}" alt="Gallery Image"/>
+            </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_5.jpg' %}" alt="Gallery Image"/>
+            </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_6.jpg' %}" alt="Gallery Image"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact" id="contact">
+    <h2 class="section_title">Contact Us</h2>
+    <div class="section_container">
+        <div class="contact_container">
+            <div class="contact_form">
+                <form action="#">
+                    <div class="field">
+                        <label for="Name">Full Name</label>
+                        <input type="text" id="Name" placeholder="Your Name" required/>
+                    </div>
+                    <div class="field">
+                        <label for="email">Your Email</label>
+                        <input
+                                type="text"
+                                id="email"
+                                placeholder="Your Email"
+                                required
+                        />
+                    </div>
+                    <div class="field">
+                        <label for="number">Your Number</label>
+                        <input
+                                type="number"
+                                id="number"
+                                placeholder="Your Contact Number"
+                                required
+                        />
+                    </div>
+                    <div class="field">
+                        <label for="textarea">Textarea</label>
+                        <textarea
+                                name="textarea"
+                                id="textarea"
+                                placeholder="Your Message"
+                        ></textarea>
+                    </div>
+
+                    <button class="button" id="submit">Submit</button>
+                </form>
+            </div>
+
+            <div class="contact_text">
+                <div class="contact_items">
+                    <i class="bx bx-current-location"></i>
+                    <div class="contact_details">
+                        <h3>Our Location</h3>
+                        <p>New Baneshwor, Kathmandu</p>
                     </div>
                 </div>
-                <div class="input__group">
-                    <h5>Starting Date</h5>
-                    <div>
-                        <span><i class="ri-calendar-2-line"></i></span>
-                        <input type="text" placeholder="17 July 2024" id="date"/>
-                        <label for="date"></label>
+                <div class="contact_items">
+                    <i class="bx bxs-envelope"></i>
+                    <div class="contact_details">
+                        <h3>General Enquries</h3>
+                        <p>coffeenepal@xyz.com</p>
+                    </div>
+                </div>
+                <div class="contact_items">
+                    <i class="bx bxs-phone-call"></i>
+                    <div class="contact_details">
+                        <h3>Call Us</h3>
+                        <p>9851826263</p>
+                    </div>
+                </div>
+                <div class="contact_items">
+                    <i class="bx bxs-time-five"></i>
+                    <div class="contact_details">
+                        <h3>Our Timing</h3>
+                        <p>Mon-Sun : 10:00 AM - 7:00 PM</p>
                     </div>
                 </div>
             </div>
-            <button type="submit">Go</button>
-        </form>
-        <div class="bar">
-            Copyright © 2025 Wellness Tracker. All rights reserved.
         </div>
     </div>
-</header>
-<script src="https://unpkg.com/scrollreveal"></script>
-<script src="{% static 'scripts/index.js' %}"></script>
+</section>
+
+<!-- Footer Section -->
+<footer>
+    <div class="section_container">
+        <div class="footer_section">
+            <div class="footer_logo">
+                <a href="index.html">
+                    <img src="{% static 'images/index/coffee_logo.png' %}" alt="Coffee Logo"/>
+                    <h2>Wellness Tracker</h2>
+                </a>
+            </div>
+
+            <div class="useful_links">
+                <h3>Useful Links</h3>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#service">Services</a></li>
+                    <li><a href="#why">Why Us</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="contact_us">
+                <h3>Contact</h3>
+                <ul>
+                    <li>
+                        <i class="bx bx-current-location"></i>
+                        <span>New Baneshwor, Kathmandu</span>
+                    </li>
+                    <li>
+                        <i class="bx bxs-phone-call"></i> <span>9851867533</span>
+                    </li>
+                    <li>
+                        <i class="bx bxs-time-five"></i>
+                        <span>Mon-Sun : 10:00 AM - 7:00 PM</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="follow_us">
+                <h3>Follow</h3>
+                <i class="bx bxl-facebook-circle"></i>
+                <i class="bx bxl-twitter"></i>
+                <i class="bx bxl-instagram-alt"></i>
+            </div>
+        </div>
+    </div>
+</footer>
 </body>
 </html>

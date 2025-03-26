@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sign in & Sign up Form</title>
+    <link href="{% static 'styles/signup.css' %}" rel="stylesheet"/>
+</head>
+<body>
+<main>
+    <div class="box">
+        <div class="inner-box">
+            <div class="forms-wrap">
+                <form action="{% url 'dashboard' %}" autocomplete="off" class="sign-in-form" id="sign-in-form">
+                    <a href="{% url 'index' %}" style="text-decoration: none">
+                        <div class="logo">
+                            <img alt="Wellness Tracker" src="{% static '/images/logos/Logo5.png' %}"/>
+                            <h4>Wellness Tracker</h4>
+                        </div>
+                    </a>
+
+                    <div class="heading">
+                        <h2>Welcome Back</h2>
+                        <h4>Not registered yet?</h4>
+                        <a class="toggle" href="#">Sign up</a>
+                    </div>
+
+                    <div class="actual-form">
+                        <div class="input-wrap">
+                            <input
+                                    autocomplete="off"
+                                    class="input-field"
+                                    minlength="4"
+                                    {#                                    required#}
+                                    type="text"
+                                    id="username-input"
+                            />
+                            <label for="username-input">Username</label>
+                        </div>
+
+                        <div class="input-wrap">
+                            <input
+                                    autocomplete="off"
+                                    class="input-field"
+                                    minlength="4"
+                                    {#                                    required#}
+                                    type="password"
+                                    id="password-input"
+                            />
+                            <label for="password-input">Password</label>
+                        </div>
+
+                        <input class="sign-btn" type="submit" value="Sign In"/>
+
+                        <p class="text">
+                            Forgotten your password or you log in datails?
+                            <a href="#">Get help</a> signing in
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <div class="carousel">
+                <div class="images-wrapper">
+                    <img alt="" class="image img-1 show" src="{% static '/images/signup/image1.png' %}"/>
+                    <img alt="" class="image img-2 show" src="{% static '/images/signup/image2.png' %}"/>
+                    <img alt="" class="image img-3 show" src="{% static '/images/signup/image3.png' %}"/>
+                </div>
+
+                <div class="text-slider">
+                    <div class="text-wrap">
+                        <div class="text-group">
+                            <h2>Track your fitness journey</h2>
+                            <h2>Monitor your daily intake</h2>
+                            <h2>Achieve your health goals</h2>
+                        </div>
+                    </div>
+
+                    <div class="bullets">
+                        <span class="active" data-value="1"></span>
+                        <span data-value="2"></span>
+                        <span data-value="3"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Javascript file -->
+
+<script src="{% static 'scripts/signup.js' %}"></script>
+</body>
+</html>
