@@ -51,6 +51,10 @@ textarea {
     text-align: start;
 }
 
+input:not([type="radio"]):not([type="checkbox"]) {
+    width: 100%;
+}
+
 input[type="tel"] {
     direction: inherit;
 }
@@ -261,3 +265,49 @@ html[dir="rtl"] .progress-container .progress {
     text-decoration: none;
     color: white;
 }
+
+.form-control {
+    margin-bottom: 20px;
+  }
+  
+  .form-control > label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 500;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .radio-group,
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .radio-option,
+  .checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-start;
+    margin-left: 20px;
+  }
+  
+  .radio-option input[type="radio"],
+  .checkbox-option input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+  }
+  
+  .radio-option label,
+  .checkbox-option label {
+    margin: 0;
+    font-weight: normal;
+    cursor: pointer;
+  }
+  
+  input[type="text"] {
+    margin-top: 8px;
+  }
