@@ -25,7 +25,19 @@
     --light-blue: #D0E4FF;
     --dark-blue: #0C5FCD;
     --red: #FC3B56;
-    --value: 80%
+    --value: 80%;
+    --primary-color: linear-gradient(130deg, #022c65, #157be5, #022c65);
+    --third-color: linear-gradient(130deg, #032352, #0650a1, #032352);
+    --secondary-color: linear-gradient(to right, #1e549f, #5fc9f3, #1e549f);
+    --dark-color: linear-gradient(180deg, #083ea1, #02203f, #083ea1);
+    --white-color: #dbf6ee;
+    --light-gray-color: #f2f2f2;
+    --logo-color: linear-gradient(to top, #031331, #1d5dd7);
+    --main-color: #c41e67;
+    --step-color: #ced7e0;
+    --step-size: 32px;
+    --steps: 4;
+    --progress-width: calc((var(--steps) - 1) / var(--steps) * 100%);
 }
 
 * {
@@ -36,7 +48,7 @@
 
 body {
     font-family: "Inter", sans-serif;
-    background-color: var(--clr-primary);
+    background: var(--dark-color);
     color: var(---clr-white);
     max-width: 100vw;
     max-height: 100vw;
@@ -51,7 +63,7 @@ body {
 /* sidebar */
 .sidebar {
     position: fixed;
-    background-color: var(--clr-secondary);
+    background: var(--third-color);
     z-index: 1;
     min-height: 100vh;
     padding: 5rem 1rem 1rem;
@@ -156,23 +168,6 @@ body {
     }
 }
 
-.search-container {
-    flex-grow: 1;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    max-width: 31.25rem;
-}
-
-.search-input {
-    background-color: var(--clr-secondary);
-    color: var(--clr-gray-300);
-    padding: 0.625rem;
-    border-radius: 0.3125rem;
-    border: none;
-    flex-grow: 1;
-}
-
 .user-profile {
     display: flex;
     align-items: center;
@@ -221,7 +216,7 @@ body {
 
 .sales-details,
 .top-products-details {
-    background-color: var(--clr-secondary);
+    background: var(--third-color);
     padding: 1rem;
     border-radius: 0.625rem;
 }
@@ -291,7 +286,7 @@ body {
 }
 
 .chart {
-    background-color: var(--clr-secondary);
+    background: var(--third-color);
     padding: 1rem;
     border-radius: 0.625rem;
 }
@@ -707,7 +702,7 @@ td {
     position: absolute;
     top: calc(100% + 15px);
     right: 10px;
-    background: var(--clr-primary);
+    background: var(--dark-color);
     padding: 10px 0;
     box-shadow: 24px 24px 160px dodgerblue;
     border-radius: 10px;
@@ -743,7 +738,7 @@ td {
 }
 
 .right-nav .profile .profile-link a:hover {
-    background: linear-gradient(to right, #1e549f, #5fc9f3, #1e549f);
+    background: var(--primary-color);
     color: white;
 }
 

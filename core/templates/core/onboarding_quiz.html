@@ -7,11 +7,6 @@
     <title>Multistep Form</title>
     <link rel="stylesheet" href="{% static 'styles/onboarding_quiz.css' %}"/>
     <script src="{% static 'scripts/onboarding_quiz.js' %}" defer></script>
-    <!-- social links for refinedguides.com -->
-    <script
-            src="https://refinedguides.com/assets/social.js?linkColor=%23c41e67&textColor=%23333"
-            defer
-    ></script>
 </head>
 <body>
 <form class="form-wizard">
@@ -32,10 +27,8 @@
         <div class="progress"></div>
 
         <ol>
-            <li class="current">Personal</li>
-            <li>Contact</li>
-            <li>Account</li>
-            <li>About</li>
+            <li class="current">Personal Information</li>
+            <li>Questionnaires</li>
         </ol>
     </div>
     <!-- /.progress-container -->
@@ -53,350 +46,330 @@
                 <label for="last-name">Last Name</label>
                 <input type="text" id="last-name" name="last-name"/>
             </div>
-        </div>
-        <div class="step">
-            <h3>Contact Information</h3>
-
-            <div class="form-control">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email"/>
-            </div>
-
             <div class="form-control">
                 <label for="phone">Phone</label>
                 <input type="tel" id="phone" name="phone"/>
             </div>
-        </div>
-        <div class="step">
-            <h3>Account Information</h3>
-
             <div class="form-control">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username"/>
-            </div>
-            <div class="form-control">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password"/>
-            </div>
-            <div class="form-control">
-                <label for="confirm-password">Confirm Password</label>
-                <input
-                        type="password"
-                        id="confirm-password"
-                        name="confirm-password"
-
-                />
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="phone"/>
             </div>
         </div>
         <div class="step">
             <h3>Health Assessment Quiz</h3>
 
             <div class="form-control">
-              <label>What is your primary goal with this app?</label>
-              <div class="radio-group">
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="goal-lose"
-                    name="primary-goal"
-                    value="lose"
-                  />
-                  <label for="goal-lose">Lose weight</label>
+                <label>What is your primary goal with this app?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="goal-lose"
+                                name="primary-goal"
+                                value="lose"
+                        />
+                        <label for="goal-lose">Lose weight</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="goal-maintain"
+                                name="primary-goal"
+                                value="maintain"
+                        />
+                        <label for="goal-maintain">Maintain weight</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="goal-gain"
+                                name="primary-goal"
+                                value="gain"
+                        />
+                        <label for="goal-gain">Gain muscle</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="goal-health"
+                                name="primary-goal"
+                                value="health"
+                        />
+                        <label for="goal-health">Improve overall health</label>
+                    </div>
                 </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="goal-maintain"
-                    name="primary-goal"
-                    value="maintain"
-                  />
-                  <label for="goal-maintain">Maintain weight</label>
-                </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="goal-gain"
-                    name="primary-goal"
-                    value="gain"
-                  />
-                  <label for="goal-gain">Gain muscle</label>
-                </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="goal-health"
-                    name="primary-goal"
-                    value="health"
-                  />
-                  <label for="goal-health">Improve overall health</label>
-                </div>
-              </div>
             </div>
-  
+
             <div class="form-control">
-              <label>How would you describe your current diet?</label>
-              <div class="radio-group">
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="diet-balanced"
-                    name="current-diet"
-                    value="balanced"
-                  />
-                  <label for="diet-balanced">Balanced and healthy</label>
+                <label>How would you describe your current diet?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="diet-balanced"
+                                name="current-diet"
+                                value="balanced"
+                        />
+                        <label for="diet-balanced">Balanced and healthy</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="diet-mostly"
+                                name="current-diet"
+                                value="mostly"
+                        />
+                        <label for="diet-mostly">Mostly healthy</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="diet-unsure"
+                                name="current-diet"
+                                value="unsure"
+                        />
+                        <label for="diet-unsure">I'm not sure</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="diet-unbalanced"
+                                name="current-diet"
+                                value="unbalanced"
+                        />
+                        <label for="diet-unbalanced">Unbalanced or unhealthy</label>
+                    </div>
                 </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="diet-mostly"
-                    name="current-diet"
-                    value="mostly"
-                  />
-                  <label for="diet-mostly">Mostly healthy</label>
-                </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="diet-unsure"
-                    name="current-diet"
-                    value="unsure"
-                  />
-                  <label for="diet-unsure">I'm not sure</label>
-                </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="diet-unbalanced"
-                    name="current-diet"
-                    value="unbalanced"
-                  />
-                  <label for="diet-unbalanced">Unbalanced or unhealthy</label>
-                </div>
-              </div>
             </div>
-  
+
             <div class="form-control">
-              <label>How often do you snack between meals?</label>
-              <div class="radio-group">
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="snack-rarely"
-                    name="snacking"
-                    value="rarely"
-                  />
-                  <label for="snack-rarely">Rarely</label>
+                <label>How often do you snack between meals?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="snack-rarely"
+                                name="snacking"
+                                value="rarely"
+                        />
+                        <label for="snack-rarely">Rarely</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="snack-sometimes"
+                                name="snacking"
+                                value="sometimes"
+                        />
+                        <label for="snack-sometimes">Sometimes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="snack-often"
+                                name="snacking"
+                                value="often"
+                        />
+                        <label for="snack-often">Often</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="snack-always"
+                                name="snacking"
+                                value="always"
+                        />
+                        <label for="snack-always">Always</label>
+                    </div>
                 </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="snack-sometimes"
-                    name="snacking"
-                    value="sometimes"
-                  />
-                  <label for="snack-sometimes">Sometimes</label>
-                </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="snack-often"
-                    name="snacking"
-                    value="often"
-                  />
-                  <label for="snack-often">Often</label>
-                </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="snack-always"
-                    name="snacking"
-                    value="always"
-                  />
-                  <label for="snack-always">Always</label>
-                </div>
-              </div>
             </div>
-  
+        </div>
+        <div class="step">
+            <h3>Health Assessment Quiz</h3>
+
             <div class="form-control">
-              <label
+                <label
                 >What types of beverages do you usually consume? (Select all that
-                apply)</label
-              >
-              <div class="checkbox-group">
-                <div class="checkbox-option">
-                  <input
-                    type="checkbox"
-                    id="beverage-water"
-                    name="beverages"
-                    value="water"
-                  />
-                  <label for="beverage-water">Water</label>
+                    apply)</label
+                >
+                <div class="checkbox-group">
+                    <div class="checkbox-option">
+                        <input
+                                type="checkbox"
+                                id="beverage-water"
+                                name="beverages"
+                                value="water"
+                        />
+                        <label for="beverage-water">Water</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input
+                                type="checkbox"
+                                id="beverage-soda"
+                                name="beverages"
+                                value="soda"
+                        />
+                        <label for="beverage-soda">Soda</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input
+                                type="checkbox"
+                                id="beverage-juice"
+                                name="beverages"
+                                value="juice"
+                        />
+                        <label for="beverage-juice">Juice</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input
+                                type="checkbox"
+                                id="beverage-coffee"
+                                name="beverages"
+                                value="coffee"
+                        />
+                        <label for="beverage-coffee">Coffee/Tea</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input
+                                type="checkbox"
+                                id="beverage-alcohol"
+                                name="beverages"
+                                value="alcohol"
+                        />
+                        <label for="beverage-alcohol">Alcohol</label>
+                    </div>
                 </div>
-                <div class="checkbox-option">
-                  <input
-                    type="checkbox"
-                    id="beverage-soda"
-                    name="beverages"
-                    value="soda"
-                  />
-                  <label for="beverage-soda">Soda</label>
-                </div>
-                <div class="checkbox-option">
-                  <input
-                    type="checkbox"
-                    id="beverage-juice"
-                    name="beverages"
-                    value="juice"
-                  />
-                  <label for="beverage-juice">Juice</label>
-                </div>
-                <div class="checkbox-option">
-                  <input
-                    type="checkbox"
-                    id="beverage-coffee"
-                    name="beverages"
-                    value="coffee"
-                  />
-                  <label for="beverage-coffee">Coffee/Tea</label>
-                </div>
-                <div class="checkbox-option">
-                  <input
-                    type="checkbox"
-                    id="beverage-alcohol"
-                    name="beverages"
-                    value="alcohol"
-                  />
-                  <label for="beverage-alcohol">Alcohol</label>
-                </div>
-              </div>
             </div>
-  
+
             <div class="form-control">
-              <label>How much water do you think you drink in a day?</label>
-              <div class="radio-group">
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="water-less"
-                    name="water-intake"
-                    value="less"
-                  />
-                  <label for="water-less">Less than 1 liter</label>
+                <label>How much water do you think you drink in a day?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="water-less"
+                                name="water-intake"
+                                value="less"
+                        />
+                        <label for="water-less">Less than 1 liter</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="water-1-2"
+                                name="water-intake"
+                                value="1-2"
+                        />
+                        <label for="water-1-2">1-2 liters</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="water-2-3"
+                                name="water-intake"
+                                value="2-3"
+                        />
+                        <label for="water-2-3">2-3+ liters</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="water-unsure"
+                                name="water-intake"
+                                value="unsure"
+                        />
+                        <label for="water-unsure">Not sure</label>
+                    </div>
                 </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="water-1-2"
-                    name="water-intake"
-                    value="1-2"
-                  />
-                  <label for="water-1-2">1-2 liters</label>
-                </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="water-2-3"
-                    name="water-intake"
-                    value="2-3"
-                  />
-                  <label for="water-2-3">2-3+ liters</label>
-                </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="water-unsure"
-                    name="water-intake"
-                    value="unsure"
-                  />
-                  <label for="water-unsure">Not sure</label>
-                </div>
-              </div>
             </div>
-  
+
             <div class="form-control">
-              <label>Do you have any dietary restrictions or preferences?</label>
-              <div class="checkbox-group">
-                <div class="checkbox-option">
-                  <input
-                    type="checkbox"
-                    id="diet-vegetarian"
-                    name="dietary-restrictions"
-                    value="vegetarian"
-                  />
-                  <label for="diet-vegetarian">Vegetarian</label>
+                <label>Do you have any dietary restrictions or preferences?</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-option">
+                        <input
+                                type="checkbox"
+                                id="diet-vegetarian"
+                                name="dietary-restrictions"
+                                value="vegetarian"
+                        />
+                        <label for="diet-vegetarian">Vegetarian</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input
+                                type="checkbox"
+                                id="diet-vegan"
+                                name="dietary-restrictions"
+                                value="vegan"
+                        />
+                        <label for="diet-vegan">Vegan</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input
+                                type="checkbox"
+                                id="diet-gluten"
+                                name="dietary-restrictions"
+                                value="gluten-free"
+                        />
+                        <label for="diet-gluten">Gluten-free</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input
+                                type="checkbox"
+                                id="diet-none"
+                                name="dietary-restrictions"
+                                value="none"
+                        />
+                        <label for="diet-none">No restrictions</label>
+                    </div>
                 </div>
-                <div class="checkbox-option">
-                  <input
-                    type="checkbox"
-                    id="diet-vegan"
-                    name="dietary-restrictions"
-                    value="vegan"
-                  />
-                  <label for="diet-vegan">Vegan</label>
-                </div>
-                <div class="checkbox-option">
-                  <input
-                    type="checkbox"
-                    id="diet-gluten"
-                    name="dietary-restrictions"
-                    value="gluten-free"
-                  />
-                  <label for="diet-gluten">Gluten-free</label>
-                </div>
-                <div class="checkbox-option">
-                  <input
-                    type="checkbox"
-                    id="diet-none"
-                    name="dietary-restrictions"
-                    value="none"
-                  />
-                  <label for="diet-none">No restrictions</label>
-                </div>
-              </div>
             </div>
-  
+
+        </div>
+        <div class="step">
+            <h3>Health Assessment Quiz</h3>
             <div class="form-control">
-              <label>How often do you exercise?</label>
-              <div class="radio-group">
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="exercise-none"
-                    name="exercise"
-                    value="none"
-                  />
-                  <label for="exercise-none">Little to no exercise</label>
+                <label>How often do you exercise?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="exercise-none"
+                                name="exercise"
+                                value="none"
+                        />
+                        <label for="exercise-none">Little to no exercise</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="exercise-light"
+                                name="exercise"
+                                value="light"
+                        />
+                        <label for="exercise-light">Light amount of exercise</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="exercise-moderate"
+                                name="exercise"
+                                value="moderate"
+                        />
+                        <label for="exercise-moderate"
+                        >Moderate amount of exercise</label
+                        >
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="exercise-daily"
+                                name="exercise"
+                                value="daily"
+                        />
+                        <label for="exercise-daily">Daily exercise</label>
+                    </div>
                 </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="exercise-light"
-                    name="exercise"
-                    value="light"
-                  />
-                  <label for="exercise-light">Light amount of exercise</label>
-                </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="exercise-moderate"
-                    name="exercise"
-                    value="moderate"
-                  />
-                  <label for="exercise-moderate"
-                    >Moderate amount of exercise</label
-                  >
-                </div>
-                <div class="radio-option">
-                  <input
-                    type="radio"
-                    id="exercise-daily"
-                    name="exercise"
-                    value="daily"
-                  />
-                  <label for="exercise-daily">Daily exercise</label>
-                </div>
-              </div>
             </div>
         </div>
     </div>

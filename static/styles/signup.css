@@ -1,5 +1,42 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
-
+:root {
+    --clr-primary: #171821;
+    --clr-secondary: #21222d;
+    --clr-light-green: #a9dfd8;
+    --clr-gray-200: #e8e8e8;
+    --clr-gray-300: #d2d2d2;
+    --clr-gray-400: #a0a0a0;
+    --clr-gray-500: #87888c;
+    --clr-gray-800: #2c2d33;
+    --clr-yellow-400: #fcb859;
+    --clr-yellow-500: #feb95a;
+    --clr-pink: #f2c8ed;
+    --clr-light-blue: #20aef3;
+    --clr-black: #000;
+    ---clr-white: #fff;
+    --grey: #00b9ff;
+    --dark-grey: #8D8D8D;
+    --light: #fff;
+    --dark: #000;
+    --green: #81D43A;
+    --light-green: #E3FFCB;
+    --blue: #1775F1;
+    --light-blue: #D0E4FF;
+    --dark-blue: #0C5FCD;
+    --red: #FC3B56;
+    --value: 80%;
+    --third-color: linear-gradient(130deg, #022c65, #157be5, #022c65);
+    --secondary-color: linear-gradient(to right, #1e549f, #5fc9f3, #1e549f);
+    --dark-color: linear-gradient(180deg, #1e549f, #0d3359, #1e549f);
+    --white-color: #dbf6ee;
+    --light-gray-color: #f2f2f2;
+    --logo-color: linear-gradient(to top, #031331, #1d5dd7);
+    --main-color: #c41e67;
+    --step-color: #ced7e0;
+    --step-size: 32px;
+    --steps: 4;
+    --progress-width: calc((var(--steps) - 1) / var(--steps) * 100%);
+}
 *,
 *::before,
 *::after {

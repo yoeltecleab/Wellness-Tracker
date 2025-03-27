@@ -8,6 +8,37 @@
 }
 
 :root {
+    --clr-primary: #171821;
+    --clr-secondary: #21222d;
+    --clr-light-green: #a9dfd8;
+    --clr-gray-200: #e8e8e8;
+    --clr-gray-300: #d2d2d2;
+    --clr-gray-400: #a0a0a0;
+    --clr-gray-500: #87888c;
+    --clr-gray-800: #2c2d33;
+    --clr-yellow-400: #fcb859;
+    --clr-yellow-500: #feb95a;
+    --clr-pink: #f2c8ed;
+    --clr-light-blue: #20aef3;
+    --clr-black: #000;
+    ---clr-white: #fff;
+    --grey: #00b9ff;
+    --dark-grey: #8D8D8D;
+    --light: #fff;
+    --dark: #000;
+    --green: #81D43A;
+    --light-green: #E3FFCB;
+    --blue: #1775F1;
+    --light-blue: #D0E4FF;
+    --dark-blue: #0C5FCD;
+    --red: #FC3B56;
+    --value: 80%;
+    --third-color: linear-gradient(130deg, #022c65, #157be5, #022c65);
+    --secondary-color: linear-gradient(45deg, #1e549f, #5fc9f3, #1e549f);
+    --dark-color: linear-gradient(180deg, #1e549f, #0d3359, #1e549f);
+    --white-color: #020346;
+    --light-gray-color: #f2f2f2;
+    --logo-color: linear-gradient(to top, #031331, #1d5dd7);
     --main-color: #c41e67;
     --step-color: #ced7e0;
     --step-size: 32px;
@@ -20,9 +51,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: lavender;
-    color: #333;
+    background: var(--dark-color);
+    color: #000000;
+    justify-content: center;
 }
+
 
 h1 {
     text-align: center;
@@ -42,7 +75,7 @@ label {
 
 input,
 textarea {
-    outline-color: var(--main-color);
+    outline-color: dodgerblue;
     border: 1px solid lightgray;
     padding: 8px 16px;
     border-radius: 4px;
@@ -68,7 +101,7 @@ button {
     border: none;
     border-radius: 16px;
     padding: 8px 16px;
-    background-color: var(--main-color);
+    background: var(--dark);
     color: #fff;
     font-size: 0.875rem;
     transition: 0.3s;
@@ -76,7 +109,7 @@ button {
 
 button:active,
 button:hover {
-    background-color: var(--dark-color);
+    background: var(--third-color);
 }
 
 button:disabled {
@@ -97,18 +130,25 @@ button[type="submit"]:active {
 }
 
 form {
-    margin-block: auto;
+    position: relative;
+    border-radius: 8px;
+    width: min(500px, 90%);
+    box-shadow: 0 4px 16px rgba(167, 21, 84, 0.1);
+
 }
 
 /* form styles */
 
 .form-wizard {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    width: min(500px, 90%);
-    box-shadow: 0 4px 16px rgba(167, 21, 84, 0.1);
+    position: relative;
+    background: var(--secondary-color);
+    padding: 2rem;
+    border-radius: 3.3rem;
+    width: min(700px, 90%);
+    box-shadow: 0 60px 40px -30px rgba(0, 0, 0, 0.27);
+    margin-top: 2rem;
 }
+
 
 .progress-container {
     position: relative;
@@ -128,7 +168,7 @@ form {
 .progress-container .progress {
     height: 4px;
     width: var(--progress-width);
-    background-color: var(--main-color);
+    background: var(--dark-color);
     position: absolute;
     top: calc(var(--step-size) / 2);
     left: 50%;
@@ -193,11 +233,11 @@ html[dir="rtl"] .progress-container .progress {
 }
 
 .progress-container li.done::before {
-    background-color: var(--main-color);
+    background: var(--dark-color);
 }
 
 .progress-container li.current::before {
-    background-color: var(--main-color);
+    background: var(--third-color);
     box-shadow: 0 0 0 3px rgba(167, 21, 84, 0.25);
 }
 
@@ -274,12 +314,13 @@ html[dir="rtl"] .progress-container .progress {
     display: block;
     margin-bottom: 12px;
     font-weight: 500;
-    color: #333;
+    color: var(--white-color);
     font-size: 1rem;
   }
-  
+
   .radio-group,
   .checkbox-group {
+    color: var(--white-color);
     display: flex;
     flex-direction: column;
     gap: 8px;
