@@ -11,18 +11,12 @@
 /* Defining Custome Variables */
 :root {
     /* Colors */
-    --one: #dbf6ee;
-    --two: linear-gradient(to right, #1e549f, #5fc9f3, #1e549f);
-    --three: linear-gradient(180deg, #1e549f, #0d3359, #1e549f);
-    --four: linear-gradient(130deg, #022c65, #157be5, #022c65);
-    --five: linear-gradient(to right, #9dbde5, #4468b7, #9dbde5);
-
-
-    --primary-color: var(--four);
-    --secondary-color: var(--two);
-    --dark-color: var(--three);
-    --white-color: var(--one);
+    --primary-color: linear-gradient(130deg, #022c65, #157be5, #022c65);
+    --secondary-color: linear-gradient(to right, #1e549f, #5fc9f3, #1e549f);
+    --dark-color: linear-gradient(180deg, #1e549f, #0d3359, #1e549f);
+    --white-color: #dbf6ee;
     --light-gray-color: #f2f2f2;
+    --logo-color: linear-gradient(to top, #031331, #1d5dd7);
 
     /* Site Max-Width */
     --site-max-width: 1300px;

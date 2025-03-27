@@ -17,7 +17,7 @@ main {
     width: 100%;
     min-height: 100vh;
     overflow: hidden;
-    background: linear-gradient(130deg, #1e549f, #081f37, #1e549f);
+    background: var(--dark-color);
     padding: 2rem;
     display: flex;
     align-items: center;
@@ -29,7 +29,7 @@ main {
     width: 100%;
     max-width: 1020px;
     height: 640px;
-    background: linear-gradient(to right, #1e549f, #5fc9f3, #1e549f);
+    background: var(--secondary-color);
     border-radius: 3.3rem;
     box-shadow: 0 60px 40px -30px rgba(0, 0, 0, 0.27);
 }
@@ -87,7 +87,7 @@ form.sign-up-form {
     font-size: 1.4rem;
     margin-top: 14px;
     letter-spacing: -0.3px;
-    background: linear-gradient(to top, #031331, #1d5dd7);
+    background: var(--logo-color);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -174,7 +174,7 @@ label {
 }
 
 .sign-btn:hover {
-    background-color: #8371fd;
+    background-color: var(--secondary-color);
 }
 
 .text {

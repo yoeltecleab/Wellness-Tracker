@@ -2,223 +2,387 @@
 {% load static %}
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sales Management Dashboard</title>
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="{% static 'styles/dashboard.css' %}">
-    <title>AdminSite</title>
+    <link rel="stylesheet" href="{% static 'styles/dashboard.css' %}"/>
 </head>
 <body>
+<div class="global-container">
+    <aside class="sidebar">
+        <nav>
+            <!-- close btn -->
+            <svg
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="close-btn"
+            >
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
 
-<!-- SIDEBAR -->
-<section id="sidebar">
-    <a href="#" class="brand"><i class='bx bxs-smile icon'></i> AdminSite</a>
-    <ul class="side-menu">
-        <li><a href="#" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
-        <li class="divider" data-text="main">Main</li>
-        <li>
-            <a href="#"><i class='bx bxs-inbox icon'></i> Elements <i class='bx bx-chevron-right icon-right'></i></a>
-            <ul class="side-dropdown">
-                <li><a href="#">Alert</a></li>
-                <li><a href="#">Badges</a></li>
-                <li><a href="#">Breadcrumbs</a></li>
-                <li><a href="#">Button</a></li>
+            <!-- nav links -->
+            <ul class="nav-links">
+                <li class="nav-link">
+                    <a href="#" class="active">
+                        <img src="{% static 'images/SVGs/Home Vector Icon.svg' %}" alt="Dashboard">
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="{% url 'waterLogging' %}">
+                        <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
+                        <span>Log Water</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="#foodLogging">
+                        <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
+                        <span>Log Food</span>
+                    </a>
+                </li>
             </ul>
-        </li>
-        <li><a href="#"><i class='bx bxs-chart icon'></i> Charts</a></li>
-        <li><a href="#"><i class='bx bxs-widget icon'></i> Widgets</a></li>
-        <li class="divider" data-text="table and forms">Table and forms</li>
-        <li><a href="#"><i class='bx bx-table icon'></i> Tables</a></li>
-        <li>
-            <a href="#"><i class='bx bxs-notepad icon'></i> Forms <i class='bx bx-chevron-right icon-right'></i></a>
-            <ul class="side-dropdown">
-                <li><a href="#">Basic</a></li>
-                <li><a href="#">Select</a></li>
-                <li><a href="#">Checkbox</a></li>
-                <li><a href="#">Radio</a></li>
-            </ul>
-        </li>
-    </ul>
-    <div class="ads">
-        <div class="wrapper">
-            <a href="#" class="btn-upgrade">Upgrade</a>
-            <p>Become a <span>PRO</span> member and enjoy <span>All Features</span></p>
-        </div>
-    </div>
-</section>
-<!-- SIDEBAR -->
+        </nav>
+    </aside>
 
-<!-- NAVBAR -->
-<section id="content">
-    <!-- NAVBAR -->
-    <nav>
-        <i class='bx bx-menu toggle-sidebar'></i>
-        <form action="#">
-            <div class="form-group">
-                <label>
-                    <input type="text" placeholder="Search...">
-                </label>
-                <i class='bx bx-search icon'></i>
+    <main class="main-content">
+        <header class="main-header">
+            <!-- search container -->
+            <div class="search-container">
+                <!-- open btn -->
+                <svg
+                        width="1em"
+                        height="1em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="open-btn"
+                >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <rect x="2" y="3" width="20" height="9" rx="2" stroke="#ffffff"></rect>
+                        <path d="M16 18V18C16 19.1046 15.1046 20 14 20H10C8.89543 20 8 19.1046 8 18V18"
+                              stroke="#ffffff"></path>
+                        <path d="M19 14V14C19 15.1046 18.1046 16 17 16H7C5.89543 16 5 15.1046 5 14V14"
+                              stroke="#ffffff"></path>
+                    </g>
+                </svg>
             </div>
-        </form>
-        <a href="#" class="nav-link">
-            <i class='bx bxs-bell icon'></i>
-            <span class="badge">5</span>
-        </a>
-        <a href="#" class="nav-link">
-            <i class='bx bxs-message-square-dots icon'></i>
-            <span class="badge">8</span>
-        </a>
-        <span class="divider"></span>
-        <div class="profile">
-            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                 alt="">
-            <ul class="profile-link">
-                <li><a href="#"><i class='bx bxs-user-circle icon'></i> Profile</a></li>
-                <li><a href="#"><i class='bx bxs-cog'></i> Settings</a></li>
-                <li><a href="{% url 'index' %}"><i class='bx bxs-log-out-circle'></i> Logout</a></li>
-            </ul>
-        </div>
-    </nav>
-    <!-- NAVBAR -->
 
-    <!-- MAIN -->
-    <main>
-        <h1 class="title">Dashboard</h1>
-        <ul class="breadcrumbs">
-            <li><a href="#">Home</a></li>
-            <li class="divider">/</li>
-            <li><a href="#" class="active">Dashboard</a></li>
-        </ul>
-        <div class="info-data">
-            <div class="card">
-                <div class="head">
+            <!-- user profile -->
+            {#            <div class="user-profile">#}
+            {#                <svg width="1em" height="1em" viewBox="0 0 15 17" fill="none">#}
+            {#                    <path#}
+            {#                            d="M14.778 11.9699L13.141 8.94776V5.80111C13.141 2.6594 10.585 0.103424 7.44333 0.103424C4.30162 0.103424 1.74565 2.6594 1.74565 5.80111V8.94776L0.108618 11.9699C0.0343797 12.1069 -0.00298452 12.2609 0.000186238 12.4167C0.00335699 12.5725 0.0469539 12.7249 0.126705 12.8588C0.206456 12.9927 0.319626 13.1036 0.455125 13.1806C0.590625 13.2576 0.743805 13.2981 0.899658 13.2981H4.1584C4.14931 13.3978 4.14471 13.4978 4.14464 13.5979C4.14464 14.4728 4.49217 15.3118 5.11079 15.9304C5.72941 16.5491 6.56844 16.8966 7.4433 16.8966C8.31816 16.8966 9.15718 16.5491 9.7758 15.9304C10.3944 15.3118 10.742 14.4728 10.742 13.5979C10.742 13.4967 10.7371 13.3969 10.7282 13.2981H13.9869C14.1428 13.298 14.2959 13.2575 14.4314 13.1805C14.5669 13.1035 14.68 12.9926 14.7598 12.8587C14.8395 12.7248 14.8831 12.5725 14.8863 12.4167C14.8894 12.2609 14.8522 12.107 14.778 11.9699ZM9.54248 13.5979C9.54272 13.8864 9.48349 14.1718 9.3685 14.4364C9.25351 14.701 9.08522 14.939 8.87414 15.1356C8.66306 15.3322 8.41372 15.4833 8.14168 15.5792C7.86964 15.6752 7.58073 15.7141 7.293 15.6934C7.00527 15.6727 6.72488 15.593 6.46934 15.4591C6.2138 15.3253 5.98859 15.1402 5.80777 14.9154C5.62694 14.6907 5.49439 14.4311 5.41838 14.1528C5.34236 13.8745 5.32452 13.5835 5.36597 13.2981H9.52066C9.53508 13.3974 9.54237 13.4976 9.54248 13.5979ZM1.40312 12.0985L2.94516 9.25176V5.80111C2.94516 4.60812 3.41908 3.46399 4.26265 2.62042C5.10622 1.77685 6.25035 1.30294 7.44333 1.30294C8.63632 1.30294 9.78045 1.77685 10.624 2.62042C11.4676 3.46399 11.9415 4.60812 11.9415 5.80111V9.25176L13.4835 12.0985H1.40312Z"#}
+            {#                            fill="white"></path>#}
+            {#                    <circle cx="12" cy="3.10342" r="3" fill="#FC003C"></circle>#}
+            {#                </svg>#}
+            {##}
+            {#                <img src="{% static '/images/dashboard/user.jpg' %}" alt="user"/>#}
+            {#            </div>#}
+            <!-- user profile -->
+
+            <!-- NAVBAR -->
+            <nav class="right-nav">
+                <a href="#" class="nav-link">
+                    <i class='bx bxs-bell icon'></i>
+                    <span class="badge">5</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class='bx bxs-message-square-dots icon'></i>
+                    <span class="badge">8</span>
+                </a>
+                <span class="divider"></span>
+                <div class="profile">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                         alt="">
+                    <ul class="profile-link">
+                        <li><a href="#"><i class='bx bxs-user-circle icon'></i> Profile</a></li>
+                        <li><a href="#"><i class='bx bxs-cog'></i> Settings</a></li>
+                        <li><a href="{% url 'index' %}"><i class='bx bxs-log-out-circle'></i> Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- NAVBAR -->
+        </header>
+
+        <section class="dashboard">
+            <!-- card 1 -->
+            <div class="card sales-summary">
+                <div class="sales-details">
+                    <header>
+                        <h2>Today's Sales</h2>
+                        <p>Sales summary</p>
+                    </header>
+
+                    <!-- sales details container -->
                     <div>
-                        <h2>1500</h2>
-                        <p>Traffic</p>
-                    </div>
-                    <i class='bx bx-trending-up icon'></i>
-                </div>
-                <span class="progress" data-value="40%"></span>
-                <span class="label">40%</span>
-            </div>
-            <div class="card">
-                <div class="head">
-                    <div>
-                        <h2>234</h2>
-                        <p>Sales</p>
-                    </div>
-                    <i class='bx bx-trending-down icon down'></i>
-                </div>
-                <span class="progress" data-value="60%"></span>
-                <span class="label">60%</span>
-            </div>
-            <div class="card">
-                <div class="head">
-                    <div>
-                        <h2>465</h2>
-                        <p>Pageviews</p>
-                    </div>
-                    <i class='bx bx-trending-up icon'></i>
-                </div>
-                <span class="progress" data-value="30%"></span>
-                <span class="label">30%</span>
-            </div>
-            <div class="card">
-                <div class="head">
-                    <div>
-                        <h2>235</h2>
-                        <p>Visitors</p>
-                    </div>
-                    <i class='bx bx-trending-up icon'></i>
-                </div>
-                <span class="progress" data-value="80%"></span>
-                <span class="label">80%</span>
-            </div>
-        </div>
-        <div class="data">
-            <div class="content-data">
-                <div class="head">
-                    <h3>Sales Report</h3>
-                    <div class="menu">
-                        <i class='bx bx-dots-horizontal-rounded icon'></i>
-                        <ul class="menu-link">
-                            <li><a href="#">Edit</a></li>
-                            <li><a href="#">Save</a></li>
-                            <li><a href="#">Remove</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="chart">
-                    <div id="chart"></div>
-                </div>
-            </div>
-            <div class="content-data">
-                <div class="head">
-                    <h3>Chatbox</h3>
-                    <div class="menu">
-                        <i class='bx bx-dots-horizontal-rounded icon'></i>
-                        <ul class="menu-link">
-                            <li><a href="#">Edit</a></li>
-                            <li><a href="#">Save</a></li>
-                            <li><a href="#">Remove</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="chat-box">
-                    <p class="day"><span>Today</span></p>
-                    <div class="msg">
-                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                             alt="">
-                        <div class="chat">
-                            <div class="profile">
-                                <span class="username">Alan</span>
-                                <span class="time">18:30</span>
-                            </div>
-                            <p>Hello</p>
+                        <!-- item 1 -->
+                        <div class="sales-detail sales-total">
+                            <svg width="1em" height="1em" viewBox="0 0 23 26" fill="none">
+                                <path
+                                        d="M21.7034 6.95138L11.7277 1.08333L1.75201 6.95138V18.6875L11.7277 24.5555L21.7034 18.6875V6.95138Z"
+                                        stroke="#FEB95A"
+                                        stroke-width="1.95"
+                                        stroke-linejoin="round"></path>
+                                <path
+                                        d="M7.03326 13.993V16.3403M11.7277 11.6458V16.3403V11.6458ZM16.4222 9.2986V16.3403V9.2986Z"
+                                        stroke="#FEB95A"
+                                        stroke-width="1.95"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                            </svg>
+                            <h3>$5k</h3>
+                            <p>Total Sales</p>
+                            <span>+10% from yesterday</span>
+                        </div>
+
+                        <!-- item 2 -->
+                        <div class="sales-detail sales-orders">
+                            <svg width="1em" height="1em" viewBox="0 0 21 25" fill="none">
+                                <path
+                                        d="M15.4987 2.69315H18.2645C18.5609 2.69315 18.8451 2.81204 19.0547 3.02367C19.2643 3.2353 19.382 3.52233 19.382 3.82163V22.4415C19.382 22.7408 19.2643 23.0279 19.0547 23.2395C18.8451 23.4511 18.5609 23.57 18.2645 23.57H2.61951C2.32313 23.57 2.03889 23.4511 1.82932 23.2395C1.61975 23.0279 1.50201 22.7408 1.50201 22.4415V3.82163C1.50201 3.52233 1.61975 3.2353 1.82932 3.02367C2.03889 2.81204 2.32313 2.69315 2.61951 2.69315H6.53076V4.38587H14.3533V2.69315H15.4987Z"
+                                        stroke="#A9DFD8"
+                                        stroke-width="1.5"
+                                        stroke-linejoin="round"></path>
+                                <path
+                                        d="M12.1187 9.4636L7.64867 13.9781H13.2384L8.76617 18.492M6.53117 1H14.3537V4.38544H6.53117V1Z"
+                                        stroke="#A9DFD8"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                            </svg>
+                            <h3>500</h3>
+                            <p>Total Orders</p>
+                            <span>+8% from yesterday</span>
+                        </div>
+
+                        <!-- item 3 -->
+                        <div class="sales-detail sales-products">
+                            <svg width="1em" height="1em" viewBox="0 0 23 25" fill="none">
+                                <path
+                                        d="M17.3006 6.24477H20.9059C21.1239 6.24499 21.3342 6.32613 21.4958 6.47249C21.6574 6.61885 21.759 6.81999 21.7808 7.03696L22.3177 12.4062H20.5468L20.1067 8.00519H17.3006V10.6458C17.3006 10.8793 17.2078 11.1031 17.0427 11.2682C16.8777 11.4333 16.6538 11.526 16.4203 11.526C16.1869 11.526 15.963 11.4333 15.7979 11.2682C15.6329 11.1031 15.5401 10.8793 15.5401 10.6458V8.00519H8.49847V10.6458C8.49847 10.8793 8.40574 11.1031 8.24066 11.2682C8.07559 11.4333 7.85171 11.526 7.61826 11.526C7.38482 11.526 7.16093 11.4333 6.99586 11.2682C6.83079 11.1031 6.73805 10.8793 6.73805 10.6458V8.00519H3.93019L2.52186 22.0885H12.0193V23.8489H1.54835C1.42541 23.8488 1.30385 23.8229 1.19152 23.773C1.07919 23.723 0.97857 23.6501 0.896143 23.5589C0.813717 23.4677 0.751314 23.3602 0.712953 23.2434C0.674592 23.1266 0.661124 23.003 0.673419 22.8807L2.25779 7.03696C2.2796 6.81999 2.38116 6.61885 2.54281 6.47249C2.70445 6.32613 2.91466 6.24499 3.13272 6.24477H6.73805V5.63039C6.73805 2.57782 9.08997 0.083313 12.0193 0.083313C14.9486 0.083313 17.3006 2.57782 17.3006 5.63039V6.24653V6.24477ZM15.5401 6.24477V5.63039C15.5401 3.52845 13.9522 1.84373 12.0193 1.84373C10.0864 1.84373 8.49847 3.52845 8.49847 5.63039V6.24653H15.5401V6.24477ZM21.0802 19.3423C21.1605 19.2549 21.2576 19.1847 21.3657 19.1358C21.4739 19.0869 21.5907 19.0604 21.7094 19.0579C21.828 19.0554 21.9459 19.0768 22.0561 19.121C22.1662 19.1652 22.2662 19.2312 22.3502 19.3151C22.4342 19.3989 22.5003 19.4989 22.5447 19.6089C22.589 19.719 22.6106 19.8369 22.6083 19.9555C22.6059 20.0741 22.5796 20.1911 22.5308 20.2993C22.4821 20.4075 22.412 20.5047 22.3248 20.5851L18.8039 24.106C18.6389 24.271 18.415 24.3637 18.1816 24.3637C17.9482 24.3637 17.7244 24.271 17.5593 24.106L14.0385 20.5851C13.9544 20.5039 13.8874 20.4068 13.8412 20.2994C13.7951 20.192 13.7708 20.0765 13.7698 19.9597C13.7688 19.8428 13.7911 19.7269 13.8353 19.6187C13.8796 19.5105 13.9449 19.4122 14.0276 19.3296C14.1102 19.247 14.2085 19.1816 14.3167 19.1373C14.4249 19.0931 14.5408 19.0708 14.6576 19.0718C14.7745 19.0728 14.89 19.0971 14.9974 19.1433C15.1048 19.1894 15.2019 19.2564 15.2831 19.3405L17.3006 21.3597V15.0469C17.3006 14.8134 17.3933 14.5895 17.5584 14.4245C17.7234 14.2594 17.9473 14.1666 18.1808 14.1666C18.4142 14.1666 18.6381 14.2594 18.8032 14.4245C18.9682 14.5895 19.061 14.8134 19.061 15.0469V21.3597L21.0802 19.3405V19.3423Z"
+                                        fill="#F2C8ED"></path>
+                            </svg>
+                            <h3>9</h3>
+                            <p>Products Sold</p>
+                            <span>+2% from yesterday</span>
+                        </div>
+
+                        <!-- item 4 -->
+                        <div class="sales-detail sales-customers">
+                            <svg width="1em" height="1em" viewBox="0 0 23 24" fill="none">
+                                <path
+                                        d="M10.3482 12C13.3821 12 15.8416 9.57487 15.8416 6.58332C15.8416 3.59178 13.3821 1.16666 10.3482 1.16666C7.31422 1.16666 4.85472 3.59178 4.85472 6.58332C4.85472 9.57487 7.31422 12 10.3482 12Z"
+                                        stroke="#20AEF3"
+                                        stroke-width="1.5"></path>
+                                <path
+                                        d="M14.7432 16.3333H21.3353M15.8419 22.8333H2.94987C2.63826 22.8334 2.33021 22.7681 2.04614 22.6418C1.76208 22.5155 1.5085 22.3311 1.30225 22.1008C1.096 21.8704 0.941783 21.5995 0.849842 21.3059C0.7579 21.0124 0.730334 20.7029 0.768973 20.398L1.19746 17.0136C1.29711 16.2274 1.68464 15.5041 2.28718 14.9798C2.88972 14.4555 3.66575 14.1663 4.46936 14.1666H4.855L15.8419 22.8333ZM18.0393 13.0833V19.5833V13.0833Z"
+                                        stroke="#20AEF3"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                            </svg>
+                            <h3>12</h3>
+                            <p>New Customers</p>
+                            <span>+3% from yesterday</span>
                         </div>
                     </div>
-                    <div class="msg me">
-                        <div class="chat">
-                            <div class="profile">
-                                <span class="time">18:30</span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque voluptatum eos quam
-                                dolores eligendi exercitationem animi nobis reprehenderit laborum! Nulla.</p>
-                        </div>
+                </div>
+
+                <!-- level chart -->
+                <div class="chart level-chart">
+                    <header>
+                        <h2>Level</h2>
+                    </header>
+
+                    <div class="chart-container">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
                     </div>
-                    <div class="msg me">
-                        <div class="chat">
-                            <div class="profile">
-                                <span class="time">18:30</span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, architecto!</p>
+
+                    <div class="labels">
+                        <div class="label">
+                            <div class="active"></div>
+                            <p>volume</p>
                         </div>
-                    </div>
-                    <div class="msg me">
-                        <div class="chat">
-                            <div class="profile">
-                                <span class="time">18:30</span>
-                            </div>
-                            <p>Lorem ipsum, dolor sit amet.</p>
+
+                        <div class="divider"></div>
+
+                        <div class="label">
+                            <div></div>
+                            <p>Service</p>
                         </div>
                     </div>
                 </div>
-                <form action="#">
-                    <div class="form-group">
-                        <label>
-                            <input type="text" placeholder="Type...">
-                        </label>
-                        <button type="submit" class="btn-send"><i class='bx bxs-send'></i></button>
-                    </div>
-                </form>
             </div>
-        </div>
+
+            <!-- card 2 -->
+            <div class="card top-products">
+                <!-- product details container -->
+                <div class="top-products-details">
+                    <header>
+                        <h2>Top Products</h2>
+                    </header>
+
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Popularity</th>
+                            <th>Sales</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr>
+                            <td>01</td>
+                            <td>Home Decore Range</td>
+                            <td>
+                                <div class="range">
+                                    <div class="range-1"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="sales-volume sv-1">46%</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>02</td>
+                            <td>Disney Princess Dress</td>
+                            <td>
+                                <div class="range">
+                                    <div class="range-2"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="sales-volume sv-2">17%</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>03</td>
+                            <td>Bathroom Essentials</td>
+                            <td>
+                                <div class="range">
+                                    <div class="range-3"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="sales-volume sv-3">19%</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>04</td>
+                            <td>Apple Smartwatch</td>
+                            <td>
+                                <div class="range">
+                                    <div class="range-4"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="sales-volume sv-4">29%</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- fulfillment chart -->
+                <div class="chart fulfillment-chart">
+                    <header><h2>Customer Fulfillment</h2></header>
+
+                    <div class="chart-container">
+                        <canvas></canvas>
+                    </div>
+
+                    <div class="labels">
+                        <div class="">
+                            <div class="label">
+                                <div class="last-month"></div>
+                                <p>Last Month</p>
+                            </div>
+                            <span>$4,087</span>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="">
+                            <div class="label">
+                                <div class="this-month"></div>
+                                <p>This Month</p>
+                            </div>
+                            <span>$5,506</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- card 3 -->
+            <div class="card earnings">
+                <div class="chart earnings-chart">
+                    <header>
+                        <h2>Earnings</h2>
+                        <p>Total expenses</p>
+                    </header>
+
+                    <div>
+                        <strong>$6078.76</strong>
+                        <p class="profit">Profit is 48% more than last month</p>
+                    </div>
+
+                    {#                    <div class="chart-container">#}
+                    {#                        <div class="chart-wrapper">#}
+                    {#                            <div class="path"></div>#}
+                    {#                            <div class="path-fill"></div>#}
+                    {#                            <div class="mask"></div>#}
+                    {#                        </div>#}
+                    {#                        <div class="dial-container">#}
+                    {#                            <div class="dial"></div>#}
+                    {#                        </div>#}
+                    {#                        <span>80%</span>#}
+                    {#                    </div>#}
+                    <div class="chart radial-chart">
+                        <header>
+                        </header>
+
+                        <canvas class="radial-canvas"></canvas>
+                    </div>
+
+                </div>
+
+                <!-- visitors chart -->
+                <div class="chart visitors-chart">
+                    <header>
+                        <h2>Visitors Insight</h2>
+                    </header>
+
+                    <canvas></canvas>
+                </div>
+            </div>
+        </section>
     </main>
-    <!-- MAIN -->
-</section>
-<!-- NAVBAR -->
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="{% static 'scripts/dashboard.js' %}"></script>
 </body>
