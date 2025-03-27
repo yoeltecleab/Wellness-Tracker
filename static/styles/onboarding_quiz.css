@@ -52,6 +52,10 @@ textarea {
     text-align: start;
 }
 
+input:not([type="radio"]):not([type="checkbox"]) {
+    width: 100%;
+}
+
 input[type="tel"] {
     direction: inherit;
 }
@@ -286,100 +290,25 @@ html[dir="rtl"] .progress-container .progress {
   .checkbox-option {
     display: flex;
     align-items: center;
-    position: relative;
-    margin: 0;
-    padding: 0;
+    gap: 8px;
+    justify-content: flex-start;
+    margin-left: 20px;
   }
   
   .radio-option input[type="radio"],
   .checkbox-option input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: auto;
     margin: 0;
     cursor: pointer;
-    position: absolute;
-    left: 0;
-    opacity: 0;
   }
   
   .radio-option label,
   .checkbox-option label {
     margin: 0;
-    padding-left: 28px;
     font-weight: normal;
-    font-size: 0.95rem;
     cursor: pointer;
-    position: relative;
-    display: flex;
-    align-items: center;
-    min-height: 24px;
-  }
-  
-  .radio-option label::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    border: 2px solid #c41e67;
-    border-radius: 50%;
-    background: white;
-  }
-  
-  .radio-option label::after {
-    content: "";
-    position: absolute;
-    left: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #c41e67;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  
-  .radio-option input[type="radio"]:checked + label::after {
-    opacity: 1;
-  }
-  
-  .checkbox-option label::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    border: 2px solid #c41e67;
-    border-radius: 3px;
-    background: white;
-  }
-  
-  .checkbox-option label::after {
-    content: "";
-    position: absolute;
-    left: 6px;
-    top: 50%;
-    transform: translateY(-65%) rotate(45deg);
-    width: 6px;
-    height: 12px;
-    border: solid #c41e67;
-    border-width: 0 2px 2px 0;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  
-  .checkbox-option input[type="checkbox"]:checked + label::after {
-    opacity: 1;
   }
   
   input[type="text"] {
-    margin-top: 4px;
-    padding: 6px 12px;
-    font-size: 0.95rem;
+    margin-top: 8px;
   }
-  
