@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Sales Management Dashboard</title>
+    <title>Health Dashboard</title>
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'styles/dashboard.css' %}"/>
 </head>
@@ -46,6 +46,12 @@
                     <a href="#foodLogging">
                         <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
                         <span>Log Food</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="#Map">
+                                                <img src="{% static 'images/SVGs/Map SVG Icon.svg' %}" alt="Food">
+                        <span>Store Map</span>
                     </a>
                 </li>
             </ul>
@@ -348,18 +354,6 @@
                         <strong>$6078.76</strong>
                         <p class="profit">Profit is 48% more than last month</p>
                     </div>
-
-                    {#                    <div class="chart-container">#}
-                    {#                        <div class="chart-wrapper">#}
-                    {#                            <div class="path"></div>#}
-                    {#                            <div class="path-fill"></div>#}
-                    {#                            <div class="mask"></div>#}
-                    {#                        </div>#}
-                    {#                        <div class="dial-container">#}
-                    {#                            <div class="dial"></div>#}
-                    {#                        </div>#}
-                    {#                        <span>80%</span>#}
-                    {#                    </div>#}
                     <div class="chart radial-chart">
                         <header>
                         </header>

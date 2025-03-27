@@ -702,7 +702,7 @@ td {
     position: absolute;
     top: calc(100% + 15px);
     right: 10px;
-    background: var(--dark-color);
+    background: var(--clr-primary);
     padding: 10px 0;
     box-shadow: 24px 24px 160px dodgerblue;
     border-radius: 10px;
