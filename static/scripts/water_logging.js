@@ -1,5 +1,5 @@
 class WaterTracker {
-    constructor() {
+      constructor() {
         this.targetIntake = 2000; // ml
         this.currentIntake = 0;
         this.logs = [];
@@ -9,6 +9,7 @@ class WaterTracker {
         this.currentDateDisplay = document.getElementById('currentDate');
         this.prevDayBtn = document.getElementById('prevDay');
         this.nextDayBtn = document.getElementById('nextDay');
+        this.currentDateLog = document.querySelector('.history h2');
 
         // Calculate circle properties
         const radius = this.circle.r.baseVal.value;
@@ -115,6 +116,7 @@ class WaterTracker {
 
     updateDateDisplay() {
         this.currentDateDisplay.textContent = this.formatDate(this.currentDate);
+        this.currentDateLog.textContent = "Intake log from " + this.formatDate(this.currentDate);
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -188,7 +190,7 @@ class WaterTracker {
         const previousIntake = this.currentIntake;
         this.currentIntake += amount;
         const time = new Date().toLocaleTimeString();
-        this.logs.unshift({ amount, time });
+        this.logs.unshift({amount, time});
 
         this.updateDisplay();
         this.saveData();
@@ -202,8 +204,7 @@ class WaterTracker {
     updateDisplay() {
         // Update progress ring
         const progress = Math.min(this.currentIntake / this.targetIntake, 1);
-        const offset = this.circumference - (progress * this.circumference);
-        this.circle.style.strokeDashoffset = offset;
+        this.circle.style.strokeDashoffset = this.circumference - (progress * this.circumference);
 
         // Update current intake display with animation
         const currentValue = parseInt(this.currentIntakeDisplay.textContent);
@@ -228,8 +229,7 @@ class WaterTracker {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            const value = Math.round(start + (end - start) * progress);
-            this.currentIntakeDisplay.textContent = value;
+            this.currentIntakeDisplay.textContent = Math.round(start + (end - start) * progress).toString();
 
             if (progress < 1) {
                 requestAnimationFrame(updateNumber);
@@ -250,4 +250,116 @@ class WaterTracker {
 // Initialize the tracker when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     new WaterTracker();
+});
+
+
+// Navbar
+// PROFILE DROPDOWN
+const profile = document.querySelector('.right-nav .profile');
+const imgProfile = profile.querySelector('.right-nav .profile img');
+const dropdownProfile = profile.querySelector('.profile-link');
+
+imgProfile.addEventListener('click', function () {
+    dropdownProfile.classList.toggle('show');
+})
+
+
+// MENU
+const allMenu = document.querySelectorAll('main .content-data .head .menu');
+
+allMenu.forEach(item => {
+    const icon = item.querySelector('.icon');
+    const menuLink = item.querySelector('.menu-link');
+
+    icon.addEventListener('click', function () {
+        menuLink.classList.toggle('show');
+    })
+})
+
+
+window.addEventListener('click', function (e) {
+    if (e.target !== imgProfile) {
+        if (e.target !== dropdownProfile) {
+            if (dropdownProfile.classList.contains('show')) {
+                dropdownProfile.classList.remove('show');
+            }
+        }
+    }
+
+    allMenu.forEach(item => {
+        const icon = item.querySelector('.icon');
+        const menuLink = item.querySelector('.menu-link');
+
+        if (e.target !== icon) {
+            if (e.target !== menuLink) {
+                if (menuLink.classList.contains('show')) {
+                    menuLink.classList.remove('show')
+                }
+            }
+        }
+    })
+})
+
+
+// PROGRESSBAR
+const allProgress = document.querySelectorAll('main .card .progress');
+
+allProgress.forEach(item => {
+    item.style.setProperty('--value', item.dataset.value)
+})
+
+
+// APEXCHART
+const options = {
+    series: [{
+        name: 'series1',
+        data: [31, 40, 28, 51, 42, 109, 100]
+    }, {
+        name: 'series2',
+        data: [11, 32, 45, 32, 34, 52, 41]
+    }],
+    chart: {
+        height: 350,
+        type: 'area'
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        curve: 'smooth'
+    },
+    xaxis: {
+        type: 'datetime',
+        categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+    },
+    tooltip: {
+        x: {
+            format: 'dd/MM/yy HH:mm'
+        },
+    },
+};
+
+const chart = new ApexCharts(document.querySelector("#chart"), options);
+chart.render();
+
+const openBtn = document.querySelector(".open-btn");
+const closeBtn = document.querySelector(".close-btn");
+const sidebar = document.querySelector(".sidebar");
+const navLinks = document.querySelectorAll(".nav-links a");
+
+openBtn.addEventListener("click", function () {
+    sidebar.classList.add("open");
+});
+
+// close sidebar
+closeBtn.addEventListener("click", function () {
+    sidebar.classList.remove("open");
+});
+
+// control active nav-link
+navLinks.forEach((navLink) => {
+    navLink.addEventListener("click", function () {
+        navLinks.forEach((l) => l.classList.remove("active"));
+        this.classList.add("active");
+    });
 });
