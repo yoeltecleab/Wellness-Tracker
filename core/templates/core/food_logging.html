@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Health Dashboard</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'styles/water_logging.css' %}"/>
+</head>
+<body>
+<div class="global-container">
+    <aside class="sidebar">
+        <nav>
+            <!-- close btn -->
+            <svg
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="close-btn"
+            >
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
+
+            <!-- nav links -->
+            <ul class="nav-links">
+                <li class="nav-link">
+                    <a href="{% url 'dashboard' %}">
+                        <img src="{% static 'images/SVGs/Home Vector Icon.svg' %}" alt="Dashboard">
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="#" class="active">
+                        <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
+                        <span>Log Water</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="#foodLogging">
+                        <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
+                        <span>Log Food</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="#Map">
+                        <img src="{% static 'images/SVGs/Map SVG Icon.svg' %}" alt="Food">
+                        <span>Store Map</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="main-header">
+            <!-- search container -->
+            <div class="search-container">
+                <!-- open btn -->
+                <svg
+                        width="1em"
+                        height="1em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="open-btn"
+                >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <rect x="2" y="3" width="20" height="9" rx="2" stroke="#ffffff"></rect>
+                        <path d="M16 18V18C16 19.1046 15.1046 20 14 20H10C8.89543 20 8 19.1046 8 18V18"
+                              stroke="#ffffff"></path>
+                        <path d="M19 14V14C19 15.1046 18.1046 16 17 16H7C5.89543 16 5 15.1046 5 14V14"
+                              stroke="#ffffff"></path>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- NAVBAR -->
+            <nav class="right-nav">
+                <a href="#" class="nav-link">
+                    <i class='bx bxs-bell icon'></i>
+                    <span class="badge">5</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class='bx bxs-message-square-dots icon'></i>
+                    <span class="badge">8</span>
+                </a>
+                <span class="divider"></span>
+                <div class="profile">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                         alt="">
+                    <ul class="profile-link">
+                        <li><a href="#"><i class='bx bxs-user-circle icon'></i> Profile</a></li>
+                        <li><a href="#"><i class='bx bxs-cog'></i> Settings</a></li>
+                        <li><a href="{% url 'index' %}"><i class='bx bxs-log-out-circle'></i> Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- NAVBAR -->
+        </header>
+
+        <div class="tracker-container">
+            <h1>Daily Calories Intake Tracker</h1>
+            <div class="chart-intake">
+                <div class="date-navigator">
+                    <button id="prevDay" class="nav-btn">
+                        <span class="arrow">←</span>
+                    </button>
+                    <h2 id="currentDate">Today</h2>
+                    <button id="nextDay" class="nav-btn" disabled>
+                        <span class="arrow">→</span>
+                    </button>
+                </div>
+
+                <div class="donut-chart">
+                    <div class="progress-ring">
+                        <div class="progress">
+                            <svg width="250" height="250">
+                                <circle class="progress-ring-circle-bg" cx="125" cy="125" r="100"></circle>
+                                <circle class="progress-ring-circle" cx="125" cy="125" r="100"></circle>
+                            </svg>
+                        </div>
+                        <div class="progress-text">
+                            <span id="current-intake">0</span>
+                            <span class="unit">ml</span>
+                            <div class="target">Calories Limit: 2,000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="add-water">
+
+                <div class="controls">
+                    <h2>Add Food & Number of Calories</h2>
+                    <div class="buttons">
+                        <button class="water-btn" data-ml="250">
+                            <span class="icon">🥤</span>
+                            <span>250ml</span>
+                        </button>
+                        <button class="water-btn" data-ml="500">
+                            <span class="icon">🫗</span>
+                            <span>500ml</span>
+                        </button>
+                        <button class="water-btn" data-ml="1000">
+                            <span class="icon">🍶</span>
+                            <span>1000ml</span>
+                        </button>
+                    </div>
+
+                    <div class="custom-input">
+                        <input type="number" id="custom-amount" placeholder="Custom amount (ml)">
+                        <button id="add-custom">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history">
+                <h2>Today's Log</h2>
+                <div id="water-log" class="log-entries"></div>
+            </div>
+            <button id="reset" class="reset-btn">Reset Day</button>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{% static 'scripts/water_logging.js' %}"></script>
+</body>
+</html>
