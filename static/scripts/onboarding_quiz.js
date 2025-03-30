@@ -66,24 +66,24 @@ inputs.forEach((input) =>
   })
 );
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault(); // prevent form submission
-
-  if (!form.checkValidity()) return;
-
-  const formData = new FormData(form);
-
-  // send the data somewhere
-  console.log(Object.fromEntries(formData));
-
-  submitButton.disabled = true;
-  submitButton.textContent = "Submitting...";
-
-  // mimic a server request
-  setTimeout(() => {
-    form.querySelector(".completed").hidden = false;
-  }, 600);
-});
+// form.addEventListener("submit", (e) => {
+//   // e.preventDefault(); // prevent form submission
+//
+//   // if (!form.checkValidity()) return;
+//
+//   const formData = new FormData(form);
+//
+//   // send the data somewhere
+//   console.log(Object.fromEntries(formData));
+//
+//   submitButton.disabled = true;
+//   submitButton.textContent = "Submitting...";
+//
+//   // mimic a server request
+//   setTimeout(() => {
+//     form.querySelector(".completed").hidden = false;
+//   }, 600);
+// });
 
 prevButton.addEventListener("click", (e) => {
   e.preventDefault(); // prevent form submission

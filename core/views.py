@@ -1,13 +1,12 @@
 from dbm.sqlite3 import error
-from importlib.resources import contents
 
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from core.forms import MyUserCreationForm
-from core.models import User
+from core.models import User, Profile
 
 
 # Create your views here.
@@ -59,7 +58,33 @@ def water_logging(request):
 
 @login_required(login_url='signin')
 def onboarding_quiz(request):
-    login(request, request.user)
+
+    if request.method == 'POST':
+        try:
+            user = request.user
+            user.first_name = request.POST['first-name']
+            user.last_name = request.POST['last-name']
+            user.phone = request.POST['phone']
+            user.dob = request.POST['dob']
+
+            profile = Profile()
+            profile.primary_goal = request.POST['primary-goal']
+            profile.current_diet = request.POST['current-diet']
+            profile.snack_between_meals = request.POST['snacking']
+            profile.beverages = request.POST['beverages']
+            profile.current_water_intake = request.POST['water-intake']
+            profile.diet_restrictions = request.POST['dietary-restrictions']
+            profile.exercise = request.POST['exercise']
+
+            user.profile = profile
+            profile.save()
+            user.save()
+            return redirect('dashboard')
+        except Exception as e:
+            print(e)
+            messages.error(request, "Please fill all fields")
+            return redirect('onboarding_quiz')
+
     return render(request, 'core/onboarding_quiz.html')
 
 
@@ -69,8 +94,7 @@ def register_user(request):
         user = form.save(commit=False)
         user.email = user.email.lower()
         user.save()
-        login(request, user)
-        return render(request, 'core/onboarding_quiz.html')
+        return redirect('onboarding_quiz')
     context = {
         'form': form,
         'page': 'signup'
@@ -88,7 +112,7 @@ def login_user(request):
 
     if user.profile is None:
         login(request, user)
-        return render(request, 'core/onboarding_quiz.html')
+        return redirect('onboarding_quiz')
     else:
         login(request, user)
         return redirect('dashboard')
@@ -99,5 +123,6 @@ def signout(request):
     return redirect('index')
 
 
+@login_required(login_url='signin')
 def food_logging(request):
     return render(request, 'core/food_logging.html')

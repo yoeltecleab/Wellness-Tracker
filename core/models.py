@@ -5,10 +5,14 @@ from hashlib import sha256
 
 # Create your models here.
 class Profile(models.Model):
-    firstName = models.CharField(max_length=100, blank=True)
-    lastName = models.CharField(max_length=100, blank=True)
-    email = models.EmailField(blank=True)
-    phone = models.CharField(max_length=100, blank=True)
+    primary_goal = models.CharField(max_length=100, blank=True, null=True)
+    current_diet = models.CharField(max_length=100, blank=True, null=True)
+    snack_between_meals = models.CharField(max_length=100, blank=True, null=True)
+    beverages = models.CharField(max_length=100, blank=True, null=True)
+    current_water_intake = models.CharField(max_length=100, blank=True, null=True)
+    diet_restrictions = models.CharField(max_length=100, blank=True, null=True)
+    exercise = models.CharField(max_length=100, blank=True, null=True)
+
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
@@ -25,6 +29,12 @@ class Profile(models.Model):
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
+
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    phone = models.CharField(max_length=10, blank=True, null=True)
+    dob = models.DateField(null=True, blank=True)
+
     avatar = models.ImageField(null=True, default="avatar.svg")
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
     createdAt = models.DateTimeField(auto_now_add=True)

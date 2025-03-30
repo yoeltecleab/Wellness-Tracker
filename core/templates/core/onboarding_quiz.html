@@ -9,7 +9,8 @@
     <script src="{% static 'scripts/onboarding_quiz.js' %}" defer></script>
 </head>
 <body>
-<form class="form-wizard">
+<form class="form-wizard" method="POST" action="{% url 'onboarding_quiz' %}">
+    {% csrf_token %}
     <!-- .completed -->
     <div class="completed" hidden>
         <h3>Registration Successful!</h3>
@@ -40,19 +41,19 @@
 
             <div class="form-control">
                 <label for="first-name">First Name</label>
-                <input type="text" id="first-name" name="first-name"/>
+                <input type="text" id="first-name" name="first-name" required/>
             </div>
             <div class="form-control">
                 <label for="last-name">Last Name</label>
-                <input type="text" id="last-name" name="last-name"/>
+                <input type="text" id="last-name" name="last-name" required/>
             </div>
             <div class="form-control">
                 <label for="phone">Phone</label>
-                <input type="tel" id="phone" name="phone"/>
+                <input type="tel" id="phone" name="phone" required/>
             </div>
             <div class="form-control">
                 <label for="dob">Date of Birth</label>
-                <input type="date" id="dob" name="phone"/>
+                <input type="date" id="dob" name="dob" required/>
             </div>
         </div>
         <div class="step">
