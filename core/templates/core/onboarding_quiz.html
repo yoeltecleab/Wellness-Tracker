@@ -68,6 +68,7 @@
                                 id="goal-lose"
                                 name="primary-goal"
                                 value="lose"
+                                required
                         />
                         <label for="goal-lose">Lose weight</label>
                     </div>
@@ -110,6 +111,7 @@
                                 id="diet-balanced"
                                 name="current-diet"
                                 value="balanced"
+                                required
                         />
                         <label for="diet-balanced">Balanced and healthy</label>
                     </div>
@@ -152,6 +154,7 @@
                                 id="snack-rarely"
                                 name="snacking"
                                 value="rarely"
+                                required
                         />
                         <label for="snack-rarely">Rarely</label>
                     </div>
@@ -251,6 +254,7 @@
                                 id="water-less"
                                 name="water-intake"
                                 value="less"
+                                required
                         />
                         <label for="water-less">Less than 1 liter</label>
                     </div>
@@ -338,6 +342,7 @@
                                 id="exercise-none"
                                 name="exercise"
                                 value="none"
+                                required
                         />
                         <label for="exercise-none">Little to no exercise</label>
                     </div>
@@ -371,6 +376,56 @@
                         <label for="exercise-daily">Daily exercise</label>
                     </div>
                 </div>
+            </div>
+            <div class="form-control">
+                <label>What type of stores do you usually shop at?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="usual-store-supermarket"
+                                name="usual-store"
+                                value="Supermarket"
+                                required
+                        />
+                        <label for="usual-store-supermarket">Supermarket</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="usual-store-farmers-market"
+                                name="usual-store"
+                                value="farmers market"
+                        />
+                        <label for="usual-store-farmers-market">Farmers market</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="usual-store-health-food-store"
+                                name="usual-store"
+                                value="health food store"
+                        />
+                        <label for="usual-store-health-food-store">Health food store</label>
+                    </div>
+                    <div class="radio-option">
+                        <input
+                                type="radio"
+                                id="usual-store-online-grocery"
+                                name="usual-store"
+                                value="Online grocery"
+                        />
+                        <label for="usual-store-online-grocery">Online grocery</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-control">
+                <label for="weight-goal">What is your weight goal?</label>
+                <input type="text" id="weight-goal" name="weight-goal" required/>
+            </div>
+            <div class="form-control">
+                <label for="calorie-goal">What is your daily calorie goal?</label>
+                <input type="text" id="calorie-goal" name="calorie-goal" required/>
             </div>
         </div>
     </div>

@@ -71,10 +71,13 @@ def onboarding_quiz(request):
             profile.primary_goal = request.POST['primary-goal']
             profile.current_diet = request.POST['current-diet']
             profile.snack_between_meals = request.POST['snacking']
-            profile.beverages = request.POST['beverages']
+            profile.beverages = ", ".join(request.POST.getlist('beverages'))
             profile.current_water_intake = request.POST['water-intake']
-            profile.diet_restrictions = request.POST['dietary-restrictions']
+            profile.diet_restrictions = ", ".join(request.POST.getlist('dietary-restrictions'))
             profile.exercise = request.POST['exercise']
+            profile.usual_store = request.POST['usual-store']
+            profile.weight_goal = request.POST['weight-goal']
+            profile.calorie_goal = request.POST['calorie-goal']
 
             user.profile = profile
             profile.save()

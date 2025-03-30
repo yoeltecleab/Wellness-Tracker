@@ -12,6 +12,9 @@ class Profile(models.Model):
     current_water_intake = models.CharField(max_length=100, blank=True, null=True)
     diet_restrictions = models.CharField(max_length=100, blank=True, null=True)
     exercise = models.CharField(max_length=100, blank=True, null=True)
+    usual_store = models.CharField(max_length=100, blank=True, null=True)
+    weight_goal = models.IntegerField(max_length=100, blank=True, null=True)
+    calorie_goal = models.IntegerField(max_length=100, blank=True, null=True)
 
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
