@@ -15,9 +15,7 @@ inputs.forEach((inp) => {
 });
 
 toggle_btn.forEach((btn) => {
-    btn.addEventListener("click", () => {
-        main.classList.toggle("sign-up-mode");
-    });
+    btn.addEventListener("click", switchMode);
 });
 
 function moveSlider() {
@@ -37,3 +35,7 @@ function moveSlider() {
 bullets.forEach((bullet) => {
     bullet.addEventListener("click", moveSlider);
 });
+
+function switchMode() {
+    main.classList.toggle("sign-up-mode");
+}
