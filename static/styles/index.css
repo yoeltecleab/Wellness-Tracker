@@ -198,7 +198,7 @@ label .close_btn {
     gap: 24px;
 }
 
-.hero_container .hero_section_button .button {
+.hero_container .hero_section_button a .button {
     padding: 8px 28px;
     border: 2px solid transparent;
     outline: none;
@@ -211,19 +211,19 @@ label .close_btn {
     transition: all 0.4s ease;
 }
 
-.hero_container .hero_section_button .button:last-child {
+.hero_container .hero_section_button a .button:last-child {
     color: var(--white-color);
     border-color: var(--white-color);
     background: none;
 }
 
-.hero_container .hero_section_button .button:first-child:hover {
+.hero_container .hero_section_button a .button:first-child:hover {
     color: var(--white-color);
     background: transparent;
     border-color: var(--white-color);
 }
 
-.hero_container .hero_section_button .button:last-child:hover {
+.hero_container .hero_section_button a .button:last-child:hover {
     color: var(--third-color);
     background: var(--secondary-color);
     border-color: var(--secondary-color);
@@ -234,6 +234,7 @@ label .close_btn {
 }
 
 .hero_container .image_section img {
+    margin-left: 15rem;
     width: 100%;
 }
 
@@ -286,7 +287,7 @@ label .close_btn {
 }
 
 .section_container .services_items img {
-    width: 100%;
+    width: 20rem;
 }
 
 .section_container .services_items {

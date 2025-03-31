@@ -5,21 +5,18 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Wellness Tracker</title>
-    <!-- CSS Link -->
     <link rel="stylesheet" href="{% static 'styles/index.css' %}"/>
-    <!-- Box Icon Link for Icons -->
     <link
             href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
             rel="stylesheet"
     />
 </head>
 <body>
-<!-- Header & Navbar Section -->
 <header>
     <nav>
         <div class="nav_logo">
             <a href="#">
-                <img src="{% static 'images/logos/Logo5.png' %}" alt="Coffee Logo"/>
+                <img src="{% static 'images/logos/Wellness Logo.png' %}" alt="Wellness Logo"/>
                 <h2>Wellness Tracker</h2>
             </a>
         </div>
@@ -42,187 +39,169 @@
     </nav>
 </header>
 
-<!-- Hero Section -->
 <section class="hero_section">
     <div class="section_container">
         <div class="hero_container">
             <div class="text_section">
-                <h2>Fuel Your Passion</h2>
-                <h3>Discover the Magic in Every Cup</h3>
+                <h2>Track Your Journey to a Healthier You</h2>
+                <h3>Empowering Your Wellness, One Step at a Time</h3>
                 <p>
-                    Welcome to our coffee paradise, where every bean tells a story and
-                    every cup sparks.
+                    Welcome to our wellness hub, where tracking your health becomes
+                    easy and motivating.
                 </p>
 
                 <div class="hero_section_button">
-                    <button class="button">Order Online</button>
-                    <button class="button">Book A Table</button>
+                    <a href="{% url 'signup' %}" style="text-decoration: none"><button class="button">Start Tracking</button></a>
+                    <a href="#service" style="text-decoration: none"><button class="button">Learn More</button></a>
                 </div>
             </div>
 
             <div class="image_section">
-                <img src="{% static 'images/index2/cofffee_image.png' %}" alt="Coffee"/>
+                <img src="{% static 'images/index/hero_wellness.png' %}" alt="Wellness"/>
             </div>
         </div>
     </div>
 </section>
 
-<!-- About Us Section -->
 <section class="about_us" id="about">
     <div class="section_container">
         <div class="about_container">
             <div class="text_section">
                 <h2 class="section_title">About Us</h2>
                 <p>
-                    We at CoffeeNepal, located in New Baneshwor, Kathmandu are one of the
-                    favorite hangouts for coffee and conversations. Our goal is to
-                    offer the best experience to our guests, ensuring an authentic
-                    coffee drinking experience in a warm, friendly, and relaxed
-                    environment. We aim to bring a sense of relaxation to the city
-                    with our cozy space, complete with comfortable couches to lounge
-                    in while you enjoy your coffee.
+                    We at Wellness Tracker are dedicated to helping you achieve your
+                    health and fitness goals. Our platform provides intuitive tools
+                    for tracking water intake, nutrition, and discovering healthy
+                    food options. We believe in empowering individuals to make
+                    informed choices and live healthier lives.
                 </p>
             </div>
 
             <div class="image_section">
-                <img src="{% static 'images/index2/about_coffee.png' %}" alt="coffee"/>
+                <img src="{% static 'images/index/about_wellness.png' %}" alt="Wellness"/>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Services Section -->
 <section class="services" id="service">
     <h2 class="section_title">Our Services</h2>
     <div class="section_container">
         <div class="service_container">
             <div class="services_items">
-                <img src="{% static 'images/index2/hot_beverages.png' %}" alt="Hot Beverages"/>
+                <img src="{% static 'images/index/water_tracker.png' %}" alt="Water Tracker"/>
                 <div class="services_text">
-                    <h3>Hot Beverages</h3>
+                    <h3>Water Intake Tracker</h3>
                     <p>
-                        Wide range of Steaming hot coffees to make you fresh and light.
+                        Easily monitor your daily water intake to stay hydrated and
+                        healthy.
                     </p>
                 </div>
             </div>
             <div class="services_items">
-                <img src="{% static 'images/index2/cold_beverages.png' %}" alt="Cold Beverages"/>
+                <img src="{% static 'images/index/nutrition_tracker.png' %}" alt="Nutrition Tracker"/>
                 <div class="services_text">
-                    <h3>Cold Beverages</h3>
+                    <h3>Nutrition Tracker</h3>
                     <p>
-                        Creamy and frothy cold coffee to make you feel cool from inside.
+                        Track your calorie and nutrient intake to maintain a balanced
+                        diet.
                     </p>
                 </div>
             </div>
             <div class="services_items">
-                <img src="{% static 'images/index2/refreshment.png' %}" alt="Refreshment"/>
+                <img src="{% static 'images/index/healthy_food.png' %}" alt="Healthy Food"/>
                 <div class="services_text">
-                    <h3>Refreshment</h3>
-                    <p>Fruit and icy refreshing drink to make you feel good.</p>
+                    <h3>Healthy Food Finder</h3>
+                    <p>Discover nearby restaurants and stores offering healthy food options.</p>
                 </div>
             </div>
             <div class="services_items">
-                <img src="{% static 'images/index2/special_combos.png' %}" alt="Special Combos"/>
+                <img src="{% static 'images/index/progress_tracking.png' %}" alt="Progress Tracking"/>
                 <div class="services_text">
-                    <h3>Special Combos</h3>
-                    <p>
-                        Now it's really easy to chose your favourite eating and drinking
-                        combinations.
-                    </p>
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor your health progress and stay motivated with detailed reports.</p>
                 </div>
             </div>
             <div class="services_items">
                 <img
-                        src="{% static 'images/index2/burger_frenchFries.png' %}"
-                        alt="Burger & French Fries"
+                        src="{% static 'images/index/goal_setting.png' %}"
+                        alt="Goal Setting"
                 />
                 <div class="services_text">
-                    <h3>Burger & French Fries</h3>
-                    <p>Yummy! Quick bites to satisfy your small size hunger.</p>
+                    <h3>Goal Setting</h3>
+                    <p>Set personalized health goals and track your achievements.</p>
                 </div>
             </div>
             <div class="services_items">
-                <img src="{% static 'images/index2/dessert.png' %}" alt="Desserts"/>
+                <img src="{% static 'images/index/community_support.png' %}" alt="Community Support"/>
                 <div class="services_text">
-                    <h3>Desserts</h3>
-                    <p>
-                        This for sure would satiate your palate and take you on a
-                        culinary treat.
-                    </p>
+                    <h3>Community Support</h3>
+                    <p>Connect with others and share your wellness journey.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Why Us Section -->
 <section class="why_us" id="why">
     <h2 class="section_title">Why Us?</h2>
     <div class="section_container">
         <div class="why_container">
             <div class="why_items">
-                <img src="{% static 'images/index2/delicious.png' %}" alt="Delicious"/>
+                <img src="{% static 'images/index/user_friendly.png' %}" alt="User Friendly"/>
                 <div class="why_us_text">
-                    <h3>Delicious Food</h3>
+                    <h3>User-Friendly Interface</h3>
                     <p>
-                        With a lavish spread of finger licking food, we serve to satisfy
-                        your palate and take you on a culinary treat.
+                        Our platform is designed to be intuitive and easy to navigate.
                     </p>
                 </div>
             </div>
             <div class="why_items">
-                <img src="{% static 'images/index2/pleasant.png' %}" alt="Pleasant"/>
+                <img src="{% static 'images/index/personalized.png' %}" alt="Personalized"/>
                 <div class="why_us_text">
-                    <h3>Pleasant Ambience</h3>
+                    <h3>Personalized Experience</h3>
                     <p>
-                        We seek to serve all our guests with the perfect dining
-                        experience. We provide perfect ambbience to cherish special
-                        moments.
+                        Tailored tools and insights to match your unique wellness needs.
                     </p>
                 </div>
             </div>
             <div class="why_items">
-                <img src="{% static 'images/index2/hospitality.png' %}" alt="Hospitality"/>
+                <img src="{% static 'images/index/reliable.png' %}" alt="Reliable"/>
                 <div class="why_us_text">
-                    <h3>Hospitality</h3>
-                    <p>
-                        Our staff members are happy to help. We go the extra mile to
-                        make you happy.
-                    </p>
+                    <h3>Reliable Tracking</h3>
+                    <p>Accurate and dependable data to help you achieve your goals.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Gallery Section -->
 <section class="gallery" id="gallery">
     <h2 class="section_title">Gallery</h2>
     <div class="section_container">
         <div class="gallery_container">
             <div class="gallery_items">
-                <img src="{% static 'images/index2/gallery_1.jpg' %}" alt="Gallery Image"/>
+                <img src="{% static 'images/index/gallery_1.png' %}" alt="Gallery Image"/>
             </div>
             <div class="gallery_items">
-                <img src="{% static 'images/index2/gallery_2.jpg' %}" alt="Gallery Image"/>
+                <img src="{% static 'images/index/gallery_2.png' %}" alt="Gallery Image"/>
             </div>
             <div class="gallery_items">
-                <img src="{% static 'images/index2/gallery_3.jpg' %}" alt="Gallery Image"/>
+                <img src="{% static 'images/index/gallery_3.png' %}" alt="Gallery Image"/>
             </div>
             <div class="gallery_items">
-                <img src="{% static 'images/index2/gallery_4.jpg' %}" alt="Gallery Image"/>
+                <img src="{% static 'images/index/gallery_4.png' %}" alt="Gallery Image"/>
             </div>
             <div class="gallery_items">
-                <img src="{% static 'images/index2/gallery_5.jpg' %}" alt="Gallery Image"/>
+                <img src="{% static 'images/index/gallery_5.png' %}" alt="Gallery Image"/>
             </div>
             <div class="gallery_items">
-                <img src="{% static 'images/index2/gallery_6.jpg' %}" alt="Gallery Image"/>
+                <img src="{% static 'images/index/gallery_6.png' %}" alt="Gallery Image"/>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Contact Section -->
 <section class="contact" id="contact">
     <h2 class="section_title">Contact Us</h2>
     <div class="section_container">
@@ -269,28 +248,28 @@
                     <i class="bx bx-current-location"></i>
                     <div class="contact_details">
                         <h3>Our Location</h3>
-                        <p>New Baneshwor, Kathmandu</p>
+                        <p>Online Platform</p>
                     </div>
                 </div>
                 <div class="contact_items">
                     <i class="bx bxs-envelope"></i>
                     <div class="contact_details">
                         <h3>General Enquries</h3>
-                        <p>coffeenepal@xyz.com</p>
+                        <p>wellness@tracker.com</p>
                     </div>
                 </div>
                 <div class="contact_items">
                     <i class="bx bxs-phone-call"></i>
                     <div class="contact_details">
                         <h3>Call Us</h3>
-                        <p>9851826263</p>
+                        <p>1-800-WELLNESS</p>
                     </div>
                 </div>
                 <div class="contact_items">
                     <i class="bx bxs-time-five"></i>
                     <div class="contact_details">
                         <h3>Our Timing</h3>
-                        <p>Mon-Sun : 10:00 AM - 7:00 PM</p>
+                        <p>24/7 Online Support</p>
                     </div>
                 </div>
             </div>
@@ -298,13 +277,12 @@
     </div>
 </section>
 
-<!-- Footer Section -->
 <footer>
     <div class="section_container">
         <div class="footer_section">
             <div class="footer_logo">
-                <a href="index.html">
-                    <img src="{% static 'images/index2/coffee_logo.png' %}" alt="Coffee Logo"/>
+                <a href="#">
+                    <img src="{% static 'images/logos/Wellness Logo.png' %}" alt="Wellness Logo"/>
                     <h2>Wellness Tracker</h2>
                 </a>
             </div>
@@ -325,14 +303,14 @@
                 <ul>
                     <li>
                         <i class="bx bx-current-location"></i>
-                        <span>New Baneshwor, Kathmandu</span>
+                        <span>Online Platform</span>
                     </li>
                     <li>
-                        <i class="bx bxs-phone-call"></i> <span>9851867533</span>
+                        <i class="bx bxs-phone-call"></i> <span>1-800-WELLNESS</span>
                     </li>
                     <li>
                         <i class="bx bxs-time-five"></i>
-                        <span>Mon-Sun : 10:00 AM - 7:00 PM</span>
+                        <span>24/7 Online Support</span>
                     </li>
                 </ul>
             </div>

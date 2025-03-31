@@ -21,7 +21,7 @@
                     {% csrf_token %}
                     <a href="{% url 'index' %}" style="text-decoration: none">
                         <div class="logo">
-                            <img alt="Wellness Tracker" src="{% static '/images/logos/Logo5.png' %}"/>
+                            <img alt="Wellness Tracker" src="{% static '/images/logos/Wellness Logo.png' %}"/>
                             <h4>Wellness Tracker</h4>
                         </div>
                     </a>
@@ -96,9 +96,9 @@
                 </form>
                 <form method="POST" action="{% url 'signup' %}" autocomplete="off" class="sign-up-form"
                       id="sign-up-form">
-                    <a href="{% url 'index' %}">
+                    <a href="{% url 'index' %}" style="text-decoration: none">
                         <div class="logo">
-                            <img alt="Wellness Tracker" src="{% static '/images/logos/Logo5.png' %}"/>
+                            <img alt="Wellness Tracker" src="{% static '/images/logos/Wellness Logo.png' %}"/>
                             <h4>Wellness Tracker</h4>
                         </div>
                     </a>

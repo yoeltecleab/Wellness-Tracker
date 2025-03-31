@@ -93,7 +93,7 @@ main {
 }
 
 form {
-    max-width: 260px;
+    max-width: 280px;
     width: 100%;
     margin: 0 auto;
     height: 100%;
@@ -116,7 +116,7 @@ form.sign-up-form {
 }
 
 .logo img {
-    width: 48px;
+    width: 65px;
     margin-right: 0.9rem;
 }
 

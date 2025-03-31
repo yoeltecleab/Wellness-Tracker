@@ -215,7 +215,7 @@ body {
 }
 
 .sales-details,
-.top-products-details {
+.top-products-details, .nearest-locations {
     background: var(--third-color);
     padding: 1rem;
     border-radius: 0.625rem;
@@ -407,6 +407,11 @@ tr td:nth-child(2) {
 td {
     font-size: 0.75rem;
     border-top: 1px solid #2b2b36;
+}
+
+.nearest-locations td:nth-child(3), .nearest-locations th:nth-child(3) {
+    padding-left: 3rem;
+    color: #afdfff;
 }
 
 @media screen and (min-width: 1280px) {

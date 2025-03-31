@@ -37,13 +37,13 @@
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="#" class="active">
+                    <a href="{% url 'water_logging' %}" class="active">
                         <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
                         <span>Log Water</span>
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="#foodLogging">
+                    <a href="#">
                         <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
                         <span>Log Food</span>
                     </a>
@@ -160,6 +160,7 @@
 
                     <div class="custom-input">
                         <input type="number" id="custom-amount" placeholder="Custom amount (ml)">
+                        <label for="custom-amount"></label>
                         <button id="add-custom">Add</button>
                     </div>
                 </div>
