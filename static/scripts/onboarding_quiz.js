@@ -4,6 +4,7 @@ const stepsContainer = form.querySelector(".steps-container");
 const steps = form.querySelectorAll(".step");
 const stepIndicators = form.querySelectorAll(".progress-container li");
 const prevButton = form.querySelector(".prev-btn");
+const cancelButton = form.querySelector(".cancel-btn");
 const nextButton = form.querySelector(".next-btn");
 const submitButton = form.querySelector(".submit-btn");
 
@@ -32,6 +33,7 @@ const updateProgress = () => {
 };
 
 const updateButtons = () => {
+  cancelButton.hidden = currentStep !== 0;
   prevButton.hidden = currentStep === 0;
   nextButton.hidden = currentStep >= steps.length - 1;
   submitButton.hidden = !nextButton.hidden;
@@ -92,6 +94,11 @@ prevButton.addEventListener("click", (e) => {
     currentStep--;
     updateProgress();
   }
+});
+
+cancelButton.addEventListener("click", (e) => {
+  e.preventDefault(); // prevent form submission
+  window.history.back();
 });
 
 nextButton.addEventListener("click", (e) => {

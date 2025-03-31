@@ -6,438 +6,512 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Multistep Form</title>
     <link rel="stylesheet" href="{% static 'styles/onboarding_quiz.css' %}"/>
-    <script src="{% static 'scripts/onboarding_quiz.js' %}" defer></script>
 </head>
 <body>
-<form class="form-wizard" method="POST" action="{% url 'onboarding_quiz' %}">
-    {% csrf_token %}
-    <!-- .completed -->
-    <div class="completed" hidden>
-        <h3>Registration Successful!</h3>
-        <p>Your account has been created.</p>
-        <button type="button" class="close-btn">
-            <a href="{% url 'dashboard' %}"> Go to dashboard </a>
-        </button>
-    </div>
-    <!-- /.completed -->
+{% if source == 'update' %}
+    <form class="form-wizard" method="POST" action="{% url 'update_profile' %}">
+{% else %}
+    <form class="form-wizard" method="POST" action="{% url 'onboarding_quiz' %}">
+{% endif %}
+{% csrf_token %}
+<!-- .completed -->
+<div class="completed" hidden>
+    <h3>Registration Successful!</h3>
+    <p>Your account has been created.</p>
+    <button type="button" class="close-btn">
+        <a href="{% url 'dashboard' %}"> Go to dashboard </a>
+    </button>
+</div>
+<!-- /.completed -->
 
-    <h1>Registration</h1>
+<h1>Registration</h1>
 
-    <!-- .progress-container -->
-    <div class="progress-container">
-        <div class="progress"></div>
+<!-- .progress-container -->
+<div class="progress-container">
+    <div class="progress"></div>
 
-        <ol>
+    <ol>
+        {% if source == 'update' %}
+            <li class="current">Account Information</li>
+            <li>Personal Information</li>
+        {% else %}
             <li class="current">Personal Information</li>
-            <li>Questionnaires</li>
-        </ol>
+        {% endif %}
+        <li>Questionnaires</li>
+    </ol>
+</div>
+<!-- /.progress-container -->
+
+<!-- .steps-container -->
+<div class="steps-container">
+    {% if source == 'update' %}
+        <div class="step">
+            <h3>Account Information</h3>
+
+            {% for field in form %}
+                <div class="form-control">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}"
+                           name="{{ field.name }}" value="{{ field.value }}" required/>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="step">
+        <h3>Personal Information</h3>
+
+        <div class="form-control">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ user.username|default_if_none:'' }}"
+                   required/>
+        </div>
+        <div class="form-control">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" name="first-name" value="{{ user.first_name|default_if_none:'' }}"
+                   required/>
+        </div>
+        <div class="form-control">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" name="last-name" value="{{ user.last_name|default_if_none:'' }}"
+                   required/>
+        </div>
+        <div class="form-control">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" value="{{ user.phone|default_if_none:'' }}" required/>
+        </div>
+        <div class="form-control">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob" value="{{ user.dob|date:'Y-m-d' }}" required/>
+
+        </div>
     </div>
-    <!-- /.progress-container -->
+    <div class="step">
+        <h3>Health Assessment Quiz</h3>
 
-    <!-- .steps-container -->
-    <div class="steps-container">
-        <div class="step">
-            <h3>Personal Information</h3>
-
-            <div class="form-control">
-                <label for="first-name">First Name</label>
-                <input type="text" id="first-name" name="first-name" required/>
-            </div>
-            <div class="form-control">
-                <label for="last-name">Last Name</label>
-                <input type="text" id="last-name" name="last-name" required/>
-            </div>
-            <div class="form-control">
-                <label for="phone">Phone</label>
-                <input type="tel" id="phone" name="phone" required/>
-            </div>
-            <div class="form-control">
-                <label for="dob">Date of Birth</label>
-                <input type="date" id="dob" name="dob" required/>
-            </div>
-        </div>
-        <div class="step">
-            <h3>Health Assessment Quiz</h3>
-
-            <div class="form-control">
-                <label>What is your primary goal with this app?</label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="goal-lose"
-                                name="primary-goal"
-                                value="lose"
-                                required
-                        />
-                        <label for="goal-lose">Lose weight</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="goal-maintain"
-                                name="primary-goal"
-                                value="maintain"
-                        />
-                        <label for="goal-maintain">Maintain weight</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="goal-gain"
-                                name="primary-goal"
-                                value="gain"
-                        />
-                        <label for="goal-gain">Gain muscle</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="goal-health"
-                                name="primary-goal"
-                                value="health"
-                        />
-                        <label for="goal-health">Improve overall health</label>
-                    </div>
+        <div class="form-control">
+            <label>What is your primary goal with this app?</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="goal-lose"
+                            name="primary-goal"
+                            value="lose"
+                            required
+                            {% if user.profile.primary_goal == 'lose' %}checked{% endif %}
+                    />
+                    <label for="goal-lose">Lose weight</label>
                 </div>
-            </div>
-
-            <div class="form-control">
-                <label>How would you describe your current diet?</label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="diet-balanced"
-                                name="current-diet"
-                                value="balanced"
-                                required
-                        />
-                        <label for="diet-balanced">Balanced and healthy</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="diet-mostly"
-                                name="current-diet"
-                                value="mostly"
-                        />
-                        <label for="diet-mostly">Mostly healthy</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="diet-unsure"
-                                name="current-diet"
-                                value="unsure"
-                        />
-                        <label for="diet-unsure">I'm not sure</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="diet-unbalanced"
-                                name="current-diet"
-                                value="unbalanced"
-                        />
-                        <label for="diet-unbalanced">Unbalanced or unhealthy</label>
-                    </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="goal-maintain"
+                            name="primary-goal"
+                            value="maintain"
+                            {% if user.profile.primary_goal == 'maintain' %}checked{% endif %}
+                    />
+                    <label for="goal-maintain">Maintain weight</label>
                 </div>
-            </div>
-
-            <div class="form-control">
-                <label>How often do you snack between meals?</label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="snack-rarely"
-                                name="snacking"
-                                value="rarely"
-                                required
-                        />
-                        <label for="snack-rarely">Rarely</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="snack-sometimes"
-                                name="snacking"
-                                value="sometimes"
-                        />
-                        <label for="snack-sometimes">Sometimes</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="snack-often"
-                                name="snacking"
-                                value="often"
-                        />
-                        <label for="snack-often">Often</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="snack-always"
-                                name="snacking"
-                                value="always"
-                        />
-                        <label for="snack-always">Always</label>
-                    </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="goal-gain"
+                            name="primary-goal"
+                            value="gain"
+                            {% if user.profile.primary_goal == 'gain' %}checked{% endif %}
+                    />
+                    <label for="goal-gain">Gain muscle</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="goal-health"
+                            name="primary-goal"
+                            value="health"
+                            {% if user.profile.primary_goal == 'health' %}checked{% endif %}
+                    />
+                    <label for="goal-health">Improve overall health</label>
                 </div>
             </div>
         </div>
-        <div class="step">
-            <h3>Health Assessment Quiz</h3>
-
-            <div class="form-control">
-                <label
-                >What types of beverages do you usually consume? (Select all that
-                    apply)</label
-                >
-                <div class="checkbox-group">
-                    <div class="checkbox-option">
-                        <input
-                                type="checkbox"
-                                id="beverage-water"
-                                name="beverages"
-                                value="water"
-                        />
-                        <label for="beverage-water">Water</label>
-                    </div>
-                    <div class="checkbox-option">
-                        <input
-                                type="checkbox"
-                                id="beverage-soda"
-                                name="beverages"
-                                value="soda"
-                        />
-                        <label for="beverage-soda">Soda</label>
-                    </div>
-                    <div class="checkbox-option">
-                        <input
-                                type="checkbox"
-                                id="beverage-juice"
-                                name="beverages"
-                                value="juice"
-                        />
-                        <label for="beverage-juice">Juice</label>
-                    </div>
-                    <div class="checkbox-option">
-                        <input
-                                type="checkbox"
-                                id="beverage-coffee"
-                                name="beverages"
-                                value="coffee"
-                        />
-                        <label for="beverage-coffee">Coffee/Tea</label>
-                    </div>
-                    <div class="checkbox-option">
-                        <input
-                                type="checkbox"
-                                id="beverage-alcohol"
-                                name="beverages"
-                                value="alcohol"
-                        />
-                        <label for="beverage-alcohol">Alcohol</label>
-                    </div>
+        <div class="form-control">
+            <label>How would you describe your current diet?</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="diet-balanced"
+                            name="current-diet"
+                            value="balanced"
+                            required
+                            {% if user.profile.current_diet == 'balanced' %}checked{% endif %}
+                    />
+                    <label for="diet-balanced">Balanced and healthy</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="diet-mostly"
+                            name="current-diet"
+                            value="mostly"
+                            {% if user.profile.current_diet == 'mostly' %}checked{% endif %}
+                    />
+                    <label for="diet-mostly">Mostly healthy</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="diet-unsure"
+                            name="current-diet"
+                            value="unsure"
+                            {% if user.profile.current_diet == 'unsure' %}checked{% endif %}
+                    />
+                    <label for="diet-unsure">I'm not sure</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="diet-unbalanced"
+                            name="current-diet"
+                            value="unbalanced"
+                            {% if user.profile.current_diet == 'unbalanced' %}checked{% endif %}
+                    />
+                    <label for="diet-unbalanced">Unbalanced or unhealthy</label>
                 </div>
             </div>
-
-            <div class="form-control">
-                <label>How much water do you think you drink in a day?</label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="water-less"
-                                name="water-intake"
-                                value="less"
-                                required
-                        />
-                        <label for="water-less">Less than 1 liter</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="water-1-2"
-                                name="water-intake"
-                                value="1-2"
-                        />
-                        <label for="water-1-2">1-2 liters</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="water-2-3"
-                                name="water-intake"
-                                value="2-3"
-                        />
-                        <label for="water-2-3">2-3+ liters</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="water-unsure"
-                                name="water-intake"
-                                value="unsure"
-                        />
-                        <label for="water-unsure">Not sure</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-control">
-                <label>Do you have any dietary restrictions or preferences?</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-option">
-                        <input
-                                type="checkbox"
-                                id="diet-vegetarian"
-                                name="dietary-restrictions"
-                                value="vegetarian"
-                        />
-                        <label for="diet-vegetarian">Vegetarian</label>
-                    </div>
-                    <div class="checkbox-option">
-                        <input
-                                type="checkbox"
-                                id="diet-vegan"
-                                name="dietary-restrictions"
-                                value="vegan"
-                        />
-                        <label for="diet-vegan">Vegan</label>
-                    </div>
-                    <div class="checkbox-option">
-                        <input
-                                type="checkbox"
-                                id="diet-gluten"
-                                name="dietary-restrictions"
-                                value="gluten-free"
-                        />
-                        <label for="diet-gluten">Gluten-free</label>
-                    </div>
-                    <div class="checkbox-option">
-                        <input
-                                type="checkbox"
-                                id="diet-none"
-                                name="dietary-restrictions"
-                                value="none"
-                        />
-                        <label for="diet-none">No restrictions</label>
-                    </div>
-                </div>
-            </div>
-
         </div>
-        <div class="step">
-            <h3>Health Assessment Quiz</h3>
-            <div class="form-control">
-                <label>How often do you exercise?</label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="exercise-none"
-                                name="exercise"
-                                value="none"
-                                required
-                        />
-                        <label for="exercise-none">Little to no exercise</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="exercise-light"
-                                name="exercise"
-                                value="light"
-                        />
-                        <label for="exercise-light">Light amount of exercise</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="exercise-moderate"
-                                name="exercise"
-                                value="moderate"
-                        />
-                        <label for="exercise-moderate"
-                        >Moderate amount of exercise</label
-                        >
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="exercise-daily"
-                                name="exercise"
-                                value="daily"
-                        />
-                        <label for="exercise-daily">Daily exercise</label>
-                    </div>
+        <div class="form-control">
+            <label>How often do you snack between meals?</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="snack-rarely"
+                            name="snacking"
+                            value="rarely"
+                            required
+                            {% if user.profile.snacking == 'rarely' %}checked{% endif %}
+                    />
+                    <label for="snack-rarely">Rarely</label>
                 </div>
-            </div>
-            <div class="form-control">
-                <label>What type of stores do you usually shop at?</label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="usual-store-supermarket"
-                                name="usual-store"
-                                value="Supermarket"
-                                required
-                        />
-                        <label for="usual-store-supermarket">Supermarket</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="usual-store-farmers-market"
-                                name="usual-store"
-                                value="farmers market"
-                        />
-                        <label for="usual-store-farmers-market">Farmers market</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="usual-store-health-food-store"
-                                name="usual-store"
-                                value="health food store"
-                        />
-                        <label for="usual-store-health-food-store">Health food store</label>
-                    </div>
-                    <div class="radio-option">
-                        <input
-                                type="radio"
-                                id="usual-store-online-grocery"
-                                name="usual-store"
-                                value="Online grocery"
-                        />
-                        <label for="usual-store-online-grocery">Online grocery</label>
-                    </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="snack-sometimes"
+                            name="snacking"
+                            value="sometimes"
+                            {% if user.profile.snacking == 'sometimes' %}checked{% endif %}
+                    />
+                    <label for="snack-sometimes">Sometimes</label>
                 </div>
-            </div>
-            <div class="form-control">
-                <label for="weight-goal">What is your weight goal?</label>
-                <input type="text" id="weight-goal" name="weight-goal" required/>
-            </div>
-            <div class="form-control">
-                <label for="calorie-goal">What is your daily calorie goal?</label>
-                <input type="text" id="calorie-goal" name="calorie-goal" required/>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="snack-often"
+                            name="snacking"
+                            value="often"
+                            {% if user.profile.snacking == 'often' %}checked{% endif %}
+                    />
+                    <label for="snack-often">Often</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="snack-always"
+                            name="snacking"
+                            value="always"
+                            {% if user.profile.snacking == 'always' %}checked{% endif %}
+                    />
+                    <label for="snack-always">Always</label>
+                </div>
             </div>
         </div>
     </div>
-    <!-- /.steps-container -->
+    <div class="step">
+        <h3>Health Assessment Quiz</h3>
 
-    <!-- .controls -->
-    <div class="controls">
-        <button type="button" class="prev-btn">Prev</button>
-        <button type="button" class="next-btn">Next</button>
-        <button type="submit" class="submit-btn">Submit</button>
+        <div class="form-control">
+            <label
+            >What types of beverages do you usually consume? (Select all that
+                apply)</label
+            >
+            <div class="checkbox-group">
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="beverage-water"
+                            name="beverages"
+                            value="water"
+                            {% if 'water' in user.profile.beverages %}checked{% endif %}
+                    />
+                    <label for="beverage-water">Water</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="beverage-soda"
+                            name="beverages"
+                            value="soda"
+                            {% if 'soda' in user.profile.beverages %}checked{% endif %}
+                    />
+                    <label for="beverage-soda">Soda</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="beverage-juice"
+                            name="beverages"
+                            value="juice"
+                            {% if 'juice' in user.profile.beverages %}checked{% endif %}
+                    />
+                    <label for="beverage-juice">Juice</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="beverage-coffee"
+                            name="beverages"
+                            value="coffee"
+                            {% if 'coffee' in user.profile.beverages %}checked{% endif %}
+                    />
+                    <label for="beverage-coffee">Coffee/Tea</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="beverage-alcohol"
+                            name="beverages"
+                            value="alcohol"
+                            {% if 'alcohol' in user.profile.beverages %}checked{% endif %}
+                    />
+                    <label for="beverage-alcohol">Alcohol</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label>How much water do you think you drink in a day?</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="water-less"
+                            name="water-intake"
+                            value="less"
+                            required
+                            {% if user.profile.water_intake == 'less' %}checked{% endif %}
+                    />
+                    <label for="water-less">Less than 1 liter</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="water-1-2"
+                            name="water-intake"
+                            value="1-2"
+                            {% if user.profile.water_intake == '1-2' %}checked{% endif %}
+                    />
+                    <label for="water-1-2">1-2 liters</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="water-2-3"
+                            name="water-intake"
+                            value="2-3"
+                            {% if user.profile.water_intake == '2-3' %}checked{% endif %}
+                    />
+                    <label for="water-2-3">2-3+ liters</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="water-unsure"
+                            name="water-intake"
+                            value="unsure"
+                            {% if user.profile.water_intake == 'unsure' %}checked{% endif %}
+                    />
+                    <label for="water-unsure">Not sure</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label>Do you have any dietary restrictions or preferences?</label>
+            <div class="checkbox-group">
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="diet-vegetarian"
+                            name="dietary-restrictions"
+                            value="vegetarian"
+                            {% if 'vegetarian' in user.profile.dietary_restrictions %}checked{% endif %}
+                    />
+                    <label for="diet-vegetarian">Vegetarian</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="diet-vegan"
+                            name="dietary-restrictions"
+                            value="vegan"
+                            {% if 'vegan' in user.profile.dietary_restrictions %}checked{% endif %}
+                    />
+                    <label for="diet-vegan">Vegan</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="diet-gluten"
+                            name="dietary-restrictions"
+                            value="gluten-free"
+                            {% if 'gluten-free' in user.profile.dietary_restrictions %}checked{% endif %}
+                    />
+                    <label for="diet-gluten">Gluten-free</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="diet-none"
+                            name="dietary-restrictions"
+                            value="none"
+                            {% if 'none' in user.profile.dietary_restrictions %}checked{% endif %}
+                    />
+                    <label for="diet-none">No restrictions</label>
+                </div>
+            </div>
+        </div>
+
     </div>
-    <!-- /.controls -->
+    <div class="step">
+        <h3>Health Assessment Quiz</h3>
+        <div class="form-control">
+            <label>How often do you exercise?</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="exercise-none"
+                            name="exercise"
+                            value="none"
+                            required
+                            {% if user.profile.exercise == 'none' %}checked{% endif %}
+                    />
+                    <label for="exercise-none">Little to no exercise</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="exercise-light"
+                            name="exercise"
+                            value="light"
+                            {% if user.profile.exercise == 'light' %}checked{% endif %}
+                    />
+                    <label for="exercise-light">Light amount of exercise</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="exercise-moderate"
+                            name="exercise"
+                            value="moderate"
+                            {% if user.profile.exercise == 'moderate' %}checked{% endif %}
+                    />
+                    <label for="exercise-moderate"
+                    >Moderate amount of exercise</label
+                    >
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="exercise-daily"
+                            name="exercise"
+                            value="daily"
+                            {% if user.profile.exercise == 'daily' %}checked{% endif %}
+                    />
+                    <label for="exercise-daily">Daily exercise</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-control">
+            <label>What type of stores do you usually shop at?</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="usual-store-supermarket"
+                            name="usual-store"
+                            value="Supermarket"
+                            required
+                            {% if user.profile.usual_store == 'Supermarket' %}checked{% endif %}
+                    />
+                    <label for="usual-store-supermarket">Supermarket</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="usual-store-farmers-market"
+                            name="usual-store"
+                            value="farmers market"
+                            {% if user.profile.usual_store == 'farmers market' %}checked{% endif %}
+                    />
+                    <label for="usual-store-farmers-market">Farmers market</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="usual-store-health-food-store"
+                            name="usual-store"
+                            value="health food store"
+                            {% if user.profile.usual_store == 'health food store' %}checked{% endif %}
+                    />
+                    <label for="usual-store-health-food-store">Health food store</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                            type="radio"
+                            id="usual-store-online-grocery"
+                            name="usual-store"
+                            value="Online grocery"
+                            {% if user.profile.usual_store == 'Online grocery' %}checked{% endif %}
+                    />
+                    <label for="usual-store-online-grocery">Online grocery</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-control">
+            <label for="weight-goal">What is your weight goal?</label>
+            <input type="text" id="weight-goal" name="weight-goal" required
+                   value="{% if user.profile %} {{ user.profile.weight_goal|default_if_none:'' }}{% endif %}"/>
+        </div>
+        <div class="form-control">
+            <label for="calorie-goal">What is your daily calorie goal?</label>
+            <input type="text" id="calorie-goal" name="calorie-goal" required
+                   value="{% if user.profile %} {{ user.profile.calorie_goal|default_if_none:'' }}{% endif %}"/>
+        </div>
+    </div>
+</div>
+<!-- /.steps-container -->
+
+<!-- .controls -->
+<div class="controls">
+    <button type="button" class="cancel-btn">Cancel</button>
+    <button type="button" class="prev-btn">Prev</button>
+    <button type="button" class="next-btn">Next</button>
+    <button type="submit" class="submit-btn">Submit</button>
+</div>
+<!-- /.controls -->
 </form>
+<script src="{% static 'scripts/onboarding_quiz.js' %}" defer></script>
+{% if source == 'update' %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector('form');
+            const submitButton = form.querySelector('.submit-btn');
+            submitButton.textContent = 'Update';
+        });
+    </script>
+{% endif %}
+
 </body>
 </html>

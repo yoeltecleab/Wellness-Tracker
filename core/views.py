@@ -58,37 +58,10 @@ def water_logging(request):
 
 @login_required(login_url='signin')
 def onboarding_quiz(request):
-
-    if request.method == 'POST':
-        try:
-            user = request.user
-            user.first_name = request.POST['first-name']
-            user.last_name = request.POST['last-name']
-            user.phone = request.POST['phone']
-            user.dob = request.POST['dob']
-
-            profile = Profile()
-            profile.primary_goal = request.POST['primary-goal']
-            profile.current_diet = request.POST['current-diet']
-            profile.snack_between_meals = request.POST['snacking']
-            profile.beverages = ", ".join(request.POST.getlist('beverages'))
-            profile.current_water_intake = request.POST['water-intake']
-            profile.diet_restrictions = ", ".join(request.POST.getlist('dietary-restrictions'))
-            profile.exercise = request.POST['exercise']
-            profile.usual_store = request.POST['usual-store']
-            profile.weight_goal = request.POST['weight-goal']
-            profile.calorie_goal = request.POST['calorie-goal']
-
-            user.profile = profile
-            profile.save()
-            user.save()
-            return redirect('dashboard')
-        except Exception as e:
-            print(e)
-            messages.error(request, "Please fill all fields")
-            return redirect('onboarding_quiz')
-
-    return render(request, 'core/onboarding_quiz.html')
+    context = {
+        'source': 'onboarding'
+    }
+    return profile_helper(request, Profile(), context, 'onboarding_quiz')
 
 
 def register_user(request):
@@ -97,6 +70,7 @@ def register_user(request):
         user = form.save(commit=False)
         user.email = user.email.lower()
         user.save()
+        login(request, user)
         return redirect('onboarding_quiz')
     context = {
         'form': form,
@@ -129,3 +103,52 @@ def signout(request):
 @login_required(login_url='signin')
 def food_logging(request):
     return render(request, 'core/food_logging.html')
+
+
+def update_profile(request):
+    form = MyUserCreationForm(instance=request.user)
+    context = {
+        'form': form,
+        'source': 'update'
+    }
+    if form.is_valid():
+        form.save(commit=False)
+    return profile_helper(request, request.user.profile, context, 'update_profile')
+
+
+def profile_helper(request, profile, context, this_page):
+    if request.method == 'POST':
+        try:
+            user = request.user
+
+            user.email = request.POST['email'].lower()
+            user.password1 = request.POST['password1']
+
+            user.first_name = request.POST['first-name']
+            user.last_name = request.POST['last-name']
+            user.username = request.POST['username']
+            user.phone = request.POST['phone']
+            user.dob = request.POST['dob']
+
+            profile = profile
+            profile.primary_goal = request.POST['primary-goal']
+            profile.current_diet = request.POST['current-diet']
+            profile.snacking = request.POST['snacking']
+            profile.beverages = ", ".join(request.POST.getlist('beverages'))
+            profile.water_intake = request.POST['water-intake']
+            profile.dietary_restrictions = ", ".join(request.POST.getlist('dietary-restrictions'))
+            profile.exercise = request.POST['exercise']
+            profile.usual_store = request.POST['usual-store']
+            profile.weight_goal = request.POST['weight-goal']
+            profile.calorie_goal = request.POST['calorie-goal']
+
+            user.profile = profile
+            profile.save()
+            user.save()
+            return redirect('dashboard')
+        except Exception as e:
+            print(e)
+            messages.error(request, "Please fill all fields")
+            return redirect(this_page)
+
+    return render(request, 'core/onboarding_quiz.html', context)
