@@ -53,6 +53,9 @@
                 <div class="hero_section_button">
                     <a href="{% url 'signup' %}" style="text-decoration: none"><button class="button">Start Tracking</button></a>
                     <a href="#service" style="text-decoration: none"><button class="button">Learn More</button></a>
+                    <a href="{% url 'generate_demo_user' %}" style="text-decoration: none">
+                        <button onclick="window.location.href = '{% url 'signup' %}';" class="button">Create Demo Account</button>
+                    </a>
                 </div>
             </div>
 

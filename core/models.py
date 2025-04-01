@@ -37,7 +37,7 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user_profile')
 
-    weight_goal = models.IntegerField(blank=True, null=True)
+    water_goal = models.IntegerField(blank=True, null=True)
     calorie_goal = models.IntegerField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -62,9 +62,7 @@ class WaterLog(models.Model):
 
 
 class Food(models.Model):
-    name = models.IntegerField(blank=True, null=True)
-    calories = models.IntegerField(blank=True, null=True)
-    is_healthy = models.BooleanField(blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=True, unique=True)
     frequency = models.IntegerField(blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
 
@@ -79,11 +77,12 @@ class Food(models.Model):
 
 
 class FoodLog(models.Model):
-    food = models.ManyToManyField('Food', blank=True, related_name='food_logs')
+    food = models.ForeignKey('Food', on_delete=models.CASCADE, blank=True, null=True, related_name='food_logs')
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='food_logs')
+    is_healthy = models.BooleanField(blank=True, null=True)
 
     homemade_or_purchased = models.CharField(max_length=100, blank=True, null=True)
-
+    calories = models.IntegerField(blank=True, null=True)
     purchased_from = models.ForeignKey('Store', on_delete=models.CASCADE,
                                        blank=True, null=True, related_name='food_logs')
 

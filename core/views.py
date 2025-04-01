@@ -1,16 +1,30 @@
-from dbm.sqlite3 import error
+import calendar
+from datetime import date, timedelta
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from core.forms import MyUserCreationForm
 from core.models import User, Profile
 from .models import FoodEntry
+from .util import CreateDemoUser
 
 
 # Create your views here.
+
+def auth(username=None, password=None):
+    try:
+        user = User.objects.get(Q(username__iexact=username) | Q(email__iexact=username))
+    except User.DoesNotExist:
+        return None
+    if user.check_password(password):
+        return user
+    return None
+
 
 def sign_up(request):
     form = MyUserCreationForm()
@@ -82,11 +96,16 @@ def register_user(request):
 
 def login_user(request):
     email = request.POST['email'].lower()
+    password = request.POST['password']
     user = None
     try:
-        user = User.objects.get(email=email)
-    except [error, User.DoesNotExist]:
-        messages.error(request, "User does not exist")
+        user = auth(email, password)
+    except BaseException as error:
+        messages.error(request, error)
+
+    if user is None:
+        messages.error(request, 'Invalid email or password')
+        return redirect('signin')
 
     if user.user_profile is None:
         login(request, user)
@@ -152,7 +171,7 @@ def profile_helper(request, context, this_page):
             profile.dietary_restrictions = ", ".join(request.POST.getlist('dietary-restrictions'))
             profile.exercise = request.POST['exercise']
             profile.usual_store = request.POST['usual-store']
-            profile.weight_goal = request.POST['weight-goal']
+            profile.water_goal = request.POST['water-goal']
             profile.calorie_goal = request.POST['calorie-goal']
 
             profile.user = user
@@ -176,9 +195,138 @@ def get_favourite_stores(user: User, count):
     return user.stores.order_by('visits')[:count]
 
 
-def get_logs_from_date(user: User, date):
+def get_water_logs_from_date(user: User, date):
     return user.water_logs.filter(created_at__date=date)
 
 
-def get_logs_from_date_range(user: User, start_date, end_date):
+def get_water_logs_from_month(user: User, month):
+    return user.water_logs.filter(created_at__month=month)
+
+
+def get_water_logs_from_date_range(user: User, start_date, end_date):
     return user.water_logs.filter(created_at__range=(start_date, end_date))
+
+
+def get_food_logs_from_date(user: User, date):
+    return user.food_logs.filter(created_at__date=date)
+
+
+def get_food_logs_from_date_range(user: User, start_date, end_date):
+    return user.food_logs.filter(created_at__range=(start_date, end_date))
+
+
+# returns data for top left card of the dashboard
+def dashboard_data_todays_intake(user: User):
+    # for water
+    today_water_intake = sum([log.amount for log in
+                              get_water_logs_from_date(user, date.today())])
+    yesterday_water_intake = sum([log.amount for log in
+                                  get_water_logs_from_date(user, date.today() - timedelta(days=1))])
+    water_change_percentage = ((today_water_intake - yesterday_water_intake) / yesterday_water_intake) * 100
+
+    # for food
+    today_food_log = get_food_logs_from_date(user, date.today())
+    today_calorie_intake = sum([log.food.calories for log in today_food_log])
+
+    yesterday_food_log = get_food_logs_from_date(user, date.today() - timedelta(days=1))
+    yesterday_food_intake = sum([log.food.calories for log in yesterday_food_log])
+
+    calorie_change_percentage = ((today_calorie_intake - yesterday_food_intake) / yesterday_food_intake) * 100
+
+    # for healthy foods
+    today_healthy_food_count = sum([1 for log in today_food_log if log.food.is_healthy])
+    yesterday_healthy_food_count = sum([1 for log in yesterday_food_log if log.food.is_healthy])
+    healthy_food_change_percentage = ((today_healthy_food_count - yesterday_healthy_food_count)
+                                      / yesterday_healthy_food_count) * 100
+
+    # for new stores
+    today_new_store_count = sum([1 for log in today_food_log if log.purchased_from is not None
+                                 and log.purchased_from.visits == 1])
+    yesterday_new_store_count = sum([1 for log in yesterday_food_log if log.purchased_from is not None
+                                     and log.purchased_from not in today_food_log and log.purchased_from.visits == 1])
+    new_store_change_percentage = ((today_new_store_count - yesterday_new_store_count)
+                                   / yesterday_new_store_count) * 100
+
+    return {
+        'today_water_intake': today_water_intake,
+        'water_change_percentage': water_change_percentage,
+
+        'today_calorie_intake': today_calorie_intake,
+        'calorie_change_percentage': calorie_change_percentage,
+
+        'today_healthy_food_count': today_healthy_food_count,
+        'healthy_food_change_percentage': healthy_food_change_percentage,
+
+        'today_new_store_count': today_new_store_count,
+        'new_store_change_percentage': new_store_change_percentage
+    }
+
+
+# returns data for middle left card of the dashboard
+def dashboard_top_foods(user: User, count):
+    top_n_foods = get_favourite_foods(user, count)
+
+    return {
+        'top_n_foods': top_n_foods
+    }
+
+
+# returns data for top right card of the dashboard
+def dashboard_top_stores(user: User, count):
+    top_n_stores = get_favourite_stores(user, count)
+
+    return {
+        'top_n_stores': top_n_stores
+    }
+
+
+# returns data for middle right card of the dashboard
+def weekly_comparison(user: User):
+    this_end_date = date.today()
+    this_start_date = this_end_date - timedelta(days=6)
+    this_logs = get_water_logs_from_date_range(user, this_start_date, this_end_date)
+    this_total = sum([log.amount for log in this_logs])
+
+    past_end_date = this_start_date - timedelta(days=1)
+    past_start_date = past_end_date - timedelta(days=6)
+    past_logs = get_water_logs_from_date_range(user, past_start_date, past_end_date)
+    past_total = sum([log.amount for log in past_logs])
+
+    return {
+        'this_week_logs': this_logs,
+        'this_week_total': this_total,
+        'past_week_logs': past_logs,
+        'past_week_total': past_total
+    }
+
+
+# returns data for bottom left card of the dashboard
+def today_water_intake_chart(user: User):
+    today_intake = sum([log.amount for log in get_water_logs_from_date(user, date.today())])
+    same_day_last_week_intake = sum([log.amount for log in
+                                     get_water_logs_from_date(user, date.today() - timedelta(days=6))])
+    goal = user.user_profile.water_goal
+    return {
+        'today_intake': today_intake,
+        'same_day_last_week_intake': same_day_last_week_intake,
+        'goal': goal
+    }
+
+
+# returns data for bottom right card of the dashboard
+def yearly_water_intake_chart(user: User):
+    month_data = []
+    for i in range(12):
+        this_month = date.today().month - i
+        month_intake = sum([log.amount for log in get_water_logs_from_month(user, this_month)])
+        month_name = calendar.month_name[this_month]
+        month_data.append({'month': month_name, 'intake': month_intake})
+
+    return {
+        'month_data': month_data
+    }
+
+
+def generate_demo_user(request):
+    CreateDemoUser.run()
+    return HttpResponse("Demo user created successfully.")

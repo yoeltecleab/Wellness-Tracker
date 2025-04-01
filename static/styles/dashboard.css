@@ -410,7 +410,7 @@ td {
 }
 
 .nearest-locations td:nth-child(3), .nearest-locations th:nth-child(3) {
-    padding-left: 3rem;
+    padding-left: 8rem;
     color: #afdfff;
 }
 

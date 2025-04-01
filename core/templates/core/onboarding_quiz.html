@@ -480,9 +480,9 @@
             </div>
         </div>
         <div class="form-control">
-            <label for="weight-goal">What is your weight goal?</label>
-            <input type="text" id="weight-goal" name="weight-goal" required
-                   value="{% if user.user_profile %} {{ user.user_profile.weight_goal|default_if_none:'' }}{% endif %}"/>
+            <label for="water-goal">What is your daily water intake goal? (in ml)</label>
+            <input type="text" id="water-goal" name="water-goal" required
+                   value="{% if user.user_profile %} {{ user.user_profile.water_goal|default_if_none:'' }}{% endif %}"/>
         </div>
         <div class="form-control">
             <label for="calorie-goal">What is your daily calorie goal?</label>
