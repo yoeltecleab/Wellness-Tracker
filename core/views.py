@@ -7,7 +7,9 @@ from django.shortcuts import render, redirect
 
 from core.forms import MyUserCreationForm
 from core.models import User, Profile
-
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import FoodEntry
 
 # Create your views here.
 
@@ -102,7 +104,17 @@ def signout(request):
 
 @login_required(login_url='signin')
 def food_logging(request):
-    return render(request, 'core/food_logging.html')
+    if request.method == 'POST':
+        food_name = request.POST.get('food_name')
+        calories = request.POST.get('calories')
+
+        if food_name and calories:
+            FoodEntry.objects.create(user=request.user, food_name=food_name, calories=calories)
+
+        return redirect('food_logging')
+
+    food_entries = FoodEntry.objects.filter(user=request.user).order_by('-date_added')
+    return render(request, 'core/food_logging.html', {'food_entries': food_entries})
 
 
 def update_profile(request):

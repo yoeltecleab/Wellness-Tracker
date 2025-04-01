@@ -43,3 +43,13 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+
+
+class FoodEntry(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Links food entries to a user
+    food_name = models.CharField(max_length=255)
+    calories = models.PositiveIntegerField()
+    date_added = models.DateTimeField(auto_now_add=True)  # Automatically sets the timestamp
+
+    def __str__(self):
+        return f"{self.food_name} - {self.calories} cal" 
