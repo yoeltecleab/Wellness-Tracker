@@ -90,19 +90,19 @@ async function initializeDashboard() {
         const fulfillmentChart = new Chart(fulfillmentCtx, { // Use the Chart object
             type: "line",
             data: {
-                labels: ["1", "4", "7", "10", "13", "16", "19", "22", "25", "28", "31"],
+                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
                 datasets: [
                     {
-                        label: "This month",
-                        data: [40, 43, 50, 28, 32, 38, 36, 42, 40, 36, 55],
+                        label: "This week",
+                        data: [40, 43, 50, 28, 32, 38, 36],
                         borderColor: "#f2c8ed",
                         backgroundColor: gradient1,
                         fill: true,
                         pointRadius: 3,
                     },
                     {
-                        label: "Last month",
-                        data: [72, 60, 62, 68, 55, 56, 68, 66, 52, 55, 90],
+                        label: "Last week",
+                        data: [72, 60, 62, 68, 55, 56, 68],
                         borderColor: "#a9dfd8",
                         backgroundColor: gradient2,
                         fill: true,

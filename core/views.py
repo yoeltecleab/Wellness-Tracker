@@ -7,9 +7,8 @@ from django.shortcuts import render, redirect
 
 from core.forms import MyUserCreationForm
 from core.models import User, Profile
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from .models import FoodEntry
+
 
 # Create your views here.
 
@@ -63,7 +62,7 @@ def onboarding_quiz(request):
     context = {
         'source': 'onboarding'
     }
-    return profile_helper(request, Profile(), context, 'onboarding_quiz')
+    return profile_helper(request, context, 'onboarding_quiz')
 
 
 def register_user(request):
@@ -89,7 +88,7 @@ def login_user(request):
     except [error, User.DoesNotExist]:
         messages.error(request, "User does not exist")
 
-    if user.profile is None:
+    if user.user_profile is None:
         login(request, user)
         return redirect('onboarding_quiz')
     else:
@@ -125,16 +124,17 @@ def update_profile(request):
     }
     if form.is_valid():
         form.save(commit=False)
-    return profile_helper(request, request.user.profile, context, 'update_profile')
+    return profile_helper(request, context, 'update_profile')
 
 
-def profile_helper(request, profile, context, this_page):
+def profile_helper(request, context, this_page):
     if request.method == 'POST':
         try:
             user = request.user
 
-            user.email = request.POST['email'].lower()
-            user.password1 = request.POST['password1']
+            if this_page == 'update_profile':
+                user.email = request.POST['email'].lower()
+                user.set_password(request.POST['password1'])
 
             user.first_name = request.POST['first-name']
             user.last_name = request.POST['last-name']
@@ -142,7 +142,8 @@ def profile_helper(request, profile, context, this_page):
             user.phone = request.POST['phone']
             user.dob = request.POST['dob']
 
-            profile = profile
+            profile, _ = Profile.objects.get_or_create(user=user)
+
             profile.primary_goal = request.POST['primary-goal']
             profile.current_diet = request.POST['current-diet']
             profile.snacking = request.POST['snacking']
@@ -154,9 +155,10 @@ def profile_helper(request, profile, context, this_page):
             profile.weight_goal = request.POST['weight-goal']
             profile.calorie_goal = request.POST['calorie-goal']
 
-            user.profile = profile
-            profile.save()
+            profile.user = user
             user.save()
+            profile.save()
+            login(request, user)
             return redirect('dashboard')
         except Exception as e:
             print(e)
@@ -164,3 +166,19 @@ def profile_helper(request, profile, context, this_page):
             return redirect(this_page)
 
     return render(request, 'core/onboarding_quiz.html', context)
+
+
+def get_favourite_foods(user: User, count):
+    return user.foods.order_by('frequency')[:count]
+
+
+def get_favourite_stores(user: User, count):
+    return user.stores.order_by('visits')[:count]
+
+
+def get_logs_from_date(user: User, date):
+    return user.water_logs.filter(created_at__date=date)
+
+
+def get_logs_from_date_range(user: User, start_date, end_date):
+    return user.water_logs.filter(created_at__range=(start_date, end_date))

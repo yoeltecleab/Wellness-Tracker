@@ -244,7 +244,7 @@ html[dir="rtl"] .progress-container .progress {
 .steps-container {
     display: flex;
     overflow: hidden;
-    min-height: 35rem;
+    min-height: 40rem;
 }
 
 .step {

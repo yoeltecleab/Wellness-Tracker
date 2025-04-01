@@ -98,7 +98,7 @@
                             name="primary-goal"
                             value="lose"
                             required
-                            {% if user.profile.primary_goal == 'lose' %}checked{% endif %}
+                            {% if user.user_profile.primary_goal == 'lose' %}checked{% endif %}
                     />
                     <label for="goal-lose">Lose weight</label>
                 </div>
@@ -108,7 +108,7 @@
                             id="goal-maintain"
                             name="primary-goal"
                             value="maintain"
-                            {% if user.profile.primary_goal == 'maintain' %}checked{% endif %}
+                            {% if user.user_profile.primary_goal == 'maintain' %}checked{% endif %}
                     />
                     <label for="goal-maintain">Maintain weight</label>
                 </div>
@@ -118,7 +118,7 @@
                             id="goal-gain"
                             name="primary-goal"
                             value="gain"
-                            {% if user.profile.primary_goal == 'gain' %}checked{% endif %}
+                            {% if user.user_profile.primary_goal == 'gain' %}checked{% endif %}
                     />
                     <label for="goal-gain">Gain muscle</label>
                 </div>
@@ -128,7 +128,7 @@
                             id="goal-health"
                             name="primary-goal"
                             value="health"
-                            {% if user.profile.primary_goal == 'health' %}checked{% endif %}
+                            {% if user.user_profile.primary_goal == 'health' %}checked{% endif %}
                     />
                     <label for="goal-health">Improve overall health</label>
                 </div>
@@ -144,7 +144,7 @@
                             name="current-diet"
                             value="balanced"
                             required
-                            {% if user.profile.current_diet == 'balanced' %}checked{% endif %}
+                            {% if user.user_profile.current_diet == 'balanced' %}checked{% endif %}
                     />
                     <label for="diet-balanced">Balanced and healthy</label>
                 </div>
@@ -154,7 +154,7 @@
                             id="diet-mostly"
                             name="current-diet"
                             value="mostly"
-                            {% if user.profile.current_diet == 'mostly' %}checked{% endif %}
+                            {% if user.user_profile.current_diet == 'mostly' %}checked{% endif %}
                     />
                     <label for="diet-mostly">Mostly healthy</label>
                 </div>
@@ -164,7 +164,7 @@
                             id="diet-unsure"
                             name="current-diet"
                             value="unsure"
-                            {% if user.profile.current_diet == 'unsure' %}checked{% endif %}
+                            {% if user.user_profile.current_diet == 'unsure' %}checked{% endif %}
                     />
                     <label for="diet-unsure">I'm not sure</label>
                 </div>
@@ -174,7 +174,7 @@
                             id="diet-unbalanced"
                             name="current-diet"
                             value="unbalanced"
-                            {% if user.profile.current_diet == 'unbalanced' %}checked{% endif %}
+                            {% if user.user_profile.current_diet == 'unbalanced' %}checked{% endif %}
                     />
                     <label for="diet-unbalanced">Unbalanced or unhealthy</label>
                 </div>
@@ -190,7 +190,7 @@
                             name="snacking"
                             value="rarely"
                             required
-                            {% if user.profile.snacking == 'rarely' %}checked{% endif %}
+                            {% if user.user_profile.snacking == 'rarely' %}checked{% endif %}
                     />
                     <label for="snack-rarely">Rarely</label>
                 </div>
@@ -200,7 +200,7 @@
                             id="snack-sometimes"
                             name="snacking"
                             value="sometimes"
-                            {% if user.profile.snacking == 'sometimes' %}checked{% endif %}
+                            {% if user.user_profile.snacking == 'sometimes' %}checked{% endif %}
                     />
                     <label for="snack-sometimes">Sometimes</label>
                 </div>
@@ -210,7 +210,7 @@
                             id="snack-often"
                             name="snacking"
                             value="often"
-                            {% if user.profile.snacking == 'often' %}checked{% endif %}
+                            {% if user.user_profile.snacking == 'often' %}checked{% endif %}
                     />
                     <label for="snack-often">Often</label>
                 </div>
@@ -220,7 +220,7 @@
                             id="snack-always"
                             name="snacking"
                             value="always"
-                            {% if user.profile.snacking == 'always' %}checked{% endif %}
+                            {% if user.user_profile.snacking == 'always' %}checked{% endif %}
                     />
                     <label for="snack-always">Always</label>
                 </div>
@@ -242,7 +242,7 @@
                             id="beverage-water"
                             name="beverages"
                             value="water"
-                            {% if 'water' in user.profile.beverages %}checked{% endif %}
+                            {% if 'water' in user.user_profile.beverages %}checked{% endif %}
                     />
                     <label for="beverage-water">Water</label>
                 </div>
@@ -252,7 +252,7 @@
                             id="beverage-soda"
                             name="beverages"
                             value="soda"
-                            {% if 'soda' in user.profile.beverages %}checked{% endif %}
+                            {% if 'soda' in user.user_profile.beverages %}checked{% endif %}
                     />
                     <label for="beverage-soda">Soda</label>
                 </div>
@@ -262,7 +262,7 @@
                             id="beverage-juice"
                             name="beverages"
                             value="juice"
-                            {% if 'juice' in user.profile.beverages %}checked{% endif %}
+                            {% if 'juice' in user.user_profile.beverages %}checked{% endif %}
                     />
                     <label for="beverage-juice">Juice</label>
                 </div>
@@ -272,7 +272,7 @@
                             id="beverage-coffee"
                             name="beverages"
                             value="coffee"
-                            {% if 'coffee' in user.profile.beverages %}checked{% endif %}
+                            {% if 'coffee' in user.user_profile.beverages %}checked{% endif %}
                     />
                     <label for="beverage-coffee">Coffee/Tea</label>
                 </div>
@@ -282,7 +282,7 @@
                             id="beverage-alcohol"
                             name="beverages"
                             value="alcohol"
-                            {% if 'alcohol' in user.profile.beverages %}checked{% endif %}
+                            {% if 'alcohol' in user.user_profile.beverages %}checked{% endif %}
                     />
                     <label for="beverage-alcohol">Alcohol</label>
                 </div>
@@ -299,7 +299,7 @@
                             name="water-intake"
                             value="less"
                             required
-                            {% if user.profile.water_intake == 'less' %}checked{% endif %}
+                            {% if user.user_profile.water_intake == 'less' %}checked{% endif %}
                     />
                     <label for="water-less">Less than 1 liter</label>
                 </div>
@@ -309,7 +309,7 @@
                             id="water-1-2"
                             name="water-intake"
                             value="1-2"
-                            {% if user.profile.water_intake == '1-2' %}checked{% endif %}
+                            {% if user.user_profile.water_intake == '1-2' %}checked{% endif %}
                     />
                     <label for="water-1-2">1-2 liters</label>
                 </div>
@@ -319,7 +319,7 @@
                             id="water-2-3"
                             name="water-intake"
                             value="2-3"
-                            {% if user.profile.water_intake == '2-3' %}checked{% endif %}
+                            {% if user.user_profile.water_intake == '2-3' %}checked{% endif %}
                     />
                     <label for="water-2-3">2-3+ liters</label>
                 </div>
@@ -329,7 +329,7 @@
                             id="water-unsure"
                             name="water-intake"
                             value="unsure"
-                            {% if user.profile.water_intake == 'unsure' %}checked{% endif %}
+                            {% if user.user_profile.water_intake == 'unsure' %}checked{% endif %}
                     />
                     <label for="water-unsure">Not sure</label>
                 </div>
@@ -345,7 +345,7 @@
                             id="diet-vegetarian"
                             name="dietary-restrictions"
                             value="vegetarian"
-                            {% if 'vegetarian' in user.profile.dietary_restrictions %}checked{% endif %}
+                            {% if 'vegetarian' in user.user_profile.dietary_restrictions %}checked{% endif %}
                     />
                     <label for="diet-vegetarian">Vegetarian</label>
                 </div>
@@ -355,7 +355,7 @@
                             id="diet-vegan"
                             name="dietary-restrictions"
                             value="vegan"
-                            {% if 'vegan' in user.profile.dietary_restrictions %}checked{% endif %}
+                            {% if 'vegan' in user.user_profile.dietary_restrictions %}checked{% endif %}
                     />
                     <label for="diet-vegan">Vegan</label>
                 </div>
@@ -365,7 +365,7 @@
                             id="diet-gluten"
                             name="dietary-restrictions"
                             value="gluten-free"
-                            {% if 'gluten-free' in user.profile.dietary_restrictions %}checked{% endif %}
+                            {% if 'gluten-free' in user.user_profile.dietary_restrictions %}checked{% endif %}
                     />
                     <label for="diet-gluten">Gluten-free</label>
                 </div>
@@ -375,7 +375,7 @@
                             id="diet-none"
                             name="dietary-restrictions"
                             value="none"
-                            {% if 'none' in user.profile.dietary_restrictions %}checked{% endif %}
+                            {% if 'none' in user.user_profile.dietary_restrictions %}checked{% endif %}
                     />
                     <label for="diet-none">No restrictions</label>
                 </div>
@@ -395,7 +395,7 @@
                             name="exercise"
                             value="none"
                             required
-                            {% if user.profile.exercise == 'none' %}checked{% endif %}
+                            {% if user.user_profile.exercise == 'none' %}checked{% endif %}
                     />
                     <label for="exercise-none">Little to no exercise</label>
                 </div>
@@ -405,7 +405,7 @@
                             id="exercise-light"
                             name="exercise"
                             value="light"
-                            {% if user.profile.exercise == 'light' %}checked{% endif %}
+                            {% if user.user_profile.exercise == 'light' %}checked{% endif %}
                     />
                     <label for="exercise-light">Light amount of exercise</label>
                 </div>
@@ -415,7 +415,7 @@
                             id="exercise-moderate"
                             name="exercise"
                             value="moderate"
-                            {% if user.profile.exercise == 'moderate' %}checked{% endif %}
+                            {% if user.user_profile.exercise == 'moderate' %}checked{% endif %}
                     />
                     <label for="exercise-moderate"
                     >Moderate amount of exercise</label
@@ -427,7 +427,7 @@
                             id="exercise-daily"
                             name="exercise"
                             value="daily"
-                            {% if user.profile.exercise == 'daily' %}checked{% endif %}
+                            {% if user.user_profile.exercise == 'daily' %}checked{% endif %}
                     />
                     <label for="exercise-daily">Daily exercise</label>
                 </div>
@@ -443,7 +443,7 @@
                             name="usual-store"
                             value="Supermarket"
                             required
-                            {% if user.profile.usual_store == 'Supermarket' %}checked{% endif %}
+                            {% if user.user_profile.usual_store == 'Supermarket' %}checked{% endif %}
                     />
                     <label for="usual-store-supermarket">Supermarket</label>
                 </div>
@@ -453,7 +453,7 @@
                             id="usual-store-farmers-market"
                             name="usual-store"
                             value="farmers market"
-                            {% if user.profile.usual_store == 'farmers market' %}checked{% endif %}
+                            {% if user.user_profile.usual_store == 'farmers market' %}checked{% endif %}
                     />
                     <label for="usual-store-farmers-market">Farmers market</label>
                 </div>
@@ -463,7 +463,7 @@
                             id="usual-store-health-food-store"
                             name="usual-store"
                             value="health food store"
-                            {% if user.profile.usual_store == 'health food store' %}checked{% endif %}
+                            {% if user.user_profile.usual_store == 'health food store' %}checked{% endif %}
                     />
                     <label for="usual-store-health-food-store">Health food store</label>
                 </div>
@@ -473,7 +473,7 @@
                             id="usual-store-online-grocery"
                             name="usual-store"
                             value="Online grocery"
-                            {% if user.profile.usual_store == 'Online grocery' %}checked{% endif %}
+                            {% if user.user_profile.usual_store == 'Online grocery' %}checked{% endif %}
                     />
                     <label for="usual-store-online-grocery">Online grocery</label>
                 </div>
@@ -482,12 +482,12 @@
         <div class="form-control">
             <label for="weight-goal">What is your weight goal?</label>
             <input type="text" id="weight-goal" name="weight-goal" required
-                   value="{% if user.profile %} {{ user.profile.weight_goal|default_if_none:'' }}{% endif %}"/>
+                   value="{% if user.user_profile %} {{ user.user_profile.weight_goal|default_if_none:'' }}{% endif %}"/>
         </div>
         <div class="form-control">
             <label for="calorie-goal">What is your daily calorie goal?</label>
             <input type="text" id="calorie-goal" name="calorie-goal" required
-                   value="{% if user.profile %} {{ user.profile.calorie_goal|default_if_none:'' }}{% endif %}"/>
+                   value="{% if user.user_profile %} {{ user.user_profile.calorie_goal|default_if_none:'' }}{% endif %}"/>
         </div>
     </div>
 </div>
