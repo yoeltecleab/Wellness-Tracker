@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 
 
 # Create your models here.
@@ -14,7 +15,7 @@ class User(AbstractUser):
 
     avatar = models.ImageField(null=True, default="avatar.svg")
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'email'
@@ -40,7 +41,7 @@ class Profile(models.Model):
     water_goal = models.IntegerField(blank=True, null=True)
     calorie_goal = models.IntegerField(blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -53,7 +54,7 @@ class WaterLog(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='water_logs')
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -68,7 +69,7 @@ class Food(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='foods')
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -86,7 +87,7 @@ class FoodLog(models.Model):
     purchased_from = models.ForeignKey('Store', on_delete=models.CASCADE,
                                        blank=True, null=True, related_name='food_logs')
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -103,7 +104,7 @@ class Store(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='stores')
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -115,7 +116,7 @@ class FoodEntry(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Links food entries to a user
     food_name = models.CharField(max_length=255)
     calories = models.PositiveIntegerField()
-    date_added = models.DateTimeField(auto_now_add=True)  # Automatically sets the timestamp
+    date_added = models.DateTimeField(default=timezone.now)  # Automatically sets the timestamp
 
     def __str__(self):
         return f"{self.food_name} - {self.calories} cal"

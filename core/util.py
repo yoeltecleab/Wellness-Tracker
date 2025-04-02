@@ -83,7 +83,7 @@ class CreateDemoUser:
 
         # Generate daily logs for the past year
         start_date = datetime.now() - timedelta(days=365)
-        for i in range(365):
+        for i in range(700):
             log_date = make_aware(start_date + timedelta(days=i))
 
             # Water logs
