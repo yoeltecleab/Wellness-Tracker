@@ -3,8 +3,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
+    <link rel="icon" href="{% static 'images/logos/Wellness Logo.png' %}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Multistep Form</title>
+    {% if source == 'update' %}
+        <title>Update Profile</title>
+    {% else %}
+        <title>Onboarding Qiuz</title>
+    {% endif %}
     <link rel="stylesheet" href="{% static 'styles/onboarding_quiz.css' %}"/>
 </head>
 <body>

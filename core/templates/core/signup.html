@@ -4,8 +4,13 @@
 <head>
     <meta charset="UTF-8"/>
     <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <link rel="icon" href="{% static 'images/logos/Wellness Logo.png' %}" type="image/x-icon">
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Sign in & Sign up Form</title>
+    {% if page == 'signin' %}
+        <title>Sign in</title>
+    {% else %}
+        <title>Sign up</title>
+    {% endif %}
     <link href="{% static 'styles/signup.css' %}" rel="stylesheet"/>
 </head>
 <body>
