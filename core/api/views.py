@@ -134,7 +134,7 @@ def weekly_comparison(request):
     weekly_comparison = []
     this_week_data = []
     this_week_total = 0
-    for i in range(7):
+    for i in range(6, -1, -1):
         this_date = date.today() - timedelta(days=i)
         logs = get_water_logs_from_date(user, this_date)
         total = sum([log.amount for log in logs])
@@ -168,7 +168,7 @@ def today_water_intake_chart(request):
 
     today_intake = sum([log.amount for log in get_water_logs_from_date(user, date.today())])
     same_day_last_week_intake = sum([log.amount for log in
-                                     get_water_logs_from_date(user, date.today() - timedelta(days=6))])
+                                     get_water_logs_from_date(user, date.today() - timedelta(days=7))])
 
     percentage_change = ((today_intake - same_day_last_week_intake) /
                          (same_day_last_week_intake if same_day_last_week_intake != 0 else 1)) * 100
@@ -189,7 +189,7 @@ def yearly_water_intake_chart(request):
 
     month_data = []
     total_this_year = 0
-    for i in range(12):
+    for i in range(11, -1, -1):
         this_month = (date.today().month - i) % 12
         this_year = date.today().year
 

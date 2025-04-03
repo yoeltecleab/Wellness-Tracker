@@ -24,7 +24,7 @@ function loadChartJsDatalabels() {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0';
         script.onload = () => {
-            if (window.Chart && window.Chart.register) {
+            if (window.Chart) {
                 // Resolve with the datalabels plugin
                 resolve();
             } else {
@@ -37,12 +37,9 @@ function loadChartJsDatalabels() {
 }
 
 // Your existing dashboard logic
-async function initializeDashboard() {
+function initializeDashboard() {
     try {
-        const Chart = await loadChartJs(); // Await and get Chart
-        await loadChartJsDatalabels();
 
-        // Chart.js is now loaded, you can use it here.
 
         const openBtn = document.querySelector(".open-btn");
         const closeBtn = document.querySelector(".close-btn");
@@ -134,7 +131,7 @@ async function updateUI() {
     await loadChartJsDatalabels();
 
     let today_intake_endpoint = "http://localhost:8000/api/todays_intake/"
-    let top_n_foods_endpoint = "http://localhost:8000/api/top_n_foods/10"
+    let top_n_foods_endpoint = "http://localhost:8000/api/top_n_foods/20"
     let top_n_stores_endpoint = "http://localhost:8000/api/top_n_stores/10"
     let weekly_comparison_endpoint = "http://localhost:8000/api/weekly_comparison/"
     let yearly_water_chart_endpoint = "http://localhost:8000/api/yearly_water_chart/"
@@ -250,16 +247,16 @@ async function updateUI() {
 
 
     // create linear gradient for this week
-    const gradient1 = fulfillmentCtx.createLinearGradient(0, 0, 0, 200);
+    const gradient1 = fulfillmentCtx.createLinearGradient(0, 0, 0, 500);
     gradient1.addColorStop(0, "#09e826");
     gradient1.addColorStop(1, "rgba(33,34,45,0)");
 
     // create linear gradient for last week
-    const gradient2 = fulfillmentCtx.createLinearGradient(0, 0, 0, 200);
+    const gradient2 = fulfillmentCtx.createLinearGradient(0, 0, 0, 350);
     gradient2.addColorStop(0, "#fa04f5");
     gradient2.addColorStop(1, "#21222d");
 
-    const fulfillmentChart = new Chart(fulfillmentCtx, { // Use the Chart object
+    new Chart(fulfillmentCtx, { // Use the Chart object
         type: "line",
         data: {
             labels: list_days,
@@ -287,6 +284,14 @@ async function updateUI() {
             scales: {
                 y: {
                     min: (Math.min(...(this_week_data.concat(last_week_data))) * 2 / 3),
+                    ticks: {
+                        color: '#02f8c9',
+                    },
+                },
+                x: {
+                    ticks: {
+                        color: '#02f8c9',
+                    },
                 },
             },
             plugins: {
@@ -314,11 +319,11 @@ async function updateUI() {
     }
     let this_year_total = yearly_water_chart['total_this_year'];
 
-    const visitorsGradient = VisitorsCtx.createLinearGradient(0, 0, 0, 175);
+    const visitorsGradient = VisitorsCtx.createLinearGradient(0, 0, 0, 400);
     visitorsGradient.addColorStop(1, "#09c6f3");
     visitorsGradient.addColorStop(0, "#1809ee");
 
-    const visitorsChart = new Chart(VisitorsCtx, { // Use the Chart object
+    new Chart(VisitorsCtx, { // Use the Chart object
         type: "line",
         data: {
             labels: list_months,
@@ -326,7 +331,7 @@ async function updateUI() {
                 {
                     label: "This year's intake",
                     data: this_year_data,
-                    borderColor: "#a9dfd8",
+                    borderColor: "#08ee13",
                     backgroundColor: visitorsGradient,
                     fill: true,
                     pointRadius: 0,
@@ -339,12 +344,12 @@ async function updateUI() {
                 y: {
                     min: (Math.min(...this_year_data) * 9 / 10),
                     ticks: {
-                        color: 'white',
+                        color: '#02f8c9',
                     },
                 },
                 x: {
                     ticks: {
-                        color: 'white',
+                        color: '#02f8c9',
                     },
                 },
             },
@@ -378,16 +383,14 @@ async function updateUI() {
     console.log("Today's goal: ", today_goal);
 
 
-    const radialGradient = radialCtx.createLinearGradient(0, 0, 0, 400);
-
-    const radialChart = new Chart(radialCtx, {
+    new Chart(radialCtx, {
         type: 'doughnut',
         data: {
             labels: ['Completed', 'Remaining'],
             datasets: [{
                 label: '',
                 data: [todays_intake_value, remaining],
-                backgroundColor: ['#14fc03', '#000150'],
+                backgroundColor: [],
                 borderWidth: 0,
             }]
         },
@@ -406,6 +409,26 @@ async function updateUI() {
             }
         },
         plugins: [{
+            beforeDraw: function(chart) {
+            let ctx = chart.ctx;
+            let chartArea = chart.chartArea;
+            if (!chartArea) return; // Prevent errors on initialization
+
+            // Define gradient for first segment (Completed)
+            let gradient1 = ctx.createLinearGradient(chartArea.left, chartArea.top, chartArea.right, chartArea.bottom);
+            gradient1.addColorStop(0, "#047ef6"); // Start color (blue)
+            gradient1.addColorStop(1, "#02f841"); // End color (green)
+
+            // Define gradient for second segment (Remaining)
+            let gradient2 = ctx.createLinearGradient(chartArea.left, chartArea.bottom, chartArea.right, chartArea.top);
+            gradient2.addColorStop(0, "rgba(0,7,140,0)"); // Start color (pink)
+            gradient2.addColorStop(1, "rgba(182,132,4,0)"); // End color (yellow)
+
+            // Assign gradients to dataset
+            chart.data.datasets[0].backgroundColor = [gradient1, gradient2];
+
+            chart.update(); // Refresh the chart
+        },
             afterDraw: function (chart) {
                 let ctx = chart.ctx;
                 let width = chart.width;
