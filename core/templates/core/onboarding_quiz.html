@@ -56,8 +56,23 @@
             {% for field in form %}
                 <div class="form-control">
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}"
-                           name="{{ field.name }}" value="{{ field.value }}" required/>
+                    <input
+                            {% if field.name == 'password1' or field.name == 'password2' %}
+                                class="password"
+                                type="password"
+                            {% else %}
+                                type="{{ field.field.widget.input_type }}"
+                                value="{{ field.value }}"
+                            {% endif %}
+                                id="{{ field.id_for_label }}"
+                                name="{{ field.name }}"
+                    />
+                    {% if field.name == 'password1' or field.name == 'password2' %}
+                        <img class="show-hide-password close" src="{% static 'images/SVGs/close-eye.png' %}"
+                             alt="Eye Icon">
+                        <img class="show-hide-password open" src="{% static 'images/SVGs/open-eye.png' %}"
+                             alt="Eye Icon">
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>

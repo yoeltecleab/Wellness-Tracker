@@ -308,47 +308,64 @@ html[dir="rtl"] .progress-container .progress {
 
 .form-control {
     margin-bottom: 20px;
-  }
-  
-  .form-control > label {
+}
+
+.form-control > label {
     display: block;
     margin-bottom: 12px;
     font-weight: 500;
     color: var(--white-color);
     font-size: 1rem;
-  }
+}
 
-  .radio-group,
-  .checkbox-group {
+.radio-group,
+.checkbox-group {
     color: var(--white-color);
     display: flex;
     flex-direction: column;
     gap: 8px;
-  }
-  
-  .radio-option,
-  .checkbox-option {
+}
+
+.radio-option,
+.checkbox-option {
     display: flex;
     align-items: center;
     gap: 8px;
     justify-content: flex-start;
     margin-left: 20px;
-  }
-  
-  .radio-option input[type="radio"],
-  .checkbox-option input[type="checkbox"] {
+}
+
+.radio-option input[type="radio"],
+.checkbox-option input[type="checkbox"] {
     width: auto;
     margin: 0;
     cursor: pointer;
-  }
-  
-  .radio-option label,
-  .checkbox-option label {
+}
+
+.radio-option label,
+.checkbox-option label {
     margin: 0;
     font-weight: normal;
     cursor: pointer;
-  }
-  
-  input[type="text"] {
+}
+
+input[type="text"] {
     margin-top: 8px;
-  }
+}
+
+.show-hide-password {
+    position: relative;
+    top: -1.2rem;
+    right: -33rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 2rem;
+}
+
+.open {
+    display: none;
+}
+
+.close {
+    display: block;
+}

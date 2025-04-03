@@ -28,13 +28,14 @@
     --dark-grey: #8D8D8D;
     --light: #fff;
     --dark: #000;
-    --green: #81D43A;
+    --green: #085702;
     --light-green: #E3FFCB;
     --blue: #1775F1;
     --light-blue: #D0E4FF;
     --dark-blue: #0C5FCD;
     --red: #FC3B56;
     --value: 80%;
+    --primary-color: linear-gradient(130deg, #022c65, #157be5, #022c65);
     --third-color: linear-gradient(130deg, #022c65, #157be5, #022c65);
     --secondary-color: linear-gradient(to right, #1e549f, #5fc9f3, #1e549f);
     --dark-color: linear-gradient(180deg, #1e549f, #0d3359, #1e549f);
@@ -200,32 +201,35 @@ label .close_btn {
 
 .hero_container .hero_section_button a .button {
     padding: 8px 28px;
-    border: 2px solid transparent;
     outline: none;
     cursor: pointer;
     border-radius: 50px;
     background: var(--secondary-color);
-    color: var(--third-color);
     font-size: 18px;
     font-weight: 600;
     transition: all 0.4s ease;
+    color: var(--third-color);
+    background: var(--secondary-color);
+    border-color: var(--secondary-color);
 }
 
-.hero_container .hero_section_button a .button:last-child {
+
+.hero_container .hero_section_button a .button:hover {
     color: var(--white-color);
     border-color: var(--white-color);
     background: none;
 }
 
-.hero_container .hero_section_button a .button:first-child:hover {
+.hero_container .hero_section_button a:nth-child(2) > button {
     color: var(--white-color);
-    background: transparent;
     border-color: var(--white-color);
+    background: var(--primary-color);
+
 }
 
-.hero_container .hero_section_button a .button:last-child:hover {
-    color: var(--third-color);
-    background: var(--secondary-color);
+.hero_container .hero_section_button a:nth-child(2) > button:hover {
+    color: var(--white-color);
+    background: none;
     border-color: var(--secondary-color);
 }
 
