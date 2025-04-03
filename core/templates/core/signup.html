@@ -61,14 +61,18 @@
                         <div class="input-wrap">
                             <input
                                     autocomplete="off"
-                                    class="input-field"
+                                    class="input-field password"
                                     minlength="4"
                                     {#                                    required#}
                                     type="password"
                                     id="password-input"
                                     name="password"
-                            />
+                            >
                             <label for="password-input">Password</label>
+                            <img class="show-hide-password close" src="{% static 'images/SVGs/close-eye.png' %}"
+                                 alt="Eye Icon">
+                            <img class="show-hide-password open" src="{% static 'images/SVGs/open-eye.png' %}"
+                                 alt="Eye Icon">
                             {% if messages %}
                                 <ul class="messages">
                                     {% for message in messages %}
@@ -122,13 +126,25 @@
                             <div class="input-wrap">
                                 <input
                                         autocomplete="off"
-                                        class="input-field"
                                         minlength="4"
                                         id="{{ field.id_for_label }}"
                                         name="{{ field.name }}"
+                                        {% if field.name == 'password1' or field.name == 'password2' %}
+                                        class="input-field password"
+                                        type="password"
+                                        {% else %}
+                                        class="input-field"
                                         type="{{ field.field.widget.input_type }}"
+                                        {% endif %}
+
                                 />
                                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {% if field.name == 'password1' or field.name == 'password2' %}
+                                    <img class="show-hide-password close" src="{% static 'images/SVGs/close-eye.png' %}"
+                                         alt="Eye Icon">
+                                    <img class="show-hide-password open" src="{% static 'images/SVGs/open-eye.png' %}"
+                                         alt="Eye Icon">
+                                {% endif %}
                             </div>
                         {% endfor %}
 

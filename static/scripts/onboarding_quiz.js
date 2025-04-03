@@ -7,6 +7,9 @@ const prevButton = form.querySelector(".prev-btn");
 const cancelButton = form.querySelector(".cancel-btn");
 const nextButton = form.querySelector(".next-btn");
 const submitButton = form.querySelector(".submit-btn");
+const openEye = document.querySelectorAll(".open");
+const closeEye = document.querySelectorAll(".close");
+const passwordField = document.querySelectorAll(".password");
 
 document.documentElement.style.setProperty("--steps", stepIndicators.length.toString());
 
@@ -113,3 +116,25 @@ nextButton.addEventListener("click", (e) => {
 });
 
 updateProgress();
+
+
+openEye.forEach(btn =>
+
+btn.addEventListener("click", () => {
+    passwordField.forEach(
+        (inp) => (inp.type = "password")
+    );
+    openEye.forEach(op => op.style.display = "none");
+    closeEye.forEach(cl => cl.style.display = "block");
+})
+)
+
+closeEye.forEach(btn =>
+    btn.addEventListener("click", () => {
+        passwordField.forEach(
+            (inp) => (inp.type = "text")
+        );
+        closeEye.forEach(cl => cl.style.display = "none");
+        openEye.forEach(op => op.style.display = "block");
+    })
+)

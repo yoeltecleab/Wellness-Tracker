@@ -3,6 +3,9 @@ const toggle_btn = document.querySelectorAll(".toggle");
 const main = document.querySelector("main");
 const bullets = document.querySelectorAll(".bullets span");
 const images = document.querySelectorAll(".image");
+const openEye = document.querySelectorAll(".open");
+const closeEye = document.querySelectorAll(".close");
+const passwordField = document.querySelectorAll(".password");
 
 inputs.forEach((inp) => {
     inp.addEventListener("focus", () => {
@@ -39,3 +42,25 @@ bullets.forEach((bullet) => {
 function switchMode() {
     main.classList.toggle("sign-up-mode");
 }
+
+openEye.forEach(btn =>
+
+btn.addEventListener("click", () => {
+    passwordField.forEach(
+        (inp) => (inp.type = "password")
+    );
+    openEye.forEach(op => op.style.display = "none");
+    closeEye.forEach(cl => cl.style.display = "block");
+})
+)
+
+closeEye.forEach(btn =>
+    btn.addEventListener("click", () => {
+        passwordField.forEach(
+            (inp) => (inp.type = "text")
+        );
+        closeEye.forEach(cl => cl.style.display = "none");
+        openEye.forEach(op => op.style.display = "block");
+    })
+)
+
