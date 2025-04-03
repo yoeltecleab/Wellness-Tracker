@@ -199,7 +199,8 @@ async function updateUI() {
                 <tr>
                     <td>${food["id"]}</td>
                     <td>${food["name"]}</td>
-                    <td>${food["calories"]}</td>
+                    <td>${food["max_calorie"]}</td>
+                    <td>${food["min_calorie"]}</td>
                     <td>
                         <div class="sales-volume">${food["frequency"]}</div>
                     </td>

@@ -99,7 +99,8 @@ def dashboard_top_foods(request, count: int):
             'id': "0" + str(i) if i < 10 else str(i),
             'name': food.name,
             'frequency': food.frequency,
-            'calories': round(sum(log.calories for log in food.food_logs.all()) / food.food_logs.count()),
+            'max_calorie': max(log.calories for log in food.food_logs.all()),
+            'min_calorie': min(log.calories for log in food.food_logs.all()),
         })
         i += 1
 
