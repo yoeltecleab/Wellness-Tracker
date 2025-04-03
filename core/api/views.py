@@ -6,7 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from core.models import User
-from .serializers import FoodSerializer, StoreSerializer
+
+MULTIPLIER = 0.314159265358979
 
 
 def get_favourite_foods(user: User, count):
@@ -31,8 +32,8 @@ def get_food_logs_from_date(user: User, date):
 
 # returns data for top left card of the dashboard
 @api_view(['GET'])
-def dashboard_data_todays_intake(request, email: str):
-    user = User.objects.get(email=email)
+def dashboard_data_todays_intake(request):
+    user = request.user
 
     # for water
     today_water_intake = sum([log.amount for log in
@@ -70,46 +71,65 @@ def dashboard_data_todays_intake(request, email: str):
 
     return Response({
         'today_water_intake': today_water_intake,
-        'water_change_percentage': water_change_percentage,
+        'water_change_percentage': round(water_change_percentage),
 
         'today_calorie_intake': today_calorie_intake,
-        'calorie_change_percentage': calorie_change_percentage,
+        'calorie_change_percentage': round(calorie_change_percentage),
 
         'today_healthy_food_count': today_healthy_food_count,
-        'healthy_food_change_percentage': healthy_food_change_percentage,
+        'healthy_food_change_percentage': round(healthy_food_change_percentage),
 
         'today_new_store_count': today_new_store_count,
-        'new_store_change_percentage': new_store_change_percentage
+        'new_store_change_percentage': round(new_store_change_percentage)
     })
 
 
 # returns data for middle left card of the dashboard
 @api_view(['GET'])
-def dashboard_top_foods(request, email: str, count: int):
-    user = User.objects.get(email=email)
+def dashboard_top_foods(request, count: int):
+    user = request.user
 
     top_n_foods = get_favourite_foods(user, count)
+    popular_food_count = sum(food.frequency for food in top_n_foods) * MULTIPLIER
 
-    serialized = FoodSerializer(top_n_foods, many=True)
-    return Response(serialized.data)
+    response = []
+    i = 1
+    for food in top_n_foods:
+        response.append({
+            'id': "0" + str(i) if i < 10 else str(i),
+            'name': food.name,
+            'frequency': food.frequency,
+            'calories': round(sum(log.calories for log in food.food_logs.all()) / food.food_logs.count()),
+        })
+        i += 1
+
+    return Response(response)
 
 
 # returns data for top right card of the dashboard
 @api_view(['GET'])
-def dashboard_top_stores(request, email: str, count):
-    user = User.objects.get(email=email)
+def dashboard_top_stores(request, count):
+    user = request.user
 
     top_n_stores = get_favourite_stores(user, count)
+    popular_stores_count = sum(store.visits for store in top_n_stores)
 
-    serialized = StoreSerializer(top_n_stores, many=True)
+    response = []
 
-    return Response(serialized.data)
+    for store in top_n_stores:
+        response.append({
+            'name': store.name,
+            'address': store.address,
+            'visits': store.visits,
+            'popularity': round((store.visits / popular_stores_count) * 100),
+        })
+    return Response(response)
 
 
 # returns data for middle right card of the dashboard
 @api_view(['GET'])
-def weekly_comparison(request, email: str):
-    user = User.objects.get(email=email)
+def weekly_comparison(request):
+    user = request.user
 
     weekly_comparison = []
     this_week_data = []
@@ -121,8 +141,9 @@ def weekly_comparison(request, email: str):
         this_week_total += total
         this_week_data.append({'date': calendar.day_name[this_date.weekday()], 'total': total})
 
-    weekly_comparison.append({'this_week': this_week_data})
-    weekly_comparison.append({'total_this_week', this_week_total})
+    weekly_comparison.append({'tag': 'This Week'})
+    weekly_comparison.append({'data': this_week_data})
+    weekly_comparison.append({'total': this_week_total})
 
     past_week_data = []
     past_week_total = 0
@@ -133,16 +154,17 @@ def weekly_comparison(request, email: str):
         past_week_total += total
         past_week_data.append({'date': calendar.day_name[this_date.weekday()], 'total': total})
 
-    weekly_comparison.append({'past_week': past_week_data})
-    weekly_comparison.append({'total_past_week', past_week_total})
+    weekly_comparison.append({'tag': 'Last Week'})
+    weekly_comparison.append({'data': past_week_data})
+    weekly_comparison.append({'total': past_week_total})
 
     return Response(weekly_comparison)
 
 
 # returns data for bottom left card of the dashboard
 @api_view(['GET'])
-def today_water_intake_chart(request, email: str):
-    user = User.objects.get(email=email)
+def today_water_intake_chart(request):
+    user = request.user
 
     today_intake = sum([log.amount for log in get_water_logs_from_date(user, date.today())])
     same_day_last_week_intake = sum([log.amount for log in
@@ -155,15 +177,15 @@ def today_water_intake_chart(request, email: str):
     return Response({
         'today_intake': today_intake,
         'same_day_last_week_intake': same_day_last_week_intake,
-        'change': percentage_change,
+        'change': round(percentage_change),
         'goal': goal
     })
 
 
 # returns data for bottom right card of the dashboard
 @api_view(['GET'])
-def yearly_water_intake_chart(request, email: str):
-    user = User.objects.get(email=email)
+def yearly_water_intake_chart(request):
+    user = request.user
 
     month_data = []
     total_this_year = 0

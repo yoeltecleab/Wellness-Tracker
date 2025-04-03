@@ -1,6 +1,7 @@
 // dashboard.js
 
 // Fetch the Chart.js library dynamically
+
 function loadChartJs() {
     return new Promise((resolve, reject) => {
         const script = document.createElement('script');
@@ -47,16 +48,6 @@ async function initializeDashboard() {
         const closeBtn = document.querySelector(".close-btn");
         const sidebar = document.querySelector(".sidebar");
         const navLinks = document.querySelectorAll(".nav-links a");
-        const fulfillmentCtx = document
-            .querySelector(".fulfillment-chart canvas")
-            .getContext("2d");
-        const VisitorsCtx = document
-            .querySelector(".visitors-chart canvas")
-            .getContext("2d");
-        // Add Radial Chart
-        const radialCtx = document
-            .querySelector(".radial-chart canvas") // Get the context from the canvas in the HTML
-            .getContext("2d");
 
         // open sidebar
         openBtn.addEventListener("click", function () {
@@ -74,162 +65,6 @@ async function initializeDashboard() {
                 navLinks.forEach((l) => l.classList.remove("active"));
                 this.classList.add("active");
             });
-        });
-
-        // customer fulfillment chart
-        // create linear gradient for first dataset
-        const gradient1 = fulfillmentCtx.createLinearGradient(0, 0, 0, 200);
-        gradient1.addColorStop(0, "#f2c8ed");
-        gradient1.addColorStop(1, "#21222d");
-
-        // create linear gradient for second dataset
-        const gradient2 = fulfillmentCtx.createLinearGradient(0, 0, 0, 200);
-        gradient2.addColorStop(0, "#a9dfd8");
-        gradient2.addColorStop(1, "#21222d");
-
-        const fulfillmentChart = new Chart(fulfillmentCtx, { // Use the Chart object
-            type: "line",
-            data: {
-                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-                datasets: [
-                    {
-                        label: "This week",
-                        data: [40, 43, 50, 28, 32, 38, 36],
-                        borderColor: "#f2c8ed",
-                        backgroundColor: gradient1,
-                        fill: true,
-                        pointRadius: 3,
-                    },
-                    {
-                        label: "Last week",
-                        data: [72, 60, 62, 68, 55, 56, 68],
-                        borderColor: "#a9dfd8",
-                        backgroundColor: gradient2,
-                        fill: true,
-                        pointRadius: 3,
-                    },
-                ],
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                    },
-                },
-                plugins: {
-                    legend: {
-                        display: false,
-                    },
-                },
-            },
-        });
-
-        // create linear gradient for first dataset
-        const visitorsGradient = fulfillmentCtx.createLinearGradient(0, 0, 0, 400);
-        visitorsGradient.addColorStop(0, "#a9dfd8");
-        visitorsGradient.addColorStop(1, "#21222d");
-
-        const visitorsChart = new Chart(VisitorsCtx, { // Use the Chart object
-            type: "line",
-            data: {
-                labels: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
-                datasets: [
-                    {
-                        label: "New Visitors",
-                        data: [60, 95, 450, 250, 350, 500, 280, 420, 380, 270, 120, 320],
-                        borderColor: "#a9dfd8",
-                        backgroundColor: visitorsGradient,
-                        fill: true,
-                        pointRadius: 0,
-                    },
-                ],
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: "#ccc",
-                        },
-                    },
-                    x: {
-                        ticks: {
-                            color: "#ccc",
-                        },
-                    },
-                },
-                plugins: {
-                    legend: {
-                        display: false,
-                    },
-                },
-            },
-        });
-
-        const radialGradient = radialCtx.createLinearGradient(0, 0, 0, 400);
-        // radialGradient.addColorStop(0, "#a9dfd8");
-        // radialCtx.addColorStop(1, "#21222d");
-        const radialChart = new Chart(radialCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Completed', 'Remaining'],
-                datasets: [{
-                    label: 'Completion',
-                    data: [80, 20],
-                    backgroundColor: [
-                        '#45d9c6',
-                        '#21222d',
-                    ],
-                    borderWidth: 0,
-                }]
-            },
-            options: {
-                rotation: 10,
-                circumference: 360,
-                cutout: '65%',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false,
-                    },
-                    // Add this block for the percentage text
-                    tooltip: {
-                        enabled: true, // Disable tooltips
-                    },
-                    doughnutlabel: {
-                        labels: {
-                            center: {
-                                text: 'Total: ' + 80, // Replace totalValue with the actual value
-                                font: {
-                                    size: 24,
-                                },
-                                color: 'white'
-                            },
-                        },
-                    },
-                },
-                elements: {
-                    arc: {
-                        borderWidth: 0,
-                    },
-                },
-            },
         });
 
     } catch (error) {
@@ -289,44 +124,326 @@ window.addEventListener('click', function (e) {
     })
 })
 
+// --------------------------------------- UPDATING DASHBOARD FROM API ---------------------------------------
 
-// PROGRESSBAR
-const allProgress = document.querySelectorAll('main .card .progress');
+import {fetchDataFromApi} from './utils.js';
 
-allProgress.forEach(item => {
-    item.style.setProperty('--value', item.dataset.value)
-})
+async function updateUI() {
+
+    const Chart = await loadChartJs(); // Await and get Chart
+    await loadChartJsDatalabels();
+
+    let today_intake_endpoint = "http://localhost:8000/api/todays_intake/"
+    let top_n_foods_endpoint = "http://localhost:8000/api/top_n_foods/10"
+    let top_n_stores_endpoint = "http://localhost:8000/api/top_n_stores/10"
+    let weekly_comparison_endpoint = "http://localhost:8000/api/weekly_comparison/"
+    let yearly_water_chart_endpoint = "http://localhost:8000/api/yearly_water_chart/"
+    let today_water_chart_endpoint = "http://localhost:8000/api/today_water_chart/"
+
+    const todays_intake = await fetchDataFromApi(today_intake_endpoint);
+    const top_n_foods = await fetchDataFromApi(top_n_foods_endpoint);
+    const top_n_stores = await fetchDataFromApi(top_n_stores_endpoint);
+    const weekly_comparison = await fetchDataFromApi(weekly_comparison_endpoint);
+    const yearly_water_chart = await fetchDataFromApi(yearly_water_chart_endpoint);
+    window.today_water_chart = await fetchDataFromApi(today_water_chart_endpoint);
 
 
-// APEXCHART
-const options = {
-    series: [{
-        name: 'series1',
-        data: [31, 40, 28, 51, 42, 109, 100]
-    }, {
-        name: 'series2',
-        data: [11, 32, 45, 32, 34, 52, 41]
-    }],
-    chart: {
-        height: 350,
-        type: 'area'
-    },
-    dataLabels: {
-        enabled: false
-    },
-    stroke: {
-        curve: 'smooth'
-    },
-    xaxis: {
-        type: 'datetime',
-        categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-    },
-    tooltip: {
-        x: {
-            format: 'dd/MM/yy HH:mm'
+    // top left card
+    if (todays_intake) {
+        document.querySelector(".sales-detail.sales-total h3").innerText = todays_intake["today_water_intake"] + " ml";
+        document.querySelector(".sales-detail.sales-total span").innerText = (todays_intake["water_change_percentage"] >= 0 ? "+" : "") +
+            todays_intake["water_change_percentage"] + "% from yesterday";
+
+        document.querySelector(".sales-detail.sales-orders h3").innerText = todays_intake["today_calorie_intake"] + " cal";
+        document.querySelector(".sales-detail.sales-orders span").innerText = (todays_intake["calorie_change_percentage"] >= 0 ? "+" : "") +
+            todays_intake["calorie_change_percentage"] + "% from yesterday";
+
+        document.querySelector(".sales-detail.sales-products h3").innerText = todays_intake["today_healthy_food_count"];
+        document.querySelector(".sales-detail.sales-products span").innerText = (todays_intake["healthy_food_change_percentage"] >= 0 ? "+" : "") +
+            todays_intake["healthy_food_change_percentage"] + "% from yesterday";
+
+        document.querySelector(".sales-detail.sales-customers h3").innerText = todays_intake["today_new_store_count"];
+        document.querySelector(".sales-detail.sales-customers span").innerText = (todays_intake["new_store_change_percentage"] >= 0 ? "+" : "") +
+            todays_intake["new_store_change_percentage"] + "% from yesterday";
+
+
+    } else {
+        document.querySelector(".sales-detail.sales-total span").innerText = "Error fetching data";
+        document.querySelector(".sales-detail.sales-orders span").innerText = "Error fetching data";
+        document.querySelector(".sales-detail.sales-products span").innerText = "Error fetching data";
+        document.querySelector(".sales-detail.sales-customers span").innerText = "Error fetching data";
+    }
+
+    //top right card
+    if (top_n_stores) {
+        for (let store of top_n_stores) {
+            document.querySelector(".nearest-locations table tbody").innerHTML += `
+                <tr>
+                    <td>${store["name"]}</td>
+                    <td>${store["address"]}</td>
+                    <td>
+                        <div class="sales-volume sv-${store["id"]}">${store["visits"]}</div>
+                    </td>
+                </tr>
+            `
+            let volumeDiv = document.querySelector(".nearest-locations table tbody tr:last-child .sales-volume");
+            volumeDiv.style.color = "var(--clr-yellow-500)";
+            volumeDiv.style.borderColor = "var(--clr-yellow-500)";
+            volumeDiv.style.backgroundColor = "rgba(252, 184, 89, 0.12)";
+        }
+    } else {
+        document.querySelector(".nearest-locations table tbody").innerText = "Error fetching data";
+    }
+
+    // middle left card
+    if (top_n_foods) {
+        for (let food of top_n_foods) {
+            document.querySelector(".top-products-details table tbody").innerHTML += `
+                <tr>
+                    <td>${food["id"]}</td>
+                    <td>${food["name"]}</td>
+                    <td>${food["calories"]}</td>
+                    <td>
+                        <div class="sales-volume">${food["frequency"]}</div>
+                    </td>
+                </tr>
+            `
+            let volumeDiv = document.querySelector(".top-products-details table tbody tr:last-child .sales-volume");
+            volumeDiv.style.color = "var(--clr-yellow-500)";
+            volumeDiv.style.borderColor = "var(--clr-yellow-500)";
+            volumeDiv.style.backgroundColor = "rgba(252, 184, 89, 0.12)";
+        }
+    } else {
+        document.querySelector(".top-products-details table tbody").innerText = "Error fetching data";
+    }
+
+    // Add weekly comparison chart
+    const fulfillmentCtx = document
+        .querySelector(".fulfillment-chart canvas")
+        .getContext("2d");
+
+    // Add year summary chart
+    const VisitorsCtx = document
+        .querySelector(".visitors-chart canvas")
+        .getContext("2d");
+
+    // Add daily intake chart
+    const radialCtx = document
+        .querySelector(".radial-chart canvas") // Get the context from the canvas in the HTML
+        .getContext("2d");
+
+    // Weekly comparison chart - middle right card
+    let list_days = []
+    let this_week_data = []
+    let last_week_data = []
+    for (let i = 0; i < 7; i++) {
+        list_days.push(weekly_comparison[1]['data'][i]['date'])
+        this_week_data.push(weekly_comparison[1]['data'][i]['total'])
+        last_week_data.push(weekly_comparison[4]['data'][i]['total'])
+    }
+    let this_week_total = weekly_comparison[2]['total'];
+    let last_week_total = weekly_comparison[5]['total'];
+    document.querySelector("body > div > main > section > div.card.top-products > div.chart.fulfillment-chart > div.labels > div:nth-child(1) > span")
+        .innerText = this_week_total + " ml";
+    document.querySelector("body > div > main > section > div.card.top-products > div.chart.fulfillment-chart > div.labels > div:nth-child(3) > span")
+        .innerText = last_week_total + " ml";
+
+
+    // create linear gradient for this week
+    const gradient1 = fulfillmentCtx.createLinearGradient(0, 0, 0, 200);
+    gradient1.addColorStop(0, "#09e826");
+    gradient1.addColorStop(1, "rgba(33,34,45,0)");
+
+    // create linear gradient for last week
+    const gradient2 = fulfillmentCtx.createLinearGradient(0, 0, 0, 200);
+    gradient2.addColorStop(0, "#fa04f5");
+    gradient2.addColorStop(1, "#21222d");
+
+    const fulfillmentChart = new Chart(fulfillmentCtx, { // Use the Chart object
+        type: "line",
+        data: {
+            labels: list_days,
+            datasets: [
+                {
+                    label: "This week",
+                    data: this_week_data,
+                    borderColor: "#f2c8ed",
+                    backgroundColor: gradient1,
+                    fill: true,
+                    pointRadius: 5,
+                },
+                {
+                    label: "Last week",
+                    data: last_week_data,
+                    borderColor: "#a9dfd8",
+                    backgroundColor: gradient2,
+                    fill: true,
+                    pointRadius: 5,
+                },
+            ],
         },
-    },
-};
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    min: (Math.min(...(this_week_data.concat(last_week_data))) * 2 / 3),
+                },
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                    position: "top",
+                    labels: {
+                        color: "#ffffff",
+                        font: {
+                            // size: 12,
+                        },
+                    },
+                },
+            },
+        },
+    });
 
-const chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();
+
+    // Yearly summary - bottom right card
+    let list_months = []
+    let this_year_data = []
+    for (let i = 0; i < 12; i++) {
+        list_months.push(yearly_water_chart["this_year_data"][i]['month'])
+        this_year_data.push(yearly_water_chart["this_year_data"][i]['intake'])
+    }
+    let this_year_total = yearly_water_chart['total_this_year'];
+
+    const visitorsGradient = VisitorsCtx.createLinearGradient(0, 0, 0, 175);
+    visitorsGradient.addColorStop(1, "#09c6f3");
+    visitorsGradient.addColorStop(0, "#1809ee");
+
+    const visitorsChart = new Chart(VisitorsCtx, { // Use the Chart object
+        type: "line",
+        data: {
+            labels: list_months,
+            datasets: [
+                {
+                    label: "This year's intake",
+                    data: this_year_data,
+                    borderColor: "#a9dfd8",
+                    backgroundColor: visitorsGradient,
+                    fill: true,
+                    pointRadius: 0,
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    min: (Math.min(...this_year_data) * 9 / 10),
+                    ticks: {
+                        color: 'white',
+                    },
+                },
+                x: {
+                    ticks: {
+                        color: 'white',
+                    },
+                },
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    position: "bottom",
+                    text: "This year's intake: " + this_year_total + " ml",
+                    color: "white",
+                    font: {
+                        size: 16,
+                    },
+                },
+                legend: {
+                    display: false,
+                },
+            },
+        },
+    });
+
+    // daily water intake - bottom left card
+    let todays_intake_value = today_water_chart['today_intake'];
+    let last_week_same_day = today_water_chart['same_day_last_week_intake'];
+    let change = today_water_chart['change'];
+    let today_goal = today_water_chart['goal'];
+    let remaining = today_goal - todays_intake_value > 0 ? today_goal - todays_intake_value : 0;
+
+    console.log("Today's intake value: ", todays_intake_value);
+    console.log("Last week same day: ", last_week_same_day);
+    console.log("Change: ", change);
+    console.log("Today's goal: ", today_goal);
+
+
+    const radialGradient = radialCtx.createLinearGradient(0, 0, 0, 400);
+
+    const radialChart = new Chart(radialCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed', 'Remaining'],
+            datasets: [{
+                label: '',
+                data: [todays_intake_value, remaining],
+                backgroundColor: ['#14fc03', '#000150'],
+                borderWidth: 0,
+            }]
+        },
+        options: {
+            rotation: 10,
+            circumference: 360,
+            cutout: '65%', // Ensures space in the middle
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {display: false},
+                tooltip: {enabled: true},
+            },
+            elements: {
+                arc: {borderWidth: 0}
+            }
+        },
+        plugins: [{
+            afterDraw: function (chart) {
+                let ctx = chart.ctx;
+                let width = chart.width;
+                let height = chart.height;
+                let centerX = width / 2;
+                let centerY = height / 2;
+
+                ctx.save();
+                ctx.font = 'bold 14px Arial'; // Set font size and style
+                ctx.fillStyle = '#fff'; // Text color
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                // Array of lines
+                let lines = ["GOAL: " + today_goal + " ml"]; // Replace with dynamic values
+                if (todays_intake_value >= today_goal) {
+                    lines.push("GOAL REACHED 🎉🎉🎉");
+                    if (todays_intake_value > today_goal) {
+                        lines.push("Over by " + (todays_intake_value - today_goal) + " ml");
+                    }
+                }
+                let lineHeight = 18; // Adjust spacing between lines
+
+                // Loop through each line and draw it
+                lines.forEach((line, index) => {
+                    ctx.fillText(line, centerX, centerY + (index * lineHeight) - (lineHeight * (lines.length - 1) / 2));
+                });
+
+                ctx.restore();
+            }
+        }]
+    });
+    document.querySelector("body > div > main > section > div.card.earnings > div.chart.earnings-chart > div:nth-child(2) > strong")
+        .innerText = todays_intake_value + " ml";
+    document.querySelector("body > div > main > section > div.card.earnings > div.chart.earnings-chart > div:nth-child(2) > p")
+        .innerText = "Water intake " + change + "% " + (change < 0 ? "less" : "more") +
+        " than same day of last week of " + last_week_same_day + " ml";
+}
+
+// Call the function when the page loads
+document.addEventListener("DOMContentLoaded", updateUI); // Call

@@ -220,6 +220,19 @@ body {
     padding: 1rem;
     border-radius: 0.625rem;
 }
+.nearest-locations {
+    max-height: 20rem;
+    overflow-y: auto;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.top-products-details{
+    max-height: 30.5rem;
+    overflow-y: auto;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
 
 .sales-details > div {
     display: grid;
@@ -410,7 +423,7 @@ td {
 }
 
 .nearest-locations td:nth-child(3), .nearest-locations th:nth-child(3) {
-    padding-left: 8rem;
+    padding-left: 5rem;
     color: #afdfff;
 }
 
@@ -428,26 +441,6 @@ td {
 
 .range > div {
     height: 100%;
-}
-
-.range-1 {
-    background-color: var(--clr-yellow-500);
-    width: 80%;
-}
-
-.range-2 {
-    background-color: var(--clr-light-green);
-    width: 65%;
-}
-
-.range-3 {
-    background-color: var(--clr-light-blue);
-    width: 50%;
-}
-
-.range-4 {
-    background-color: var(--clr-pink);
-    width: 30%;
 }
 
 .sales-volume {
@@ -506,17 +499,16 @@ td {
 
         div {
             width: 0.5rem;
-            height: 0.5rem;
-            border-radius: 50%;
+            height: 4rem;
             background-color: #2b2b36;
         }
 
         div.last-month {
-            background-color: var(--clr-light-green);
+            background-color: #09e826;
         }
 
         div.this-month {
-            background-color: var(--clr-pink);
+            background-color: #fa04f5;
         }
     }
 }

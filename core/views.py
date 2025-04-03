@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from core.forms import MyUserCreationForm
 from core.models import User, Profile
 from .models import FoodEntry
-from .util import CreateDemoUser
+from .utils import CreateDemoUser
 
 
 # Create your views here.
