@@ -21,7 +21,46 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <nav>
+        <!-- close btn -->
+        <svg
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="close-btn"
+        >
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+        </svg>
 
+        <!-- nav links -->
+        <ul class="nav-links">
+            <li class="nav-link">
+                <a href="{% url 'dashboard' %}">
+                    <img src="{% static 'images/SVGs/Home Vector Icon.svg' %}" alt="Dashboard">
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-link">
+                <a href="{% url 'water_logging' %}" class="active">
+                    <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
+                    <span>Log Water</span>
+                </a>
+            </li>
+            <li class="nav-link">
+                <a href="{% url 'food_logging' %}">
+                    <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
+                    <span>Log Food</span>
+                </a>
+            </li>
+        
+        </ul>
+    </nav>
 
 <!-- Theme Toggler -->
 <div class="theme-toggler" style="display: none">
