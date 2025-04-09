@@ -96,7 +96,7 @@ header {
   top: 0;
   width: 100%;
   z-index: 1;
-  background: #143f7a;
+  background: #4f6d7a;
 }
 
 nav {
@@ -162,7 +162,7 @@ label .close_btn {
 /* Hero Section */
 .hero_section {
   min-height: 100vh;
-  background: #1e549f;
+  background: #c0d6df;
 }
 
 .hero_container {
@@ -176,20 +176,20 @@ label .close_btn {
 
 .hero_container .text_section h2 {
   font-size: 40px;
-  color: var(--secondary-color);
+  color: #166088;
 }
 
 .hero_container .text_section h3 {
   font-size: 35px;
   font-weight: 600;
-  color: var(--white-color);
+  color: #166088;
   margin-top: 8px;
 }
 
 .hero_container .text_section p {
   font-size: 20px;
   font-weight: 400;
-  color: var(--white-color);
+  color: #166088;
   margin: 24px 0 40px;
   max-width: 70%;
 }
@@ -204,25 +204,24 @@ label .close_btn {
   outline: none;
   cursor: pointer;
   border-radius: 50px;
-  background: var(--secondary-color);
+  background: #9ee493;
   font-size: 18px;
   font-weight: 600;
   transition: all 0.4s ease;
-  color: var(--third-color);
-  background: var(--secondary-color);
-  border-color: var(--secondary-color);
+  color: #2f4858;
+  border: none;
 }
 
 .hero_container .hero_section_button a .button:hover {
-  color: var(--white-color);
-  border-color: var(--white-color);
+  color: #2f4858;
+  border-color: #2f4858;
   background: none;
 }
 
 .hero_container .hero_section_button a:nth-child(2) > button {
-  color: var(--white-color);
-  border-color: var(--white-color);
-  background: var(--primary-color);
+  color: #2f4858;
+  border-color: #2f4858;
+  background: #9ee493;
 }
 
 .hero_container .hero_section_button a:nth-child(2) > button:hover {
@@ -275,7 +274,7 @@ label .close_btn {
 
 /* Services Section */
 .services {
-  background: #1e549f;
+  background: #457b9d;
   color: var(--white-color);
   padding: 60px 20px 120px;
 }
@@ -383,7 +382,7 @@ label .close_btn {
 
 /* Contact Section */
 .contact {
-  background: #1e549f;
+  background: #457b9d;
   padding: 60px 20px 100px;
 }
 
@@ -462,8 +461,8 @@ label .close_btn {
 
 /* Footer Section */
 footer {
-  background: var(--light-gray-color);
-  color: black;
+  background: #4f6d7a;
+  color: white;
   padding: 60px 20px;
 }
 
@@ -482,7 +481,7 @@ footer {
   display: flex;
   gap: 15px;
   align-items: center;
-  color: black;
+  color: white;
 }
 
 .footer_section .footer_logo a img {
@@ -498,7 +497,7 @@ footer {
 }
 
 .footer_section .useful_links ul li a {
-  color: black;
+  color: white;
   font-size: 17px;
 }
 
@@ -733,11 +732,11 @@ footer {
   cursor: pointer;
   border-radius: 50px;
   background: none;
-  color: var(--third-color);
+  color: #2f4858;
   font-size: 18px;
   font-weight: 600;
   transition: all 0.4s ease;
-  background: var(--secondary-color);
+  background: #9ee493;
 }
 
 .login:hover {
