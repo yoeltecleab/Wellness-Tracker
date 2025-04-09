@@ -22,10 +22,9 @@ class SettingsManager {
             localStorage.setItem('waterGoal', '8');
         }
 
-        
         // Setup event listeners for settings
         this.setupEventListeners();
-        
+
         // Initialize toasts container
         this.initializeToasts();
     }
