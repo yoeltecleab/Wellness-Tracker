@@ -7,6 +7,8 @@
     <link rel="icon" href="{% static 'images/logos/Wellness Logo.png' %}" type="image/x-icon">
     <title>Health Dashboard</title>
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+        <!-- Bootstrap CSS from Replit theme -->
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
     <link rel="stylesheet" href="{% static 'styles/dashboard.css' %}"/>
 </head>
 <body>
@@ -100,13 +102,90 @@
                         <li><a href="{% url 'update_profile' %}"><i
                                 class='bx bxs-user-circle icon'></i> {{ request.user.username|default_if_none:"User" }}
                         </a></li>
-                        <li><a href="{% url 'update_profile' %}"><i class='bx bxs-cog'></i> Settings</a></li>
+                        <li><a id="settingsBtn" class="btn btn-sm" data-bs-toggle="modal"
+                               data-bs-target="#settingsModal"><i class='bx bxs-cog'></i> Settings</a></li>
                         <li><a href="{% url 'signout' %}"><i class='bx bxs-log-out-circle'></i> Logout</a></li>
                     </ul>
                 </div>
             </nav>
             <!-- NAVBAR -->
         </header>
+        <!-- Settings Modal -->
+        <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="settingsForm">
+                            <div class="mb-3">
+                                <label for="calorieGoalInput" class="form-label">Daily Calorie Goal</label>
+                                <input type="number" class="form-control" id="calorieGoalInput" min="500"
+                                       max="10000"
+                                       value="3000">
+                            </div>
+                            <div class="mb-3">
+                                <label for="waterGoalInput" class="form-label">Daily Water Goal (glasses)</label>
+                                <input type="number" class="form-control" id="waterGoalInput" min="1" max="20"
+                                       value="8">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nutritional Goals</label>
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <label for="proteinGoalInput" class="form-label small">Protein (g)</label>
+                                        <input type="number" class="form-control" id="proteinGoalInput" min="0"
+                                               value="50">
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="carbsGoalInput" class="form-label small">Carbs (g)</label>
+                                        <input type="number" class="form-control" id="carbsGoalInput" min="0"
+                                               value="275">
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="fatGoalInput" class="form-label small">Fat (g)</label>
+                                        <input type="number" class="form-control" id="fatGoalInput" min="0"
+                                               value="65">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="enableNotifications">
+                                    <label class="form-check-label" for="enableNotifications">Enable
+                                        Notifications</label>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <h6>Data Management</h6>
+                                <div class="d-flex gap-2">
+                                    <button type="button" id="exportDataBtn"
+                                            class="btn btn-outline-secondary btn-sm">
+                                        <i class="fas fa-download me-1"></i> Export Data
+                                    </button>
+                                    <button type="button" id="importDataBtn"
+                                            class="btn btn-outline-secondary btn-sm">
+                                        <i class="fas fa-upload me-1"></i> Import Data
+                                    </button>
+                                    <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                                    <button type="button" id="clearDataBtn"
+                                            class="btn btn-outline-danger btn-sm ms-auto">
+                                        <i class="fas fa-trash me-1"></i> Clear All Data
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveSettings">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <section class="dashboard">
             <!-- card 1 -->
@@ -312,6 +391,8 @@
         </section>
     </main>
 </div>
+<!-- JavaScript Files -->
+<script src="{% static '/scripts/logging/app.js' %}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>

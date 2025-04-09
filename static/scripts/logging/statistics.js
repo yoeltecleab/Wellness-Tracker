@@ -401,32 +401,6 @@ class StatisticsManager {
         document.getElementById('proteinProgress').style.width = `${proteinPercent}%`;
         document.getElementById('carbsProgress').style.width = `${carbsPercent}%`;
         document.getElementById('fatProgress').style.width = `${fatPercent}%`;
-        
-        // Update water tracker
-        const dateKey = this.storageManager.getDateKey(date);
-        const waterIntake = parseInt(localStorage.getItem(`waterIntake_${dateKey}`) || '0', 10);
-        const waterGoal = parseInt(localStorage.getItem('waterGoal') || '8', 10);
-        const waterPercent = Math.min((waterIntake / waterGoal) * 100, 100);
-        
-        document.getElementById('waterProgress').style.width = `${waterPercent}%`;
-        document.getElementById('waterCount').textContent = `${waterIntake}/${waterGoal} glasses`;
-        
-        // Add event listener to water button (if not already added)
-        if (!document.getElementById('addWaterBtn').dataset.initialized) {
-            document.getElementById('addWaterBtn').addEventListener('click', () => {
-                // Increment water intake
-                const newWaterIntake = waterIntake + 1;
-                localStorage.setItem(`waterIntake_${dateKey}`, newWaterIntake.toString());
-                
-                // Update display
-                this.updateNutritionSummary(date);
-                
-                // Show notification
-                app.settingsManager.showToast('Added a glass of water!', 'info');
-            });
-            
-            document.getElementById('addWaterBtn').dataset.initialized = 'true';
-        }
     }
     
     /**
