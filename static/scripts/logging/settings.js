@@ -21,9 +21,7 @@ class SettingsManager {
         if (!localStorage.getItem('waterGoal')) {
             localStorage.setItem('waterGoal', '8');
         }
-        
-        // Initialize theme
-        this.initializeTheme();
+
         
         // Setup event listeners for settings
         this.setupEventListeners();
@@ -31,64 +29,19 @@ class SettingsManager {
         // Initialize toasts container
         this.initializeToasts();
     }
-    
-    /**
-     * Initialize theme based on localStorage or system preference
-     */
-    initializeTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
-        
-        // Apply theme
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-bs-theme', savedTheme);
-            
-            // Update icon
-            if (savedTheme === 'dark') {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            } else {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            }
-        }
-        
-        // Add event listener to theme toggle button
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-bs-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            document.documentElement.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            // Update icon
-            if (newTheme === 'dark') {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            } else {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            }
-            
-            this.showToast(`Switched to ${newTheme} theme`, 'info');
-        });
-    }
-    
+
     /**
      * Setup event listeners for settings
      */
     setupEventListeners() {
-        // Settings form submission
-        document.getElementById('settingsForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
+        // Settings save button click
+        document.getElementById('saveSettings').addEventListener('click', () => {
             // Save settings
-            const calorieGoal = document.getElementById('settingsCalorieGoal').value;
-            const proteinGoal = document.getElementById('settingsProteinGoal').value;
-            const carbsGoal = document.getElementById('settingsCarbsGoal').value;
-            const fatGoal = document.getElementById('settingsFatGoal').value;
-            const waterGoal = document.getElementById('settingsWaterGoal').value;
+            const calorieGoal = document.getElementById('calorieGoalInput').value;
+            const proteinGoal = document.getElementById('proteinGoalInput').value;
+            const carbsGoal = document.getElementById('carbsGoalInput').value;
+            const fatGoal = document.getElementById('fatGoalInput').value;
+            const waterGoal = document.getElementById('waterGoalInput').value;
             
             localStorage.setItem('calorieGoal', calorieGoal);
             localStorage.setItem('proteinGoal', proteinGoal);
@@ -96,9 +49,18 @@ class SettingsManager {
             localStorage.setItem('fatGoal', fatGoal);
             localStorage.setItem('waterGoal', waterGoal);
             
+            // Convert water goal from glasses to ml for the water tracking display
+            localStorage.setItem('waterGoalML', (parseInt(waterGoal) * 250).toString());
+            
             // Update the application
             app.chartManager.updateChart(app.storageManager.getTotalCalories(app.currentDisplayDate));
             app.statisticsManager.updateNutritionSummary(app.currentDisplayDate);
+            
+            // Update water tracking if it exists
+            if (app.waterTrackingManager) {
+                app.waterTrackingManager.waterGoal = parseInt(localStorage.getItem('waterGoalML')) || 2500;
+                app.waterTrackingManager.updateWaterUI();
+            }
             
             // Close modal
             const modal = bootstrap.Modal.getInstance(document.getElementById('settingsModal'));
@@ -110,11 +72,11 @@ class SettingsManager {
         
         // Open settings modal - load current settings
         document.getElementById('settingsModal').addEventListener('show.bs.modal', () => {
-            document.getElementById('settingsCalorieGoal').value = localStorage.getItem('calorieGoal') || '3000';
-            document.getElementById('settingsProteinGoal').value = localStorage.getItem('proteinGoal') || '150';
-            document.getElementById('settingsCarbsGoal').value = localStorage.getItem('carbsGoal') || '300';
-            document.getElementById('settingsFatGoal').value = localStorage.getItem('fatGoal') || '65';
-            document.getElementById('settingsWaterGoal').value = localStorage.getItem('waterGoal') || '8';
+            document.getElementById('calorieGoalInput').value = localStorage.getItem('calorieGoal') || '3000';
+            document.getElementById('proteinGoalInput').value = localStorage.getItem('proteinGoal') || '150';
+            document.getElementById('carbsGoalInput').value = localStorage.getItem('carbsGoal') || '300';
+            document.getElementById('fatGoalInput').value = localStorage.getItem('fatGoal') || '65';
+            document.getElementById('waterGoalInput').value = localStorage.getItem('waterGoal') || '8';
         });
         
         // Quick add functionality

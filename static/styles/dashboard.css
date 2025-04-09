@@ -149,41 +149,6 @@ body {
     flex-grow: 1;
 }
 
-.main-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: center;
-    padding: 1.25rem;
-}
-
-.open-btn {
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-@media screen and (min-width: 768px) {
-    .open-btn {
-        display: none;
-    }
-}
-
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 3rem;
-
-    svg {
-        font-size: 1.25rem;
-    }
-
-    img {
-        width: 2rem;
-        height: 2rem;
-        border-radius: 50%;
-    }
-}
-
 .dashboard {
     padding: 1.25rem;
     display: flex;
@@ -647,6 +612,41 @@ td {
 }
 
 /* NAVBAR */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.25rem;
+}
+
+.open-btn {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+@media screen and (min-width: 768px) {
+    .open-btn {
+        display: none;
+    }
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+
+    svg {
+        font-size: 1.25rem;
+    }
+
+    img {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+    }
+}
+
 .right-nav {
     background: transparent;
     height: 64px;

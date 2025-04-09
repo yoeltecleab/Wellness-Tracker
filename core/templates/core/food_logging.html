@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intake Tracker</title>
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'styles/food_logging.css' %}">
+    <title>Log Entries</title>
 
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Icon logo -->
+    <link rel="icon" href="{% static 'images/logos/Wellness Logo.png' %}" type="image/x-icon">
     <!-- Bootstrap CSS from Replit theme -->
     <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
 
@@ -19,538 +20,163 @@
 
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'styles/food_logging.css' %}">
 </head>
 <body>
-    <nav>
-        <!-- close btn -->
-        <svg
-                width="1em"
-                height="1em"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="close-btn"
-        >
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-        </svg>
+<div class="app">
+    <aside class="sidebar">
+        <nav>
+            <!-- close btn -->
+            <svg
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="close-btn"
+            >
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
 
-        <!-- nav links -->
-        <ul class="nav-links">
-            <li class="nav-link">
-                <a href="{% url 'dashboard' %}">
-                    <img src="{% static 'images/SVGs/Home Vector Icon.svg' %}" alt="Dashboard">
-                    <span>Dashboard</span>
+            <!-- nav links -->
+            <ul class="nav-links">
+                <li class="nav-link-left">
+                    <a href="{% url 'dashboard' %}">
+                        <img src="{% static 'images/SVGs/Home Vector Icon.svg' %}" alt="Dashboard">
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-link-left">
+                    <a href="{% url 'water_logging' %}">
+                        <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
+                        <span>Log Water</span>
+                    </a>
+                </li>
+                <li class="nav-link-left">
+                    <a href="#" class="active">
+                        <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
+                        <span>Log Food</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    </aside>
+    <div class="app-holder">
+        <header class="main-header">
+            <!-- search container -->
+            <div class="search-container">
+                <!-- open btn -->
+                <svg
+                        width="1em"
+                        height="1em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="open-btn"
+                >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <rect x="2" y="3" width="20" height="9" rx="2" stroke="#ffffff"></rect>
+                        <path d="M16 18V18C16 19.1046 15.1046 20 14 20H10C8.89543 20 8 19.1046 8 18V18"
+                              stroke="#ffffff"></path>
+                        <path d="M19 14V14C19 15.1046 18.1046 16 17 16H7C5.89543 16 5 15.1046 5 14V14"
+                              stroke="#ffffff"></path>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- NAVBAR -->
+            <nav class="right-nav">
+                <a href="#" class="nav-link">
+                    <i class='bx bxs-bell icon'></i>
+                    <span class="badge">5</span>
                 </a>
-            </li>
-            <li class="nav-link">
-                <a href="{% url 'water_logging' %}" class="active">
-                    <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
-                    <span>Log Water</span>
+                <a href="#" class="nav-link">
+                    <i class='bx bxs-message-square-dots icon'></i>
+                    <span class="badge">8</span>
                 </a>
-            </li>
-            <li class="nav-link">
-                <a href="{% url 'food_logging' %}">
-                    <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
-                    <span>Log Food</span>
-                </a>
-            </li>
-        
-        </ul>
-    </nav>
+                <span class="divider"></span>
+                <div class="profile">
+                    <img src="{% static 'images/SVGs/avatar.svg' %}"
+                         alt="">
+                    <ul class="profile-link">
+                        <li><a href="{% url 'update_profile' %}"><i
+                                class='bx bxs-user-circle icon'></i> {{ request.user.username|default_if_none:"User" }}
+                        </a></li>
+                        <li><a href="{% url 'update_profile' %}"><i class='bx bxs-cog'></i> Settings</a></li>
+                        <li><a href="{% url 'signout' %}"><i class='bx bxs-log-out-circle'></i> Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- NAVBAR -->
+        </header>
+        <div class="app-content">
 
-<!-- Theme Toggler -->
-<div class="theme-toggler" style="display: none">
-    <button id="themeToggle" class="btn btn-sm">
-        <i class="fas fa-moon"></i>
-    </button>
-</div>
-
-<div class="container py-4">
-    <header class="mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <div class="app-logo">
-                <i class="fas fa-leaf logo-icon"></i>
-            </div>
-            <div class="settings-icon">
-                <button id="settingsBtn" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#settingsModal">
-                    <i class="fas fa-cog"></i>
-                </button>
-            </div>
-        </div>
-        <p class="lead text-center">Track your daily nutrition + water and reach your health goals</p>
-    </header>
-
-    <!-- Stats Cards Row -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-subtitle mb-1 text-muted">Total Calories</h6>
-                            <h4 id="totalCaloriesCard" class="card-title mb-0">0</h4>
+            <div class="container py-4">
+                <header class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="app-logo">
+                            <i class="fas fa-leaf logo-icon"></i>
                         </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-fire"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-subtitle mb-1 text-muted">Meals Today</h6>
-                            <h4 id="mealCountCard" class="card-title mb-0">0</h4>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-utensils"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-subtitle mb-1 text-muted">Health Score</h6>
-                            <h4 id="healthScoreCard" class="card-title mb-0">0</h4>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-subtitle mb-1 text-muted">Streak</h6>
-                            <h4 id="streakCard" class="card-title mb-0">0</h4>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4">
-        <!-- Calorie Chart Column -->
-        <div class="col-lg-5">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Daily Goal Progress</h5>
-                    <div class="card-actions">
-                        <button id="weeklyStatsBtn" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
-                                data-bs-target="#weeklyStatsModal">
-                            <i class="fas fa-chart-line me-1"></i> Weekly Stats
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                    <div class="chart-container">
-                        <canvas id="calorieChart"></canvas>
-                    </div>
-                    <div class="text-center mt-3">
-                        <h4 id="calorieCounter">0 / 3000 calories</h4>
-                        <div class="progress mt-2" style="height: 10px;">
-                            <div id="calorieProgress" class="progress-bar bg-success" role="progressbar"
-                                 style="width: 0%"></div>
-                        </div>
-                    </div>
-                    <div class="date-navigation mt-4">
-                        <div class="btn-group">
-                            <button id="prevDay" class="btn btn-outline-secondary">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button id="currentDay" class="btn btn-outline-info">Today</button>
-                            <button id="nextDay" class="btn btn-outline-secondary">
-                                <i class="fas fa-chevron-right"></i>
+                        <h1 class="display-5 fw-bold text-center mb-0">
+                            Wellness Tracker
+                        </h1>
+                        <div class="settings-icon">
+                            <button id="settingsBtn" class="btn btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#settingsModal">
+                                <i class="fas fa-cog"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="mt-3">
-                        <h5 id="currentDate" class="text-center"></h5>
-                    </div>
+                    <p class="lead text-center">Track your daily nutrition and reach your health goals</p>
+                </header>
 
-                    <!-- Nutrition Summary -->
-                    <div class="nutrition-summary mt-4 w-100">
-                        <h6 class="fw-bold mb-3">Nutrition Summary</h6>
-                        <div class="row g-2">
-                            <div class="col-4">
-                                <div class="nutrition-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted small">Protein</span>
-                                        <span class="small" id="proteinCount">0g</span>
-                                    </div>
-                                    <div class="progress nutrition-progress" style="height: 5px;">
-                                        <div id="proteinProgress" class="progress-bar bg-info" style="width: 0%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="nutrition-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted small">Carbs</span>
-                                        <span class="small" id="carbsCount">0g</span>
-                                    </div>
-                                    <div class="progress nutrition-progress" style="height: 5px;">
-                                        <div id="carbsProgress" class="progress-bar bg-warning" style="width: 0%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="nutrition-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted small">Fat</span>
-                                        <span class="small" id="fatCount">0g</span>
-                                    </div>
-                                    <div class="progress nutrition-progress" style="height: 5px;">
-                                        <div id="fatProgress" class="progress-bar bg-danger" style="width: 0%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Water Intake Tracker -->
-                    <div class="water-tracker mt-4 w-100">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="fw-bold mb-0">Water Intake</h6>
-                            <div>
-                                <button id="addWaterBtn" class="btn btn-sm btn-outline-info">
-                                    <i class="fas fa-plus"></i> Add Glass
-                                </button>
-                            </div>
-                        </div>
-                        <div class="progress" style="height: 15px;">
-                            <div id="waterProgress" class="progress-bar bg-info" role="progressbar" style="width: 0%">
-                                <span id="waterCount">0/8 glasses</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Food Entry Form Column -->
-        <div class="col-lg-7">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Log Food Intake</h5>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
-                                id="quickAddDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-bolt me-1"></i> Quick Add
-                        </button>
-                        <ul class="dropdown-menu quick-add-menu" aria-labelledby="quickAddDropdown">
-                            <li><a class="dropdown-item" href="#" data-food="Apple" data-calories="95" data-health="3"
-                                   data-meal="snack">Apple (95 cal)</a></li>
-                            <li><a class="dropdown-item" href="#" data-food="Banana" data-calories="105" data-health="3"
-                                   data-meal="snack">Banana (105 cal)</a></li>
-                            <li><a class="dropdown-item" href="#" data-food="Chicken Breast" data-calories="165"
-                                   data-health="3" data-meal="lunch">Chicken Breast (165 cal)</a></li>
-                            <li><a class="dropdown-item" href="#" data-food="Salad" data-calories="120" data-health="3"
-                                   data-meal="lunch">Salad (120 cal)</a></li>
-                            <li><a class="dropdown-item" href="#" data-food="Oatmeal" data-calories="150"
-                                   data-health="3" data-meal="breakfast">Oatmeal (150 cal)</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                   data-bs-target="#quickAddModal">Manage Quick Add Items</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <form id="foodEntryForm">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="foodName" class="form-label">Food Name</label>
-                                    <div class="autocomplete-container">
-                                        <input type="text" class="form-control" id="foodName" name="foodName" required>
-                                        <div id="foodNameSuggestions" class="autocomplete-items"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="calories" class="form-label">Calories</label>
-                                    <input type="number" class="form-control" id="calories" name="calories" min="0"
-                                           required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="protein" class="form-label">Protein (g)</label>
-                                    <input type="number" class="form-control" id="protein" name="protein" min="0">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="carbs" class="form-label">Carbs (g)</label>
-                                    <input type="number" class="form-control" id="carbs" name="carbs" min="0">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="fat" class="form-label">Fat (g)</label>
-                                    <input type="number" class="form-control" id="fat" name="fat" min="0">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">Health Rating</label>
-                                    <div class="health-rating-stars">
-                                        <div class="rating-group">
-                                            <input class="rating__input rating__input--none" name="healthRating"
-                                                   id="health-0" value="0" type="radio">
-                                            <label aria-label="Unhealthy" class="rating__label" for="health-1"><i
-                                                    class="rating__icon rating__icon--star fa fa-leaf"></i></label>
-                                            <input class="rating__input" name="healthRating" id="health-1" value="1"
-                                                   type="radio" required>
-                                            <label aria-label="Neutral" class="rating__label" for="health-2"><i
-                                                    class="rating__icon rating__icon--star fa fa-leaf"></i></label>
-                                            <input class="rating__input" name="healthRating" id="health-2" value="2"
-                                                   type="radio">
-                                            <label aria-label="Healthy" class="rating__label" for="health-3"><i
-                                                    class="rating__icon rating__icon--star fa fa-leaf"></i></label>
-                                            <input class="rating__input" name="healthRating" id="health-3" value="3"
-                                                   type="radio">
-                                        </div>
-                                        <div class="health-rating-text small text-muted mt-1">Select Health Rating</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="mealType" class="form-label">Meal Type</label>
-                                    <select class="form-select" id="mealType" name="mealType" required>
-                                        <option value="">Choose meal type</option>
-                                        <option value="breakfast">Breakfast</option>
-                                        <option value="lunch">Lunch</option>
-                                        <option value="dinner">Dinner</option>
-                                        <option value="snack">Snack</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="purchased" name="purchased">
-                                    <label class="form-check-label" for="purchased">
-                                        Purchased Food
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 store-field" style="display: none;">
-                                <div class="form-group">
-                                    <label for="store" class="form-label">Store</label>
-                                    <div class="autocomplete-container">
-                                        <input type="text" class="form-control" id="store" name="store">
-                                        <div id="storeSuggestions" class="autocomplete-items"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="notes" class="form-label">Notes (Optional)</label>
-                                    <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-12 text-end">
-                                <button type="button" class="btn btn-outline-secondary me-2" id="resetFormBtn">
-                                    <i class="fas fa-undo me-1"></i> Reset
-                                </button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-plus-circle me-1"></i> Add Food
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Food Log History -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Food History</h5>
-                    <div class="input-group search-group">
-                        <input type="text" class="form-control form-control-sm" id="searchFood"
-                               placeholder="Search logs...">
-                        <button class="btn btn-sm btn-outline-secondary" type="button" id="exportBtn">
-                            <i class="fas fa-download"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Food</th>
-                                <th>Calories</th>
-                                <th>Meal Type</th>
-                                <th>Health Rating</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody id="foodLogTable">
-                            <!-- Food entries will be added here dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="emptyLogMessage" class="text-center py-4">
-                        <i class="fas fa-utensils fa-2x mb-2 text-muted"></i>
-                        <p class="text-muted">No food entries for today. Start logging your meals!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Settings Modal -->
-<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="settingsForm">
-                    <div class="mb-3">
-                        <label for="calorieGoalInput" class="form-label">Daily Calorie Goal</label>
-                        <input type="number" class="form-control" id="calorieGoalInput" min="500" max="10000"
-                               value="3000">
-                    </div>
-                    <div class="mb-3">
-                        <label for="waterGoalInput" class="form-label">Daily Water Goal (glasses)</label>
-                        <input type="number" class="form-control" id="waterGoalInput" min="1" max="20" value="8">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nutritional Goals</label>
-                        <div class="row g-2">
-                            <div class="col-4">
-                                <label for="proteinGoalInput" class="form-label small">Protein (g)</label>
-                                <input type="number" class="form-control" id="proteinGoalInput" min="0" value="50">
-                            </div>
-                            <div class="col-4">
-                                <label for="carbsGoalInput" class="form-label small">Carbs (g)</label>
-                                <input type="number" class="form-control" id="carbsGoalInput" min="0" value="275">
-                            </div>
-                            <div class="col-4">
-                                <label for="fatGoalInput" class="form-label small">Fat (g)</label>
-                                <input type="number" class="form-control" id="fatGoalInput" min="0" value="65">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="enableNotifications">
-                            <label class="form-check-label" for="enableNotifications">Enable Notifications</label>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <h6>Data Management</h6>
-                        <div class="d-flex gap-2">
-                            <button type="button" id="exportDataBtn" class="btn btn-outline-secondary btn-sm">
-                                <i class="fas fa-download me-1"></i> Export Data
-                            </button>
-                            <button type="button" id="importDataBtn" class="btn btn-outline-secondary btn-sm">
-                                <i class="fas fa-upload me-1"></i> Import Data
-                            </button>
-                            <input type="file" id="importFileInput" accept=".json" style="display: none;">
-                            <button type="button" id="clearDataBtn" class="btn btn-outline-danger btn-sm ms-auto">
-                                <i class="fas fa-trash me-1"></i> Clear All Data
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="saveSettings">Save Settings</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Weekly Stats Modal -->
-<div class="modal fade" id="weeklyStatsModal" tabindex="-1" aria-labelledby="weeklyStatsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="weeklyStatsModalLabel">Weekly Statistics</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="weekly-stats-content">
-                    <ul class="nav nav-tabs" id="statsTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="calories-tab" data-bs-toggle="tab"
-                                    data-bs-target="#calories-tab-pane" type="button" role="tab">Calories
+                <!-- Track Type Navigation Tabs -->
+                <div class="mb-4">
+                    <ul class="nav nav-pills nav-justified tracking-tabs" id="trackingTabs">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="food-tab" data-bs-toggle="pill"
+                                    data-bs-target="#food-tracking"
+                                    type="button">
+                                <i class="fas fa-utensils me-2"></i>Food Tracking
                             </button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="nutrition-tab" data-bs-toggle="tab"
-                                    data-bs-target="#nutrition-tab-pane" type="button" role="tab">Nutrition
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="health-tab" data-bs-toggle="tab"
-                                    data-bs-target="#health-tab-pane" type="button" role="tab">Health Score
+                        <li class="nav-item">
+                            <button class="nav-link" id="water-tab" data-bs-toggle="pill"
+                                    data-bs-target="#water-tracking"
+                                    type="button">
+                                <i class="fas fa-tint me-2"></i>Water Tracking
                             </button>
                         </li>
                     </ul>
-                    <div class="tab-content pt-3" id="statsTabContent">
-                        <div class="tab-pane fade show active" id="calories-tab-pane" role="tabpanel"
-                             aria-labelledby="calories-tab" tabindex="0">
-                            <div class="weekly-chart-container">
-                                <canvas id="weeklyCaloriesChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="nutrition-tab-pane" role="tabpanel"
-                             aria-labelledby="nutrition-tab" tabindex="0">
-                            <div class="weekly-chart-container">
-                                <canvas id="weeklyNutritionChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="health-tab-pane" role="tabpanel" aria-labelledby="health-tab"
-                             tabindex="0">
-                            <div class="weekly-chart-container">
-                                <canvas id="weeklyHealthChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+                </div>
 
-                    <div class="stat-summary mt-4">
-                        <h6>Weekly Summary</h6>
-                        <div class="row g-2 mt-2">
+                <!-- Content for food and water tracking -->
+                <div class="tab-content" id="trackingTabsContent">
+                    <!-- Food Tracking Content -->
+                    <div class="tab-pane fade show active" id="food-tracking" role="tabpanel">
+                        <!-- Stats Cards Row -->
+                        <div class="row g-3 mb-4">
                             <div class="col-md-3">
-                                <div class="card stat-card-sm">
-                                    <div class="card-body p-2">
+                                <div class="card stat-card">
+                                    <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <div class="small text-muted">Avg. Calories</div>
-                                                <div class="fw-bold" id="avgCaloriesWeekly">0</div>
+                                                <h6 class="card-subtitle mb-1 text-muted">Total Calories</h6>
+                                                <h4 id="totalCaloriesCard" class="card-title mb-0">0</h4>
                                             </div>
-                                            <div class="stat-icon-sm">
+                                            <div class="stat-icon">
                                                 <i class="fas fa-fire"></i>
                                             </div>
                                         </div>
@@ -558,14 +184,29 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card stat-card-sm">
-                                    <div class="card-body p-2">
+                                <div class="card stat-card">
+                                    <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <div class="small text-muted">Avg. Health Score</div>
-                                                <div class="fw-bold" id="avgHealthScoreWeekly">0</div>
+                                                <h6 class="card-subtitle mb-1 text-muted">Meals Today</h6>
+                                                <h4 id="mealCountCard" class="card-title mb-0">0</h4>
                                             </div>
-                                            <div class="stat-icon-sm">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-utensils"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card stat-card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="card-subtitle mb-1 text-muted">Health Score</h6>
+                                                <h4 id="healthScoreCard" class="card-title mb-0">0</h4>
+                                            </div>
+                                            <div class="stat-icon">
                                                 <i class="fas fa-heartbeat"></i>
                                             </div>
                                         </div>
@@ -573,106 +214,1181 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card stat-card-sm">
-                                    <div class="card-body p-2">
+                                <div class="card stat-card">
+                                    <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <div class="small text-muted">Best Day</div>
-                                                <div class="fw-bold" id="bestDayWeekly">-</div>
+                                                <h6 class="card-subtitle mb-1 text-muted">Streak</h6>
+                                                <h4 id="streakCard" class="card-title mb-0">0</h4>
                                             </div>
-                                            <div class="stat-icon-sm">
-                                                <i class="fas fa-medal"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="card stat-card-sm">
-                                    <div class="card-body p-2">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <div class="small text-muted">Total Foods</div>
-                                                <div class="fw-bold" id="totalFoodsWeekly">0</div>
-                                            </div>
-                                            <div class="stat-icon-sm">
-                                                <i class="fas fa-hamburger"></i>
+                                            <div class="stat-icon">
+                                                <i class="fas fa-trophy"></i>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Quick Add Modal -->
-<div class="modal fade" id="quickAddModal" tabindex="-1" aria-labelledby="quickAddModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="quickAddModalLabel">Manage Quick Add Foods</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="quickAddForm" class="mb-3">
-                    <div class="row g-2">
-                        <div class="col-5">
-                            <input type="text" class="form-control" id="quickAddFoodName" placeholder="Food name"
-                                   required>
-                        </div>
-                        <div class="col-3">
-                            <input type="number" class="form-control" id="quickAddCalories" placeholder="Calories"
-                                   min="0" required>
-                        </div>
-                        <div class="col-4">
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Add Item</button>
+                        <div class="row g-4">
+                            <!-- Calorie Chart Column -->
+                            <div class="col-lg-5">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Daily Goal Progress</h5>
+                                        <div class="card-actions">
+                                            <button id="weeklyStatsBtn" class="btn btn-sm btn-outline-secondary"
+                                                    data-bs-toggle="modal" data-bs-target="#weeklyStatsModal">
+                                                <i class="fas fa-chart-line me-1"></i> Weekly Stats
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                        <div class="chart-container">
+                                            <canvas id="calorieChart"></canvas>
+                                        </div>
+                                        <div class="text-center mt-3">
+                                            <h4 id="calorieCounter">0 / 3000 calories</h4>
+                                            <div class="progress mt-2" style="height: 10px;">
+                                                <div id="calorieProgress" class="progress-bar bg-success"
+                                                     role="progressbar"
+                                                     style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="date-navigation mt-4">
+                                            <div class="btn-group">
+                                                <button id="prevDay" class="btn btn-outline-secondary">
+                                                    <i class="fas fa-chevron-left"></i>
+                                                </button>
+                                                <button id="currentDay" class="btn btn-outline-info">Today</button>
+                                                <button id="nextDay" class="btn btn-outline-secondary">
+                                                    <i class="fas fa-chevron-right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <h5 id="currentDate" class="text-center"></h5>
+                                        </div>
+
+                                        <!-- Nutrition Summary -->
+                                        <div class="nutrition-summary mt-4 w-100">
+                                            <h6 class="fw-bold mb-3">Nutrition Summary</h6>
+                                            <div class="row g-2">
+                                                <div class="col-4">
+                                                    <div class="nutrition-item">
+                                                        <div class="d-flex justify-content-between">
+                                                            <span class="text-muted small">Protein</span>
+                                                            <span class="small" id="proteinCount">0g</span>
+                                                        </div>
+                                                        <div class="progress nutrition-progress" style="height: 5px;">
+                                                            <div id="proteinProgress" class="progress-bar bg-info"
+                                                                 style="width: 0%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="nutrition-item">
+                                                        <div class="d-flex justify-content-between">
+                                                            <span class="text-muted small">Carbs</span>
+                                                            <span class="small" id="carbsCount">0g</span>
+                                                        </div>
+                                                        <div class="progress nutrition-progress" style="height: 5px;">
+                                                            <div id="carbsProgress" class="progress-bar bg-warning"
+                                                                 style="width: 0%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="nutrition-item">
+                                                        <div class="d-flex justify-content-between">
+                                                            <span class="text-muted small">Fat</span>
+                                                            <span class="small" id="fatCount">0g</span>
+                                                        </div>
+                                                        <div class="progress nutrition-progress" style="height: 5px;">
+                                                            <div id="fatProgress" class="progress-bar bg-danger"
+                                                                 style="width: 0%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Water Intake Tracker -->
+                                        <div class="water-tracker mt-4 w-100">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="fw-bold mb-0">Water Intake</h6>
+                                                <div>
+                                                    <button id="addWaterBtn" class="btn btn-sm btn-outline-info">
+                                                        <i class="fas fa-plus"></i> Add Glass
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="progress" style="height: 15px;">
+                                                <div id="waterProgress" class="progress-bar bg-info" role="progressbar"
+                                                     style="width: 0%">
+                                                    <span id="waterCount">0/8 glasses</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Food Entry Form Column -->
+                            <div class="col-lg-7">
+                                <div class="card shadow-sm mb-4">
+                                    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Log Food Intake</h5>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                    type="button"
+                                                    id="quickAddDropdown" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                <i class="fas fa-bolt me-1"></i> Quick Add
+                                            </button>
+                                            <ul class="dropdown-menu quick-add-menu" aria-labelledby="quickAddDropdown">
+                                                <li><a class="dropdown-item" href="#" data-food="Apple"
+                                                       data-calories="95"
+                                                       data-protein="0.5" data-carbs="25" data-fat="0.3" data-health="3"
+                                                       data-meal="snack">Apple (95 cal)</a></li>
+                                                <li><a class="dropdown-item" href="#" data-food="Banana"
+                                                       data-calories="105"
+                                                       data-protein="1.3" data-carbs="27" data-fat="0.4" data-health="3"
+                                                       data-meal="snack">Banana (105 cal)</a></li>
+                                                <li><a class="dropdown-item" href="#" data-food="Chicken Breast"
+                                                       data-calories="165"
+                                                       data-protein="31" data-carbs="0" data-fat="3.6" data-health="3"
+                                                       data-meal="lunch">Chicken Breast (165 cal)</a></li>
+                                                <li><a class="dropdown-item" href="#" data-food="Salad"
+                                                       data-calories="120"
+                                                       data-protein="2" data-carbs="10" data-fat="8" data-health="3"
+                                                       data-meal="lunch">Salad (120 cal)</a></li>
+                                                <li><a class="dropdown-item" href="#" data-food="Oatmeal"
+                                                       data-calories="150"
+                                                       data-protein="5" data-carbs="27" data-fat="2.5" data-health="3"
+                                                       data-meal="breakfast">Oatmeal (150 cal)</a></li>
+                                                <li><a class="dropdown-item" href="#" data-food="Greek Yogurt"
+                                                       data-calories="100"
+                                                       data-protein="15" data-carbs="5" data-fat="0.4" data-health="3"
+                                                       data-meal="snack">Greek Yogurt (100 cal)</a></li>
+                                                <li><a class="dropdown-item" href="#" data-food="Eggs (2)"
+                                                       data-calories="155"
+                                                       data-protein="13" data-carbs="1" data-fat="11" data-health="3"
+                                                       data-meal="breakfast">Eggs (2) (155 cal)</a></li>
+                                                <li><a class="dropdown-item" href="#" data-food="Avocado Toast"
+                                                       data-calories="190"
+                                                       data-protein="5" data-carbs="15" data-fat="10" data-health="3"
+                                                       data-meal="breakfast">Avocado Toast (190 cal)</a></li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                       data-bs-target="#quickAddModal">Manage Quick Add Items</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="foodEntryForm">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="foodName" class="form-label">Food Name</label>
+                                                        <div class="autocomplete-container">
+                                                            <input type="text" class="form-control" id="foodName"
+                                                                   name="foodName"
+                                                                   required>
+                                                            <div id="foodNameSuggestions"
+                                                                 class="autocomplete-items"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="calories" class="form-label">Calories</label>
+                                                        <input type="number" class="form-control" id="calories"
+                                                               name="calories"
+                                                               min="0" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="protein" class="form-label">Protein (g)</label>
+                                                        <input type="number" class="form-control" id="protein"
+                                                               name="protein"
+                                                               min="0">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="carbs" class="form-label">Carbs (g)</label>
+                                                        <input type="number" class="form-control" id="carbs"
+                                                               name="carbs"
+                                                               min="0">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="fat" class="form-label">Fat (g)</label>
+                                                        <input type="number" class="form-control" id="fat" name="fat"
+                                                               min="0">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Health Rating</label>
+                                                        <div class="health-rating-stars">
+                                                            <div class="rating-group">
+                                                                <input class="rating__input rating__input--none"
+                                                                       name="healthRating"
+                                                                       id="health-0" value="0" type="radio">
+                                                                <label aria-label="Unhealthy" class="rating__label"
+                                                                       for="health-1"><i
+                                                                        class="rating__icon rating__icon--star fa fa-leaf"></i></label>
+                                                                <input class="rating__input" name="healthRating"
+                                                                       id="health-1"
+                                                                       value="1" type="radio" required>
+                                                                <label aria-label="Neutral" class="rating__label"
+                                                                       for="health-2"><i
+                                                                        class="rating__icon rating__icon--star fa fa-leaf"></i></label>
+                                                                <input class="rating__input" name="healthRating"
+                                                                       id="health-2"
+                                                                       value="2" type="radio">
+                                                                <label aria-label="Healthy" class="rating__label"
+                                                                       for="health-3"><i
+                                                                        class="rating__icon rating__icon--star fa fa-leaf"></i></label>
+                                                                <input class="rating__input" name="healthRating"
+                                                                       id="health-3"
+                                                                       value="3" type="radio">
+                                                            </div>
+                                                            <div class="health-rating-text small text-muted mt-1">Select
+                                                                Health
+                                                                Rating
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="mealType" class="form-label">Meal Type</label>
+                                                        <select class="form-select" id="mealType" name="mealType"
+                                                                required>
+                                                            <option value="">Choose meal type</option>
+                                                            <option value="breakfast">Breakfast</option>
+                                                            <option value="lunch">Lunch</option>
+                                                            <option value="dinner">Dinner</option>
+                                                            <option value="snack">Snack</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="purchased"
+                                                               name="purchased">
+                                                        <label class="form-check-label" for="purchased">
+                                                            Purchased Food
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 store-field" style="display: none;">
+                                                    <div class="form-group">
+                                                        <label for="store" class="form-label">Store</label>
+                                                        <div class="autocomplete-container">
+                                                            <input type="text" class="form-control" id="store"
+                                                                   name="store">
+                                                            <div id="storeSuggestions" class="autocomplete-items"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label for="notes" class="form-label">Notes (Optional)</label>
+                                                        <textarea class="form-control" id="notes" name="notes"
+                                                                  rows="2"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 text-end">
+                                                    <button type="button" class="btn btn-outline-secondary me-2"
+                                                            id="resetFormBtn">
+                                                        <i class="fas fa-undo me-1"></i> Reset
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fas fa-plus-circle me-1"></i> Add Food
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Food Log History -->
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Food History</h5>
+                                        <div class="input-group search-group">
+                                            <input type="text" class="form-control form-control-sm" id="searchFood"
+                                                   placeholder="Search logs...">
+                                            <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                    id="exportBtn">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Food</th>
+                                                    <th>Calories</th>
+                                                    <th>Meal Type</th>
+                                                    <th>Health Rating</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="foodLogTable">
+                                                <!-- Food entries will be added here dynamically -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div id="emptyLogMessage" class="text-center py-4">
+                                            <i class="fas fa-utensils fa-2x mb-2 text-muted"></i>
+                                            <p class="text-muted">No food entries for today. Start logging your
+                                                meals!</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                    <!-- End Food Tracking Content -->
+                </div>
 
-                <div class="quick-add-items">
-                    <h6>Saved Quick Add Items</h6>
-                    <div class="table-responsive">
-                        <table class="table table-sm">
-                            <thead>
-                            <tr>
-                                <th>Food</th>
-                                <th>Calories</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody id="quickAddItemsTable">
-                            <!-- Quick add items will be added here dynamically -->
-                            </tbody>
-                        </table>
+                <!-- Water Tracking Content -->
+                <div style="display: none" class="tab-pane fade" id="water-tracking" role="tabpanel">
+                    <!-- Water Stats Cards Row -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="card-subtitle mb-1 text-muted">Daily Water Intake</h6>
+                                            <h4 id="totalWaterCard" class="card-title mb-0">0 ml</h4>
+                                        </div>
+                                        <div class="stat-icon">
+                                            <i class="fas fa-tint"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="card-subtitle mb-1 text-muted">Goal Completion</h6>
+                                            <h4 id="waterGoalCompletionCard" class="card-title mb-0">0%</h4>
+                                        </div>
+                                        <div class="stat-icon">
+                                            <i class="fas fa-chart-pie"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Water Chart Column -->
+                        <div class="col-lg-5">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Water Intake Progress</h5>
+                                    <div class="card-actions">
+                                        <button id="weeklyWaterStatsBtn" class="btn btn-sm btn-outline-secondary"
+                                                data-bs-toggle="modal" data-bs-target="#weeklyWaterStatsModal">
+                                            <i class="fas fa-chart-bar"></i> Show Weekly Stats
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                    <div class="chart-container">
+                                        <canvas id="waterChart"></canvas>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <h4 id="waterCounter">0 / 2500 ml</h4>
+                                        <div class="progress mt-2" style="height: 10px;">
+                                            <div id="waterProgressBar" class="progress-bar bg-info" role="progressbar"
+                                                 style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="date-navigation mt-4">
+                                        <div class="btn-group">
+                                            <button id="waterPrevDay" class="btn btn-outline-secondary">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button id="waterCurrentDay" class="btn btn-outline-info">Today</button>
+                                            <button id="waterNextDay" class="btn btn-outline-secondary">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h5 id="waterCurrentDate" class="text-center"></h5>
+                                    </div>
+
+                                    <!-- Weekly Water Stats Section (will be removed) -->
+                                    <div id="waterWeeklyStatsSection" class="mt-4 w-100 d-none">
+                                        <hr>
+                                        <h6 class="fw-bold mb-3">Weekly Water Statistics <small class="text-muted">(See
+                                            modal for
+                                            enhanced view)</small></h6>
+
+                                        <!-- Weekly Water Stats Cards -->
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-md-6">
+                                                <div class="card stat-card">
+                                                    <div class="card-body p-2">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <div class="small text-muted">Total Weekly</div>
+                                                                <div class="fw-bold" id="totalWeeklyWater">0 ml</div>
+                                                            </div>
+                                                            <div class="stat-icon-sm">
+                                                                <i class="fas fa-calendar-week"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card stat-card">
+                                                    <div class="card-body p-2">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <div class="small text-muted">Daily Average</div>
+                                                                <div class="fw-bold" id="avgDailyWater">0 ml</div>
+                                                            </div>
+                                                            <div class="stat-icon-sm">
+                                                                <i class="fas fa-chart-line"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card stat-card">
+                                                    <div class="card-body p-2">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <div class="small text-muted">Goal Achievement</div>
+                                                                <div class="fw-bold" id="daysAboveWaterGoal">0/7</div>
+                                                            </div>
+                                                            <div class="stat-icon-sm">
+                                                                <i class="fas fa-check-circle"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card stat-card">
+                                                    <div class="card-body p-2">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <div class="small text-muted">vs Last Week</div>
+                                                                <div class="fw-bold">
+                                                                    <span id="waterChangeIcon"></span>
+                                                                    <span id="waterWeeklyChange">0%</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="stat-icon-sm">
+                                                                <i class="fas fa-exchange-alt"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="card stat-card">
+                                                    <div class="card-body p-2">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <div class="small text-muted">Current Streak</div>
+                                                                <div class="fw-bold" id="waterStreak">0 days</div>
+                                                            </div>
+                                                            <div class="stat-icon-sm">
+                                                                <i class="fas fa-trophy"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Weekly Water Chart -->
+                                        <div class="stats-chart-container">
+                                            <canvas id="weeklyWaterChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Water Entry Form Column -->
+                        <div class="col-lg-7">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-header bg-transparent">
+                                    <h5 class="mb-0">Log Water Intake</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="waterEntryForm">
+                                        <div class="row g-3">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="waterAmount" class="form-label">Amount (ml)</label>
+                                                    <input type="number" class="form-control" id="waterAmount"
+                                                           name="waterAmount"
+                                                           min="0" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="water-quick-add mt-2">
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <div class="small text-muted">Quick Add Containers</div>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#waterContainersModal">
+                                                            <i class="fas fa-plus-circle me-1"></i> Manage Containers
+                                                        </button>
+                                                    </div>
+                                                    <div class="d-flex flex-wrap gap-2" id="waterPresetsContainer">
+                                                        <button type="button" class="btn btn-outline-info water-preset"
+                                                                data-amount="250">
+                                                            <i class="fas fa-tint-slash me-1"></i> Small Glass (250ml)
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-info water-preset"
+                                                                data-amount="500">
+                                                            <i class="fas fa-tint me-1"></i> Large Glass (500ml)
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-info water-preset"
+                                                                data-amount="750">
+                                                            <i class="fas fa-glass-water me-1"></i> Bottle (750ml)
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-info water-preset"
+                                                                data-amount="1000">
+                                                            <i class="fas fa-bottle-water me-1"></i> Large Bottle
+                                                            (1000ml)
+                                                        </button>
+                                                        <!-- Custom containers will be added here dynamically -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-primary mt-3 w-100">
+                                                    <i class="fas fa-plus-circle me-2"></i>Add Water Intake
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Water Log History -->
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-transparent">
+                                    <h5 class="mb-0">Water Intake History</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>Time</th>
+                                                <th>Amount</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="waterLogTable">
+                                            <!-- Water entries will be added here dynamically -->
+                                            <tr class="empty-state">
+                                                <td colspan="3" class="text-center py-4">
+                                                    <div class="empty-state-container">
+                                                        <i class="fas fa-tint empty-state-icon mb-3"></i>
+                                                        <p class="mb-0">No water intake logged for this day.</p>
+                                                        <p class="text-muted small">Track your hydration by adding water
+                                                            entries
+                                                            above.</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Water Tracking Content -->
+            </div>
+            <!-- End Tab Content -->
+
+            <!-- Settings Modal -->
+            <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="settingsForm">
+                                <div class="mb-3">
+                                    <label for="calorieGoalInput" class="form-label">Daily Calorie Goal</label>
+                                    <input type="number" class="form-control" id="calorieGoalInput" min="500"
+                                           max="10000"
+                                           value="3000">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="waterGoalInput" class="form-label">Daily Water Goal (glasses)</label>
+                                    <input type="number" class="form-control" id="waterGoalInput" min="1" max="20"
+                                           value="8">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Nutritional Goals</label>
+                                    <div class="row g-2">
+                                        <div class="col-4">
+                                            <label for="proteinGoalInput" class="form-label small">Protein (g)</label>
+                                            <input type="number" class="form-control" id="proteinGoalInput" min="0"
+                                                   value="50">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="carbsGoalInput" class="form-label small">Carbs (g)</label>
+                                            <input type="number" class="form-control" id="carbsGoalInput" min="0"
+                                                   value="275">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="fatGoalInput" class="form-label small">Fat (g)</label>
+                                            <input type="number" class="form-control" id="fatGoalInput" min="0"
+                                                   value="65">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="enableNotifications">
+                                        <label class="form-check-label" for="enableNotifications">Enable
+                                            Notifications</label>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <h6>Data Management</h6>
+                                    <div class="d-flex gap-2">
+                                        <button type="button" id="exportDataBtn"
+                                                class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-download me-1"></i> Export Data
+                                        </button>
+                                        <button type="button" id="importDataBtn"
+                                                class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-upload me-1"></i> Import Data
+                                        </button>
+                                        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                                        <button type="button" id="clearDataBtn"
+                                                class="btn btn-outline-danger btn-sm ms-auto">
+                                            <i class="fas fa-trash me-1"></i> Clear All Data
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="saveSettings">Save Settings</button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            <!-- Weekly Stats Modal -->
+            <div class="modal fade" id="weeklyStatsModal" tabindex="-1" aria-labelledby="weeklyStatsModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="weeklyStatsModalLabel">Weekly Statistics</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="weekly-stats-content">
+                                <ul class="nav nav-tabs" id="statsTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="calories-tab" data-bs-toggle="tab"
+                                                data-bs-target="#calories-tab-pane" type="button" role="tab">Calories
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="nutrition-tab" data-bs-toggle="tab"
+                                                data-bs-target="#nutrition-tab-pane" type="button" role="tab">Nutrition
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="health-tab" data-bs-toggle="tab"
+                                                data-bs-target="#health-tab-pane" type="button" role="tab">Health Score
+                                        </button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content pt-3" id="statsTabContent">
+                                    <div class="tab-pane fade show active" id="calories-tab-pane" role="tabpanel"
+                                         aria-labelledby="calories-tab" tabindex="0">
+                                        <div class="weekly-chart-container">
+                                            <canvas id="weeklyCaloriesChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="nutrition-tab-pane" role="tabpanel"
+                                         aria-labelledby="nutrition-tab" tabindex="0">
+                                        <div class="weekly-chart-container">
+                                            <canvas id="weeklyNutritionChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="health-tab-pane" role="tabpanel"
+                                         aria-labelledby="health-tab"
+                                         tabindex="0">
+                                        <div class="weekly-chart-container">
+                                            <canvas id="weeklyHealthChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-summary mt-4">
+                                    <h6>Weekly Summary</h6>
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-3">
+                                            <div class="card stat-card-sm">
+                                                <div class="card-body p-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div class="small text-muted">Avg. Calories</div>
+                                                            <div class="fw-bold" id="avgCaloriesWeekly">0</div>
+                                                        </div>
+                                                        <div class="stat-icon-sm">
+                                                            <i class="fas fa-fire"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card stat-card-sm">
+                                                <div class="card-body p-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div class="small text-muted">Avg. Health Score</div>
+                                                            <div class="fw-bold" id="avgHealthScoreWeekly">0</div>
+                                                        </div>
+                                                        <div class="stat-icon-sm">
+                                                            <i class="fas fa-heartbeat"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card stat-card-sm">
+                                                <div class="card-body p-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div class="small text-muted">Best Day</div>
+                                                            <div class="fw-bold" id="bestDayWeekly">-</div>
+                                                        </div>
+                                                        <div class="stat-icon-sm">
+                                                            <i class="fas fa-medal"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card stat-card-sm">
+                                                <div class="card-body p-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div class="small text-muted">Total Foods</div>
+                                                            <div class="fw-bold" id="totalFoodsWeekly">0</div>
+                                                        </div>
+                                                        <div class="stat-icon-sm">
+                                                            <i class="fas fa-hamburger"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Quick Add Modal -->
+            <div class="modal fade" id="quickAddModal" tabindex="-1" aria-labelledby="quickAddModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="quickAddModalLabel">Manage Quick Add Foods</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="quickAddForm" class="mb-3">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="quickAddFoodName"
+                                               placeholder="Food name"
+                                               required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control" id="quickAddCalories"
+                                               placeholder="Calories"
+                                               min="0" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" class="form-control" id="quickAddProtein"
+                                               placeholder="Protein (g)"
+                                               min="0">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" class="form-control" id="quickAddCarbs"
+                                               placeholder="Carbs (g)"
+                                               min="0">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" class="form-control" id="quickAddFat" placeholder="Fat (g)"
+                                               min="0">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-select" id="quickAddMealType" required>
+                                            <option value="">Select meal type</option>
+                                            <option value="breakfast">Breakfast</option>
+                                            <option value="lunch">Lunch</option>
+                                            <option value="dinner">Dinner</option>
+                                            <option value="snack">Snack</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-select" id="quickAddHealthRating" required>
+                                            <option value="">Select health rating</option>
+                                            <option value="1">Unhealthy</option>
+                                            <option value="2">Neutral</option>
+                                            <option value="3">Healthy</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary">Add to Quick List</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <ul class="nav nav-tabs mb-3" id="quickAddTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="custom-tab" data-bs-toggle="tab"
+                                            data-bs-target="#custom-items" type="button" role="tab"
+                                            aria-controls="custom-items"
+                                            aria-selected="true">Custom Items
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="default-tab" data-bs-toggle="tab"
+                                            data-bs-target="#default-items"
+                                            type="button" role="tab" aria-controls="default-items"
+                                            aria-selected="false">
+                                        Default
+                                        Items
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="quickAddTabContent">
+                                <div class="tab-pane fade show active" id="custom-items" role="tabpanel"
+                                     aria-labelledby="custom-tab">
+                                    <div class="quick-add-items">
+                                        <h6>Your Custom Quick Add Items</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                <tr>
+                                                    <th>Food</th>
+                                                    <th>Calories</th>
+                                                    <th>Protein</th>
+                                                    <th>Carbs</th>
+                                                    <th>Fat</th>
+                                                    <th>Meal</th>
+                                                    <th>Health</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="quickAddItemsTable">
+                                                <!-- Custom quick add items will be added here dynamically -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="default-items" role="tabpanel"
+                                     aria-labelledby="default-tab">
+                                    <div class="default-quick-add-items">
+                                        <h6>Default Quick Add Items</h6>
+                                        <p class="text-muted small">Toggle which default items appear in your Quick Add
+                                            menu</p>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                <tr>
+                                                    <th>Food</th>
+                                                    <th>Calories</th>
+                                                    <th>Nutrition</th>
+                                                    <th>Meal</th>
+                                                    <th>Health</th>
+                                                    <th>Enabled</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="defaultQuickAddItemsTable">
+                                                <!-- Default quick add items will be added here dynamically -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weekly Water Statistics Modal -->
+            <div class="modal fade" id="weeklyWaterStatsModal" tabindex="-1"
+                 aria-labelledby="weeklyWaterStatsModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="weeklyWaterStatsModalLabel">Weekly Water Statistics</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="weekly-water-stats-content">
+                                <div class="weekly-chart-container mb-4">
+                                    <canvas id="modalWeeklyWaterChart"></canvas>
+                                </div>
+
+                                <div class="stat-summary mt-4">
+                                    <h6>Weekly Summary</h6>
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-3">
+                                            <div class="card stat-card-sm">
+                                                <div class="card-body p-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div class="small text-muted">Total Weekly</div>
+                                                            <div class="fw-bold" id="modalTotalWeeklyWater">0 ml</div>
+                                                        </div>
+                                                        <div class="stat-icon-sm">
+                                                            <i class="fas fa-tint"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card stat-card-sm">
+                                                <div class="card-body p-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div class="small text-muted">Daily Average</div>
+                                                            <div class="fw-bold" id="modalAvgDailyWater">0 ml</div>
+                                                        </div>
+                                                        <div class="stat-icon-sm">
+                                                            <i class="fas fa-calculator"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card stat-card-sm">
+                                                <div class="card-body p-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div class="small text-muted">Goal Achievement</div>
+                                                            <div class="fw-bold" id="modalDaysAboveWaterGoal">0/7</div>
+                                                        </div>
+                                                        <div class="stat-icon-sm">
+                                                            <i class="fas fa-trophy"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card stat-card-sm">
+                                                <div class="card-body p-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div class="small text-muted">vs Last Week</div>
+                                                            <div class="fw-bold">
+                                                                <span id="modalWaterChangeIcon"></span>
+                                                                <span id="modalWaterWeeklyChange">0%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="stat-icon-sm">
+                                                            <i class="fas fa-exchange-alt"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <h6>Daily Breakdown</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                            <tr>
+                                                <th>Day</th>
+                                                <th>Amount</th>
+                                                <th>% of Goal</th>
+                                                <th>Status</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="waterDailyBreakdown">
+                                            <!-- This will be populated dynamically -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Water Containers Modal -->
+            <div class="modal fade" id="waterContainersModal" tabindex="-1" aria-labelledby="waterContainersModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="waterContainersModalLabel">Custom Water Containers</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-muted mb-3">Add your own custom water containers for quick logging.</p>
+
+                            <form id="waterContainerForm" class="mb-3">
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <label for="containerName" class="form-label">Container Name</label>
+                                        <input type="text" class="form-control" id="containerName" required
+                                               placeholder="My Water Bottle">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="containerSize" class="form-label">Size (ml)</label>
+                                        <input type="number" class="form-control" id="containerSize" required
+                                               placeholder="850"
+                                               min="1">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="containerIcon" class="form-label">Icon</label>
+                                        <select class="form-select" id="containerIcon" required>
+                                            <option value="fa-tint" selected>Droplet</option>
+                                            <option value="fa-glass">Glass</option>
+                                            <option value="fa-glass-water">Water Glass</option>
+                                            <option value="fa-bottle-water">Water Bottle</option>
+                                            <option value="fa-mug-hot">Mug</option>
+                                            <option value="fa-wine-glass">Wine Glass</option>
+                                            <option value="fa-coffee">Coffee</option>
+                                            <option value="fa-flask">Flask</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary w-100">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="showDefaultContainers" checked>
+                                <label class="form-check-label" for="showDefaultContainers">Show default
+                                    containers</label>
+                            </div>
+
+                            <hr>
+
+                            <h6 class="mb-3">Your Custom Containers</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Icon</th>
+                                        <th>Name</th>
+                                        <th>Size</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="customContainersTable">
+                                    <!-- Custom containers will be added here dynamically -->
+                                    <tr class="empty-state">
+                                        <td colspan="4" class="text-center py-3">
+                                            <p class="text-muted mb-0">No custom containers defined yet.</p>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JavaScript Files -->
+            <!-- API Client for server communication -->
+            <script src="{% static '/scripts/logging/api.js' %}"></script>
+
+            <!-- Current client using localStorage -->
+            <script src="{% static '/scripts/logging/storage.js' %}"></script>
+
+            <!-- To use the API-based storage instead of localStorage, comment out the line above and uncomment this: -->
+            <!-- <script src="{% static '/scripts/logging/api-storage.js' %}"></script> -->
+
+            <script src="{% static '/scripts/logging/chart.js' %}"></script>
+            <script src="{% static '/scripts/logging/confetti.js' %}"></script>
+            <script src="{% static '/scripts/logging/form.js' %}"></script>
+            <script src="{% static '/scripts/logging/statistics.js' %}"></script>
+            <script src="{% static '/scripts/logging/settings.js' %}"></script>
+            <script src="{% static '/scripts/logging/water.js' %}"></script>
+            <script src="{% static '/scripts/logging/app.js' %}"></script>
         </div>
     </div>
 </div>
-
-<!-- JavaScript Files -->
-<script src="{% static '/scripts/logging/storage.js' %}"></script>
-<script src="{% static '/scripts/logging/chart.js' %}"></script>
-<script src="{% static '/scripts/logging/confetti.js' %}"></script>
-<script src="{% static '/scripts/logging/form.js' %}"></script>
-<script src="{% static '/scripts/logging/statistics.js' %}"></script>
-<script src="{% static '/scripts/logging/settings.js' %}"></script>
-<script src="{% static '/scripts/logging/app.js' %}"></script>
 </body>
 </html>
-<input type="file" id="importFileInput" accept=".json" style="display: none;">

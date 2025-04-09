@@ -16,6 +16,7 @@ class FoodIntakeApp {
             this.formManager = new FormManager(this.storageManager);
             this.statisticsManager = new StatisticsManager(this.storageManager);
             this.settingsManager = new SettingsManager(this.storageManager);
+            this.waterTrackingManager = new WaterTrackingManager(this.storageManager);
             
             // Current date being displayed (default to today)
             this.currentDisplayDate = new Date();
@@ -25,7 +26,7 @@ class FoodIntakeApp {
             
             // Hide loading overlay
             this.hideLoadingOverlay();
-        }, 500);
+        }, 5);
         
         // Show loading overlay
         this.showLoadingOverlay();
@@ -337,12 +338,103 @@ document.addEventListener('DOMContentLoaded', () => {
     const bootstrapScript = document.createElement('script');
     bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
     bootstrapScript.onload = () => {
-        console.log('Bootstrap loaded successfully');
+        // console.log('Bootstrap loaded successfully');
     };
     document.body.appendChild(bootstrapScript);
     
     // Initialize the app with a small delay to ensure all scripts are loaded
     setTimeout(() => {
         window.app = new FoodIntakeApp();
-    }, 300);
+    }, 3);
 });
+
+foodTab = document.getElementById('food-tab');
+waterTab = document.getElementById('water-tab');
+waterTrackingTab = document.getElementById('water-tracking');
+foodTrackingTab = document.getElementById('food-tracking');
+
+foodTab.addEventListener('click', () => {
+    foodTab.classList.add('active');
+    waterTab.classList.remove('active');
+    waterTrackingTab.style.display = 'none';
+    foodTrackingTab.style.display = 'block';
+});
+
+
+waterTab.addEventListener('click', () => {
+    waterTab.classList.add('active');
+    foodTab.classList.remove('active');
+    waterTrackingTab.style.display = 'block';
+    foodTrackingTab.style.display = 'none';
+});
+
+// Navbar
+// PROFILE DROPDOWN
+const profile = document.querySelector('.right-nav .profile');
+const imgProfile = profile.querySelector('.right-nav .profile img');
+const dropdownProfile = profile.querySelector('.profile-link');
+
+imgProfile.addEventListener('click', function () {
+    dropdownProfile.classList.toggle('show');
+})
+
+
+// MENU
+const allMenu = document.querySelectorAll('main .content-data .head .menu');
+
+allMenu.forEach(item => {
+    const icon = item.querySelector('.icon');
+    const menuLink = item.querySelector('.menu-link');
+
+    icon.addEventListener('click', function () {
+        menuLink.classList.toggle('show');
+    })
+})
+
+
+window.addEventListener('click', function (e) {
+    if (e.target !== imgProfile) {
+        if (e.target !== dropdownProfile) {
+            if (dropdownProfile.classList.contains('show')) {
+                dropdownProfile.classList.remove('show');
+            }
+        }
+    }
+
+    allMenu.forEach(item => {
+        const icon = item.querySelector('.icon');
+        const menuLink = item.querySelector('.menu-link');
+
+        if (e.target !== icon) {
+            if (e.target !== menuLink) {
+                if (menuLink.classList.contains('show')) {
+                    menuLink.classList.remove('show')
+                }
+            }
+        }
+    })
+})
+
+// SIDEBAR
+const openBtn = document.querySelector(".open-btn");
+        const closeBtn = document.querySelector(".close-btn");
+        const sidebar = document.querySelector(".sidebar");
+        const navLinks = document.querySelectorAll(".nav-links a");
+
+        // open sidebar
+        openBtn.addEventListener("click", function () {
+            sidebar.classList.add("open");
+        });
+
+        // close sidebar
+        closeBtn.addEventListener("click", function () {
+            sidebar.classList.remove("open");
+        });
+
+        // control active nav-link
+        navLinks.forEach((navLink) => {
+            navLink.addEventListener("click", function () {
+                navLinks.forEach((l) => l.classList.remove("active"));
+                this.classList.add("active");
+            });
+        });

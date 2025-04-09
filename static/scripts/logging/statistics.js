@@ -10,7 +10,7 @@ class StatisticsManager {
             setTimeout(() => {
                 this.initWeeklyCharts();
                 this.updateWeeklyStats();
-            }, 500); // Small delay to ensure DOM is ready
+            }, 5); // Small delay to ensure DOM is ready
         });
     }
     

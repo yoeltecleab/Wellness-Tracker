@@ -13,6 +13,9 @@ class StorageManager {
         if (!localStorage.getItem('storeDatabase')) {
             localStorage.setItem('storeDatabase', JSON.stringify([]));
         }
+        if (!localStorage.getItem('quickAddFoods')) {
+            localStorage.setItem('quickAddFoods', JSON.stringify([]));
+        }
         
         // Clean up data structure
         this.cleanupData();
@@ -312,5 +315,47 @@ class StorageManager {
      */
     generateUniqueId() {
         return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
+    }
+    
+    /**
+     * Gets all quick add food items
+     * @returns {Array} - Array of quick add food items
+     */
+    getQuickAddFoods() {
+        return JSON.parse(localStorage.getItem('quickAddFoods') || '[]');
+    }
+    
+    /**
+     * Adds a quick add food item
+     * @param {Object} foodItem - Quick add food item object
+     */
+    addQuickAddFood(foodItem) {
+        const quickAddFoods = this.getQuickAddFoods();
+        
+        // Add ID
+        foodItem.id = this.generateUniqueId();
+        
+        // Add item
+        quickAddFoods.push(foodItem);
+        
+        // Save to storage
+        localStorage.setItem('quickAddFoods', JSON.stringify(quickAddFoods));
+        
+        // Add to food database as well
+        this.addToFoodDatabase(foodItem.foodName);
+    }
+    
+    /**
+     * Removes a quick add food item
+     * @param {string} itemId - ID of the item to remove
+     */
+    removeQuickAddFood(itemId) {
+        const quickAddFoods = this.getQuickAddFoods();
+        
+        // Filter out the item to remove
+        const updatedFoods = quickAddFoods.filter(item => item.id !== itemId);
+        
+        // Save to storage
+        localStorage.setItem('quickAddFoods', JSON.stringify(updatedFoods));
     }
 }
