@@ -6,7 +6,7 @@ class StorageManager {
     constructor() {
         // Initialize API client
         this.apiClient = new ApiClient();
-        
+
         // Clean up any existing data
         this.cleanupData();
     }
@@ -16,7 +16,7 @@ class StorageManager {
      */
     cleanupData() {
         // This method is replaced with server-side data validation
-        console.log('API Storage Manager initialized');
+        // console.log('API Storage Manager initialized');
     }
 
     /**
@@ -25,9 +25,9 @@ class StorageManager {
      * @returns {string} - Date string in YYYY-MM-DD format
      */
     getDateKey(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(date.getUTCDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     }
 
@@ -50,7 +50,7 @@ class StorageManager {
         if (!foodEntry.id) {
             foodEntry.id = this.generateUniqueId();
         }
-        
+
         return await this.apiClient.addFoodEntry(foodEntry, date);
     }
 
@@ -118,7 +118,7 @@ class StorageManager {
                 carbs: totals.carbs + (entry.carbs || 0),
                 fat: totals.fat + (entry.fat || 0)
             };
-        }, { protein: 0, carbs: 0, fat: 0 });
+        }, {protein: 0, carbs: 0, fat: 0});
     }
 
     /**
@@ -130,14 +130,14 @@ class StorageManager {
         const today = new Date();
         const yesterday = new Date(today);
         yesterday.setDate(today.getDate() - 1);
-        
+
         // Check if there are entries for today
         const todayEntries = await this.getFoodEntries(today);
-        
+
         if (todayEntries.length > 0) {
             // Check if there were entries yesterday
             const yesterdayEntries = await this.getFoodEntries(yesterday);
-            
+
             if (yesterdayEntries.length > 0) {
                 // Continue streak
                 streak++;
@@ -145,7 +145,7 @@ class StorageManager {
                 // Reset streak
                 streak = 1;
             }
-            
+
             // Save updated streak
             await this.apiClient.setSetting('streak', streak);
         }
@@ -195,6 +195,13 @@ class StorageManager {
         return await this.apiClient.getQuickAddFoods();
     }
 
+    async defaultQuickAddFoods() {
+        return (await this.getQuickAddFoods()).filter(item => {
+                return item.isDefault;
+            }
+        )
+    }
+
     /**
      * Adds a quick add food item
      * @param {Object} foodItem - Quick add food item object
@@ -204,7 +211,7 @@ class StorageManager {
         if (!foodItem.id) {
             foodItem.id = this.generateUniqueId();
         }
-        
+
         return await this.apiClient.addQuickAddFood(foodItem);
     }
 
@@ -215,7 +222,7 @@ class StorageManager {
     async removeQuickAddFood(itemId) {
         return await this.apiClient.removeQuickAddFood(itemId);
     }
-    
+
     /**
      * Gets water entries for a specific date
      * @param {Date} date - Date object
@@ -224,7 +231,7 @@ class StorageManager {
     async getWaterEntries(date) {
         return await this.apiClient.getWaterEntries(date);
     }
-    
+
     /**
      * Adds a water entry for a specific date
      * @param {Object} waterEntry - Water entry object
@@ -235,10 +242,10 @@ class StorageManager {
         if (!waterEntry.id) {
             waterEntry.id = this.generateUniqueId();
         }
-        
+
         return await this.apiClient.addWaterEntry(waterEntry, date);
     }
-    
+
     /**
      * Removes a water entry
      * @param {string} entryId - ID of the entry to remove
@@ -246,7 +253,7 @@ class StorageManager {
     async removeWaterEntry(entryId) {
         return await this.apiClient.removeWaterEntry(entryId);
     }
-    
+
     /**
      * Gets total water for a specific date
      * @param {Date} date - Date object
@@ -256,7 +263,7 @@ class StorageManager {
         const entries = await this.getWaterEntries(date);
         return entries.reduce((total, entry) => total + (entry.amount || 0), 0);
     }
-    
+
     /**
      * Gets custom water containers
      * @returns {Promise<Array>} - Promise resolving to an array of container objects
@@ -264,7 +271,7 @@ class StorageManager {
     async getCustomWaterContainers() {
         return await this.apiClient.getWaterContainers();
     }
-    
+
     /**
      * Adds a custom water container
      * @param {Object} container - The container object to add
@@ -274,10 +281,10 @@ class StorageManager {
         if (!container.id) {
             container.id = this.generateUniqueId();
         }
-        
+
         return await this.apiClient.addWaterContainer(container);
     }
-    
+
     /**
      * Deletes a custom water container
      * @param {string} containerId - ID of the container to delete
@@ -285,7 +292,7 @@ class StorageManager {
     async deleteCustomWaterContainer(containerId) {
         return await this.apiClient.removeWaterContainer(containerId);
     }
-    
+
     /**
      * Gets a setting
      * @param {string} key - Setting key
@@ -294,7 +301,7 @@ class StorageManager {
     async getSetting(key) {
         return await this.apiClient.getSetting(key);
     }
-    
+
     /**
      * Sets a setting
      * @param {string} key - Setting key

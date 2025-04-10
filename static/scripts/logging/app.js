@@ -5,29 +5,29 @@ class FoodIntakeApp {
     constructor() {
         // Get calorie goal from settings or use default
         this.calorieGoal = parseInt(localStorage.getItem('calorieGoal') || '3000', 10);
-        
+
         // Initialize managers
         this.storageManager = new StorageManager();
-        
+
         // Add a small delay to ensure DOM is fully loaded
-        setTimeout(() => {
+        setTimeout(async () => {
             this.chartManager = new ChartManager(this.calorieGoal);
             this.confettiManager = new ConfettiManager();
-            this.formManager = new FormManager(this.storageManager);
             this.statisticsManager = new StatisticsManager(this.storageManager);
             this.settingsManager = new SettingsManager(this.storageManager);
             this.waterTrackingManager = new WaterTrackingManager(this.storageManager);
-            
+            new FormManager(this.storageManager);
+
             // Current date being displayed (default to today)
             this.currentDisplayDate = new Date();
-            
+
             // Initialize the app
-            this.initApp();
-            
+            await this.initApp();
+
             // Hide loading overlay
             this.hideLoadingOverlay();
         }, 5);
-        
+
         // Show loading overlay
         this.showLoadingOverlay();
     }
@@ -41,7 +41,7 @@ class FoodIntakeApp {
             overlay.classList.add('show');
         }
     }
-    
+
     /**
      * Hides the loading overlay
      */
@@ -55,40 +55,40 @@ class FoodIntakeApp {
     /**
      * Initializes the application
      */
-    initApp() {
+    async initApp() {
         // Setup date navigation
-        this.setupDateNavigation();
-        
+        await this.setupDateNavigation();
+
         // Update UI for the current date
-        this.updateCurrentDateDisplay();
-        this.refreshUI();
-        
+        await this.updateCurrentDateDisplay();
+        await this.refreshUI();
+
         // Setup delete functionality for food log
-        this.setupFoodLogDeletion();
+        await this.setupFoodLogDeletion();
     }
 
     /**
      * Sets up date navigation buttons
      */
-    setupDateNavigation() {
+    async setupDateNavigation() {
         const prevDay = document.getElementById('prevDay');
         const nextDay = document.getElementById('nextDay');
         const currentDay = document.getElementById('currentDay');
-        
+
         if (prevDay) {
-            prevDay.addEventListener('click', () => {
-                this.currentDisplayDate.setDate(this.currentDisplayDate.getDate() - 1);
-                this.updateCurrentDateDisplay();
-                this.refreshUI();
+            prevDay.addEventListener('click', async () => {
+                await this.currentDisplayDate.setDate(this.currentDisplayDate.getDate() - 1);
+                await this.updateCurrentDateDisplay();
+                await this.refreshUI();
             });
         }
-        
+
         if (nextDay) {
             nextDay.addEventListener('click', () => {
                 // Don't allow navigating to future dates
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
-                
+
                 if (this.currentDisplayDate < new Date(tomorrow.setHours(0, 0, 0, 0))) {
                     this.currentDisplayDate.setDate(this.currentDisplayDate.getDate() + 1);
                     this.updateCurrentDateDisplay();
@@ -96,7 +96,7 @@ class FoodIntakeApp {
                 }
             });
         }
-        
+
         if (currentDay) {
             currentDay.addEventListener('click', () => {
                 this.currentDisplayDate = new Date();
@@ -112,26 +112,22 @@ class FoodIntakeApp {
     updateCurrentDateDisplay() {
         const currentDateElem = document.getElementById('currentDate');
         if (!currentDateElem) return;
-        
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+        const options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
         currentDateElem.textContent = this.currentDisplayDate.toLocaleDateString(undefined, options);
-        
+
         // Disable next day button if we're on today
         const nextDayBtn = document.getElementById('nextDay');
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        
+
         const currentDate = new Date(this.currentDisplayDate);
         currentDate.setHours(0, 0, 0, 0);
-        
+
         if (nextDayBtn) {
-            if (currentDate.getTime() === today.getTime()) {
-                nextDayBtn.disabled = true;
-            } else {
-                nextDayBtn.disabled = false;
-            }
+            nextDayBtn.disabled = currentDate.getTime() === today.getTime();
         }
-        
+
         // Highlight today button if we're on today
         const todayBtn = document.getElementById('currentDay');
         if (todayBtn) {
@@ -148,60 +144,60 @@ class FoodIntakeApp {
     /**
      * Refreshes the UI with current data
      */
-    refreshUI() {
-        this.updateFoodLog();
-        this.updateCalorieData();
-        this.statisticsManager.updateNutritionSummary(this.currentDisplayDate);
-        this.statisticsManager.updateStatCards(this.currentDisplayDate);
+    async refreshUI() {
+        await this.updateFoodLog();
+        await this.updateCalorieData();
+        await this.statisticsManager.updateNutritionSummary(this.currentDisplayDate);
+        await this.statisticsManager.updateStatCards(this.currentDisplayDate);
     }
 
     /**
      * Updates the food log table
      */
-    updateFoodLog() {
+    async updateFoodLog() {
         const foodLogTable = document.getElementById('foodLogTable');
         const emptyLogMessage = document.getElementById('emptyLogMessage');
-        
+
         if (!foodLogTable || !emptyLogMessage) return;
-        
-        const foodEntries = this.storageManager.getFoodEntries(this.currentDisplayDate);
-        
+
+        const foodEntries = await this.storageManager.getFoodEntries(this.currentDisplayDate);
+
         // Clear existing entries
         foodLogTable.innerHTML = '';
-        
+
         // Show or hide empty message
-        if (foodEntries.length === 0) {
+        if (foodEntries['length'] === 0) {
             emptyLogMessage.style.display = 'block';
             return;
         } else {
             emptyLogMessage.style.display = 'none';
         }
-        
+
         // Sort entries by timestamp (newest first)
         foodEntries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        
+
         // Add entries to the table
         foodEntries.forEach(entry => {
             const row = document.createElement('tr');
-            
+
             // Create health rating indicator
             const healthRatingIndicator = document.createElement('span');
             healthRatingIndicator.className = `health-rating-indicator health-rating-${entry.healthRating}`;
-            
+
             // Get health rating text
             const healthRatingText = this.getHealthRatingText(entry.healthRating);
-            
+
             // Create meal type badge
             const mealTypeBadge = document.createElement('span');
             mealTypeBadge.className = `badge ${this.getMealTypeBadgeClass(entry.mealType)}`;
             mealTypeBadge.textContent = this.capitalizeFirstLetter(entry.mealType);
-            
+
             // Format the food entry
             let foodNameText = entry.foodName;
             if (entry.purchased) {
                 foodNameText += ` <small class="text-muted">(from ${entry.store})</small>`;
             }
-            
+
             // Add nutrition info if available
             let nutritionInfo = '';
             if (entry.protein || entry.carbs || entry.fat) {
@@ -211,13 +207,13 @@ class FoodIntakeApp {
                 if (entry.fat) nutritionInfo += `<span>F: ${entry.fat}g</span>`;
                 nutritionInfo += `</div>`;
             }
-            
+
             // Create delete button
             const deleteButton = document.createElement('button');
             deleteButton.className = 'btn btn-sm btn-outline-danger';
             deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
             deleteButton.dataset.entryId = entry.id;
-            
+
             // Add all content to the row
             row.innerHTML = `
                 <td>${foodNameText}${nutritionInfo}</td>
@@ -226,20 +222,20 @@ class FoodIntakeApp {
                 <td>${healthRatingIndicator.outerHTML} ${healthRatingText}</td>
                 <td></td>
             `;
-            
+
             // Add delete button to the last cell
             row.lastElementChild.appendChild(deleteButton);
-            
+
             // Add tooltip with notes if present
             if (entry.notes) {
                 row.setAttribute('data-bs-toggle', 'tooltip');
                 row.setAttribute('data-bs-placement', 'top');
                 row.setAttribute('title', entry.notes);
             }
-            
+
             foodLogTable.appendChild(row);
         });
-        
+
         // Initialize tooltips
         if (typeof bootstrap !== 'undefined') {
             const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -252,17 +248,17 @@ class FoodIntakeApp {
     /**
      * Updates calorie data and chart
      */
-    updateCalorieData() {
-        const totalCalories = this.storageManager.getTotalCalories(this.currentDisplayDate);
-        
+    async updateCalorieData() {
+        const totalCalories = await this.storageManager.getTotalCalories(this.currentDisplayDate);
+
         // Update the chart if it exists
         if (this.chartManager && this.chartManager.chart) {
             this.chartManager.updateChart(totalCalories);
-            
+
             // Check if we should trigger confetti (only for today)
             const today = new Date();
             const isToday = this.currentDisplayDate.toDateString() === today.toDateString();
-            
+
             if (isToday && this.confettiManager) {
                 this.confettiManager.checkAndTrigger(totalCalories, this.calorieGoal);
             }
@@ -275,18 +271,18 @@ class FoodIntakeApp {
     setupFoodLogDeletion() {
         const foodLogTable = document.getElementById('foodLogTable');
         if (!foodLogTable) return;
-        
-        foodLogTable.addEventListener('click', (e) => {
+
+        foodLogTable.addEventListener('click', async (e) => {
             // Check if the click was on a delete button
-            const deleteButton = e.target.closest('.btn-outline-danger');
+            window.deleteButton = e.target.closest('.btn-outline-danger');
             if (!deleteButton) return;
-            
+
             const entryId = deleteButton.dataset.entryId;
-            
+
             if (confirm('Are you sure you want to delete this food entry?')) {
-                this.storageManager.removeFoodEntry(entryId, this.currentDisplayDate);
-                this.refreshUI();
-                
+                await this.storageManager.removeFoodEntry(entryId, this.currentDisplayDate);
+                await this.refreshUI();
+
                 // Show notification
                 this.settingsManager.showToast('Food entry deleted successfully', 'info');
             }
@@ -300,10 +296,14 @@ class FoodIntakeApp {
      */
     getHealthRatingText(rating) {
         switch (rating) {
-            case '1': return 'Unhealthy';
-            case '2': return 'Neutral';
-            case '3': return 'Healthy';
-            default: return 'Unknown';
+            case '1':
+                return 'Unhealthy';
+            case '2':
+                return 'Neutral';
+            case '3':
+                return 'Healthy';
+            default:
+                return 'Unknown';
         }
     }
 
@@ -314,11 +314,16 @@ class FoodIntakeApp {
      */
     getMealTypeBadgeClass(mealType) {
         switch (mealType) {
-            case 'breakfast': return 'bg-primary';
-            case 'lunch': return 'bg-success';
-            case 'dinner': return 'bg-danger';
-            case 'snack': return 'bg-warning';
-            default: return 'bg-secondary';
+            case 'breakfast':
+                return 'bg-primary';
+            case 'lunch':
+                return 'bg-success';
+            case 'dinner':
+                return 'bg-danger';
+            case 'snack':
+                return 'bg-warning';
+            default:
+                return 'bg-secondary';
         }
     }
 
@@ -328,6 +333,7 @@ class FoodIntakeApp {
      * @returns {string} - String with first letter capitalized
      */
     capitalizeFirstLetter(string) {
+        if (!string) return '';
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 }
@@ -341,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // console.log('Bootstrap loaded successfully');
     };
     document.body.appendChild(bootstrapScript);
-    
+
     // Initialize the app with a small delay to ensure all scripts are loaded
     setTimeout(() => {
         window.app = new FoodIntakeApp();
@@ -417,24 +423,24 @@ window.addEventListener('click', function (e) {
 
 // SIDEBAR
 const openBtn = document.querySelector(".open-btn");
-        const closeBtn = document.querySelector(".close-btn");
-        const sidebar = document.querySelector(".sidebar");
-        const navLinks = document.querySelectorAll(".nav-links a");
+const closeBtn = document.querySelector(".close-btn");
+const sidebar = document.querySelector(".sidebar");
+const navLinks = document.querySelectorAll(".nav-links a");
 
-        // open sidebar
-        openBtn.addEventListener("click", function () {
-            sidebar.classList.add("open");
-        });
+// open sidebar
+openBtn.addEventListener("click", function () {
+    sidebar.classList.add("open");
+});
 
-        // close sidebar
-        closeBtn.addEventListener("click", function () {
-            sidebar.classList.remove("open");
-        });
+// close sidebar
+closeBtn.addEventListener("click", function () {
+    sidebar.classList.remove("open");
+});
 
-        // control active nav-link
-        navLinks.forEach((navLink) => {
-            navLink.addEventListener("click", function () {
-                navLinks.forEach((l) => l.classList.remove("active"));
-                this.classList.add("active");
-            });
-        });
+// control active nav-link
+navLinks.forEach((navLink) => {
+    navLink.addEventListener("click", function () {
+        navLinks.forEach((l) => l.classList.remove("active"));
+        this.classList.add("active");
+    });
+});

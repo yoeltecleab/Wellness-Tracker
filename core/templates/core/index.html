@@ -1,365 +1,333 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link
-      rel="icon"
-      href="{% static 'images/logos/Wellness Logo.png' %}"
-      type="image/x-icon"
-    />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" href="{% static 'images/logos/Wellness Logo.png' %}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Wellness Tracker</title>
-    <link rel="stylesheet" href="{% static 'styles/index.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/index.css' %}"/>
     <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
     />
-  </head>
-  <body>
-    <header>
-      <nav>
+</head>
+<body>
+<header>
+    <nav>
         <div class="nav_logo">
-          <a href="#">
-            <img
-              src="{% static 'images/logos/Wellness Logo.png' %}"
-              alt="Wellness Logo"
-            />
-            <h2>Wellness Tracker</h2>
-          </a>
+            <a href="#">
+                <img src="{% static 'images/logos/Wellness Logo.png' %}" alt="Wellness Logo"/>
+                <h2>Wellness Tracker</h2>
+            </a>
         </div>
 
-        <input type="checkbox" id="click" />
+        <input type="checkbox" id="click"/>
         <label for="click">
-          <i class="menu_btn bx bx-menu"></i>
-          <i class="close_btn bx bx-x"></i>
+            <i class="menu_btn bx bx-menu"></i>
+            <i class="close_btn bx bx-x"></i>
         </label>
 
         <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#service">Services</a></li>
-          <li><a href="#gallery">Gallery</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <li><a href="{% url 'signin' %}" class="login">Login</a></li>
+            <li><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#service">Services</a></li>
+            <li><a href="#why">Why Us</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="{% url 'signin' %}" class="login">Login</a></li>
         </ul>
-      </nav>
-    </header>
+    </nav>
+</header>
 
-    <section class="hero_section">
-      <div class="section_container">
+<section class="hero_section">
+    <div class="section_container">
         <div class="hero_container">
-          <div class="text_section">
-            <h2>Track Your Journey to a Healthier You</h2>
-            <h3>Empowering Your Wellness, One Step at a Time</h3>
-            <p>
-              Welcome to our wellness hub, where tracking your health becomes
-              easy and motivating.
-            </p>
+            <div class="text_section">
+                <h2>Track Your Journey to a Healthier You</h2>
+                <h3>Empowering Your Wellness, One Step at a Time</h3>
+                <p>
+                    Welcome to our wellness hub, where tracking your health becomes
+                    easy and motivating.
+                </p>
 
-            <div class="hero_section_button">
-              <a href="{% url 'signup' %}" style="text-decoration: none"
-                ><button class="button">Start Tracking</button></a
-              >
-              <a href="#service" style="text-decoration: none"
-                ><button class="button">Learn More</button></a
-              >
-              <a
-                href="{% url 'generate_demo_user' %}"
-                style="text-decoration: none"
-              >
-                <button
-                  onclick='window.location.href = "{% url "signup" %}";'
-                  class="button"
-                >
-                  Create Demo Account
-                </button>
-              </a>
+                <div class="hero_section_button">
+                    <a href="{% url 'signup' %}" style="text-decoration: none"><button class="button">Start Tracking</button></a>
+                    <a href="#service" style="text-decoration: none"><button class="button">Learn More</button></a>
+                    <a style="text-decoration: none">
+                        <button id="demo-user-button" class="button">Create Demo Account</button>
+                    </a>
+                </div>
             </div>
-          </div>
 
-          <div class="image_section">
-            <img
-              src="{% static 'images/index/hero_wellness.png' %}"
-              alt="Wellness"
-            />
-          </div>
+            <div class="image_section">
+                <img src="{% static 'images/index/hero_wellness.png' %}" alt="Wellness"/>
+            </div>
         </div>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <section class="about_us" id="about">
-      <div class="section_container">
+<section class="about_us" id="about">
+    <div class="section_container">
         <div class="about_container">
-          <div class="text_section">
-            <h2 class="section_title">About Us</h2>
-            <p>
-              We at Wellness Tracker are dedicated to helping you achieve your
-              health and fitness goals. Our platform provides intuitive tools
-              for tracking water intake, nutrition, and discovering healthy food
-              options. We believe in empowering individuals to make informed
-              choices and live healthier lives.
-            </p>
-          </div>
+            <div class="text_section">
+                <h2 class="section_title">About Us</h2>
+                <p>
+                    We at Wellness Tracker are dedicated to helping you achieve your
+                    health and fitness goals. Our platform provides intuitive tools
+                    for tracking water intake, nutrition, and discovering healthy
+                    food options. We believe in empowering individuals to make
+                    informed choices and live healthier lives.
+                </p>
+            </div>
 
-          <div class="image_section">
-            <img
-              src="{% static 'images/index/about_wellness.png' %}"
-              alt="Wellness"
-            />
-          </div>
+            <div class="image_section">
+                <img src="{% static 'images/index/about_wellness.png' %}" alt="Wellness"/>
+            </div>
         </div>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <section class="services" id="service">
-      <h2 class="section_title">Our Services</h2>
-      <div class="section_container">
+<section class="services" id="service">
+    <h2 class="section_title">Our Services</h2>
+    <div class="section_container">
         <div class="service_container">
-          <div class="services_items">
-            <img
-              src="{% static 'images/index/water_tracker.png' %}"
-              alt="Water Tracker"
-            />
-            <div class="services_text">
-              <h3>Water Intake Tracker</h3>
-              <p>
-                Easily monitor your daily water intake to stay hydrated and
-                healthy.
-              </p>
+            <div class="services_items">
+                <img src="{% static 'images/index/water_tracker.png' %}" alt="Water Tracker"/>
+                <div class="services_text">
+                    <h3>Water Intake Tracker</h3>
+                    <p>
+                        Easily monitor your daily water intake to stay hydrated and
+                        healthy.
+                    </p>
+                </div>
             </div>
-          </div>
-          <div class="services_items">
-            <img
-              src="{% static 'images/index/nutrition_tracker.png' %}"
-              alt="Nutrition Tracker"
-            />
-            <div class="services_text">
-              <h3>Nutrition Tracker</h3>
-              <p>
-                Track your calorie and nutrient intake to maintain a balanced
-                diet.
-              </p>
+            <div class="services_items">
+                <img src="{% static 'images/index/nutrition_tracker.png' %}" alt="Nutrition Tracker"/>
+                <div class="services_text">
+                    <h3>Nutrition Tracker</h3>
+                    <p>
+                        Track your calorie and nutrient intake to maintain a balanced
+                        diet.
+                    </p>
+                </div>
             </div>
-          </div>
-          <div class="services_items">
-            <img
-              src="{% static 'images/index/healthy_food.png' %}"
-              alt="Healthy Food"
-            />
-            <div class="services_text">
-              <h3>Healthy Food Finder</h3>
-              <p>
-                Discover nearby restaurants and stores offering healthy food
-                options.
-              </p>
+            <div class="services_items">
+                <img src="{% static 'images/index/healthy_food.png' %}" alt="Healthy Food"/>
+                <div class="services_text">
+                    <h3>Healthy Food Finder</h3>
+                    <p>Discover nearby restaurants and stores offering healthy food options.</p>
+                </div>
             </div>
-          </div>
-          <div class="services_items">
-            <img
-              src="{% static 'images/index/progress_tracking.png' %}"
-              alt="Progress Tracking"
-            />
-            <div class="services_text">
-              <h3>Progress Tracking</h3>
-              <p>
-                Monitor your health progress and stay motivated with detailed
-                reports.
-              </p>
+            <div class="services_items">
+                <img src="{% static 'images/index/progress_tracking.png' %}" alt="Progress Tracking"/>
+                <div class="services_text">
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor your health progress and stay motivated with detailed reports.</p>
+                </div>
             </div>
-          </div>
-          <div class="services_items">
-            <img
-              src="{% static 'images/index/goal_setting.png' %}"
-              alt="Goal Setting"
-            />
-            <div class="services_text">
-              <h3>Goal Setting</h3>
-              <p>Set personalized health goals and track your achievements.</p>
+            <div class="services_items">
+                <img
+                        src="{% static 'images/index/goal_setting.png' %}"
+                        alt="Goal Setting"
+                />
+                <div class="services_text">
+                    <h3>Goal Setting</h3>
+                    <p>Set personalized health goals and track your achievements.</p>
+                </div>
             </div>
-          </div>
-          <div class="services_items">
-            <img
-              src="{% static 'images/index/community_support.png' %}"
-              alt="Community Support"
-            />
-            <div class="services_text">
-              <h3>Community Support</h3>
-              <p>Connect with others and share your wellness journey.</p>
+            <div class="services_items">
+                <img src="{% static 'images/index/community_support.png' %}" alt="Community Support"/>
+                <div class="services_text">
+                    <h3>Community Support</h3>
+                    <p>Connect with others and share your wellness journey.</p>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <section class="gallery" id="gallery">
-      <h2 class="section_title">Gallery</h2>
-      <div class="section_container">
+<section class="why_us" id="why">
+    <h2 class="section_title">Why Us?</h2>
+    <div class="section_container">
+        <div class="why_container">
+            <div class="why_items">
+                <img src="{% static 'images/index/user_friendly.png' %}" alt="User Friendly"/>
+                <div class="why_us_text">
+                    <h3>User-Friendly Interface</h3>
+                    <p>
+                        Our platform is designed to be intuitive and easy to navigate.
+                    </p>
+                </div>
+            </div>
+            <div class="why_items">
+                <img src="{% static 'images/index/personalized.png' %}" alt="Personalized"/>
+                <div class="why_us_text">
+                    <h3>Personalized Experience</h3>
+                    <p>
+                        Tailored tools and insights to match your unique wellness needs.
+                    </p>
+                </div>
+            </div>
+            <div class="why_items">
+                <img src="{% static 'images/index/reliable.png' %}" alt="Reliable"/>
+                <div class="why_us_text">
+                    <h3>Reliable Tracking</h3>
+                    <p>Accurate and dependable data to help you achieve your goals.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="gallery" id="gallery">
+    <h2 class="section_title">Gallery</h2>
+    <div class="section_container">
         <div class="gallery_container">
-          <div class="gallery_items">
-            <img
-              src="{% static 'images/index/gallery_1.png' %}"
-              alt="Gallery Image"
-            />
-          </div>
-          <div class="gallery_items">
-            <img
-              src="{% static 'images/index/gallery_2.png' %}"
-              alt="Gallery Image"
-            />
-          </div>
-          <div class="gallery_items">
-            <img
-              src="{% static 'images/index/gallery_3.png' %}"
-              alt="Gallery Image"
-            />
-          </div>
-          <div class="gallery_items">
-            <img
-              src="{% static 'images/index/gallery_4.png' %}"
-              alt="Gallery Image"
-            />
-          </div>
-          <div class="gallery_items">
-            <img
-              src="{% static 'images/index/gallery_5.png' %}"
-              alt="Gallery Image"
-            />
-          </div>
-          <div class="gallery_items">
-            <img
-              src="{% static 'images/index/gallery_6.png' %}"
-              alt="Gallery Image"
-            />
-          </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_1.png' %}" alt="Gallery Image"/>
+            </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_2.png' %}" alt="Gallery Image"/>
+            </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_3.png' %}" alt="Gallery Image"/>
+            </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_4.png' %}" alt="Gallery Image"/>
+            </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_5.png' %}" alt="Gallery Image"/>
+            </div>
+            <div class="gallery_items">
+                <img src="{% static 'images/index/gallery_6.png' %}" alt="Gallery Image"/>
+            </div>
         </div>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <section class="contact" id="contact">
-      <h2 class="section_title">Contact Us</h2>
-      <div class="section_container">
+<section class="contact" id="contact">
+    <h2 class="section_title">Contact Us</h2>
+    <div class="section_container">
         <div class="contact_container">
-          <div class="contact_form">
-            <form action="#">
-              <div class="field">
-                <label for="Name">Full Name</label>
-                <input type="text" id="Name" placeholder="Your Name" required />
-              </div>
-              <div class="field">
-                <label for="email">Your Email</label>
-                <input
-                  type="text"
-                  id="email"
-                  placeholder="Your Email"
-                  required
-                />
-              </div>
-              <div class="field">
-                <label for="number">Your Number</label>
-                <input
-                  type="number"
-                  id="number"
-                  placeholder="Your Contact Number"
-                  required
-                />
-              </div>
-              <div class="field">
-                <label for="textarea">Textarea</label>
-                <textarea
-                  name="textarea"
-                  id="textarea"
-                  placeholder="Your Message"
-                ></textarea>
-              </div>
+            <div class="contact_form">
+                <form action="#">
+                    <div class="field">
+                        <label for="Name">Full Name</label>
+                        <input type="text" id="Name" placeholder="Your Name" required/>
+                    </div>
+                    <div class="field">
+                        <label for="email">Your Email</label>
+                        <input
+                                type="text"
+                                id="email"
+                                placeholder="Your Email"
+                                required
+                        />
+                    </div>
+                    <div class="field">
+                        <label for="number">Your Number</label>
+                        <input
+                                type="number"
+                                id="number"
+                                placeholder="Your Contact Number"
+                                required
+                        />
+                    </div>
+                    <div class="field">
+                        <label for="textarea">Textarea</label>
+                        <textarea
+                                name="textarea"
+                                id="textarea"
+                                placeholder="Your Message"
+                        ></textarea>
+                    </div>
 
-              <button class="button" id="submit">Submit</button>
-            </form>
-          </div>
+                    <button class="button" id="submit">Submit</button>
+                </form>
+            </div>
 
-          <div class="contact_text">
-            <div class="contact_items">
-              <i class="bx bx-current-location"></i>
-              <div class="contact_details">
-                <h3>Our Location</h3>
-                <p>Online Platform</p>
-              </div>
+            <div class="contact_text">
+                <div class="contact_items">
+                    <i class="bx bx-current-location"></i>
+                    <div class="contact_details">
+                        <h3>Our Location</h3>
+                        <p>Online Platform</p>
+                    </div>
+                </div>
+                <div class="contact_items">
+                    <i class="bx bxs-envelope"></i>
+                    <div class="contact_details">
+                        <h3>General Enquries</h3>
+                        <p>wellness@tracker.com</p>
+                    </div>
+                </div>
+                <div class="contact_items">
+                    <i class="bx bxs-phone-call"></i>
+                    <div class="contact_details">
+                        <h3>Call Us</h3>
+                        <p>1-800-WELLNESS</p>
+                    </div>
+                </div>
+                <div class="contact_items">
+                    <i class="bx bxs-time-five"></i>
+                    <div class="contact_details">
+                        <h3>Our Timing</h3>
+                        <p>24/7 Online Support</p>
+                    </div>
+                </div>
             </div>
-            <div class="contact_items">
-              <i class="bx bxs-envelope"></i>
-              <div class="contact_details">
-                <h3>General Enquries</h3>
-                <p>wellness@tracker.com</p>
-              </div>
-            </div>
-            <div class="contact_items">
-              <i class="bx bxs-phone-call"></i>
-              <div class="contact_details">
-                <h3>Call Us</h3>
-                <p>1-800-WELLNESS</p>
-              </div>
-            </div>
-            <div class="contact_items">
-              <i class="bx bxs-time-five"></i>
-              <div class="contact_details">
-                <h3>Our Timing</h3>
-                <p>24/7 Online Support</p>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <footer>
-      <div class="section_container">
+<footer>
+    <div class="section_container">
         <div class="footer_section">
-          <div class="footer_logo">
-            <a href="#">
-              <img
-                src="{% static 'images/logos/Wellness Logo.png' %}"
-                alt="Wellness Logo"
-              />
-              <h2>Wellness Tracker</h2>
-            </a>
-          </div>
+            <div class="footer_logo">
+                <a href="#">
+                    <img src="{% static 'images/logos/Wellness Logo.png' %}" alt="Wellness Logo"/>
+                    <h2>Wellness Tracker</h2>
+                </a>
+            </div>
 
-          <div class="useful_links">
-            <h3>Useful Links</h3>
-            <ul>
-              <li><a href="#about">About</a></li>
-              <li><a href="#service">Services</a></li>
-              <li><a href="#why">Why Us</a></li>
-              <li><a href="#gallery">Gallery</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </div>
+            <div class="useful_links">
+                <h3>Useful Links</h3>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#service">Services</a></li>
+                    <li><a href="#why">Why Us</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
 
-          <div class="contact_us">
-            <h3>Contact</h3>
-            <ul>
-              <li>
-                <i class="bx bx-current-location"></i>
-                <span>Online Platform</span>
-              </li>
-              <li>
-                <i class="bx bxs-phone-call"></i> <span>1-800-WELLNESS</span>
-              </li>
-              <li>
-                <i class="bx bxs-time-five"></i>
-                <span>24/7 Online Support</span>
-              </li>
-            </ul>
-          </div>
+            <div class="contact_us">
+                <h3>Contact</h3>
+                <ul>
+                    <li>
+                        <i class="bx bx-current-location"></i>
+                        <span>Online Platform</span>
+                    </li>
+                    <li>
+                        <i class="bx bxs-phone-call"></i> <span>1-800-WELLNESS</span>
+                    </li>
+                    <li>
+                        <i class="bx bxs-time-five"></i>
+                        <span>24/7 Online Support</span>
+                    </li>
+                </ul>
+            </div>
 
-          <div class="follow_us">
-            <h3>Follow</h3>
-            <i class="bx bxl-facebook-circle"></i>
-            <i class="bx bxl-twitter"></i>
-            <i class="bx bxl-instagram-alt"></i>
-          </div>
+            <div class="follow_us">
+                <h3>Follow</h3>
+                <i class="bx bxl-facebook-circle"></i>
+                <i class="bx bxl-twitter"></i>
+                <i class="bx bxl-instagram-alt"></i>
+            </div>
         </div>
-      </div>
-    </footer>
-  </body>
+    </div>
+</footer>
+<script src="{% static 'scripts/index.js' %}"></script>
+</body>
 </html>

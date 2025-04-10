@@ -1,9 +1,10 @@
 import random
+import uuid
 from datetime import datetime, timedelta
 
 from django.utils.timezone import make_aware
 
-from .models import User, Profile, WaterLog, Food, FoodLog, Store
+from .models import User, Profile, WaterLog, FoodEntry, Store, Goal
 
 
 class CreateDemoUser:
@@ -11,8 +12,7 @@ class CreateDemoUser:
     def run():
         # Delete all existing entries
         WaterLog.objects.all().delete()
-        FoodLog.objects.all().delete()
-        Food.objects.all().delete()
+        FoodEntry.objects.all().delete()
         Store.objects.all().delete()
         Profile.objects.all().delete()
         User.objects.all().delete()
@@ -24,7 +24,7 @@ class CreateDemoUser:
             first_name="Demo",
             last_name="User",
             phone="1234567890",
-            dob=datetime(1995, 5, 15),
+            dob=datetime(1995, 5, 15).date(),
             avatar="avatar.svg",
         )
 
@@ -34,8 +34,6 @@ class CreateDemoUser:
         # Set up profile with goals
         Profile.objects.create(
             user=user,
-            water_goal=3500,
-            calorie_goal=3000,
             primary_goal='health',
             current_diet='unsure',
             snacking='often',
@@ -44,7 +42,15 @@ class CreateDemoUser:
             dietary_restrictions='none',
             exercise='none',
             usual_store='Supermarket',
+        )
 
+        Goal.objects.create(
+            user=user,
+            calorie_goal='2250',
+            water_goal='3200',
+            protein_goal='50',
+            carbs_goal='300',
+            fat_goal='60',
         )
 
         # Generate stores
@@ -58,8 +64,6 @@ class CreateDemoUser:
                 user=user,
                 name=name,
                 address=f"{random.randint(100, 999)} Main St, ZIP {random.randint(10000, 99999)}",
-                latitude=random.uniform(-90, 90),
-                longitude=random.uniform(-180, 180),
                 visits=random.randint(5, 50),
             )
             stores.append(store)
@@ -71,15 +75,6 @@ class CreateDemoUser:
                       "Waffles", "Fruit Salad", "Vegetable Stir-fry", "Roast Chicken", "Salmon",
                       "Shrimp", "Beans", "Lentils", "Avocado", "Bread", "Cheese", "Apple", "Banana",
                       "Orange", "Grapes", "Berries", "Potato", "Corn", "Broccoli"]
-        foods = []
-        for name in food_names:
-            food = Food.objects.create(
-                user=user,
-                name=name,
-                frequency=random.randint(1, 20),
-                description=f"A {name}",
-            )
-            foods.append(food)
 
         # Generate daily logs for the past year
         start_date = datetime.now() - timedelta(days=365)
@@ -87,35 +82,153 @@ class CreateDemoUser:
             log_date = make_aware(start_date + timedelta(days=i))
 
             # Water logs
-            daily_water_intake = 0
             water_entries = []
             for _ in range(random.randint(5, 10)):
                 amount = random.choice([250, 500, 750])
-                daily_water_intake += amount
                 water_entries.append(WaterLog(user=user, amount=amount, created_at=log_date))
             WaterLog.objects.bulk_create(water_entries)
 
             # Food logs
-            daily_calorie_intake = 0
             food_entries = []
             for _ in range(random.randint(8, 12)):
-                food = random.choice(foods)
-                homemade_or_purchased = random.choice(["Homemade", "Purchased"])
-                calories = random.randint(400, 900) \
-                    if homemade_or_purchased == "Purchased" else random.randint(200, 700)
-                is_healthy = food.name in ["Burger", "Pizza", "Soda", "Fries", "Ice Cream", "Pasta", "Sandwich",
-                                           "Tacos", "Burrito", "Pancakes", "Waffles", "Bread", "Cheese"] \
-                    if homemade_or_purchased == "Purchased" else False
-                daily_calorie_intake += calories
-                food_entries.append(FoodLog(
+                food_name = random.choice(food_names)
+                purchased = random.choice([True, False])
+                calories = random.randint(200, 500) if purchased else random.randint(80, 300)
+                health_rating = random.choice(['Unhealthy', 'Neutral', 'Healthy', 'Unknown'])
+                meal_type = random.choice(['Breakfast', 'Lunch', 'Dinner', 'Snack'])
+                notes = random.choice([None, 'Extra cheese', 'Lightly seasoned'])
+                protein = random.randint(5, 30)
+                carbs = random.randint(10, 50)
+                fat = random.randint(5, 40)
+                frequency = random.randint(1, 100)
+
+                food_entries.append(FoodEntry(
+                    entry_id=str(uuid.uuid4()),
                     user=user,
-                    food=food,
+                    food_name=food_name,
                     calories=calories,
-                    is_healthy=is_healthy,
-                    homemade_or_purchased=homemade_or_purchased,
-                    purchased_from=random.choice(stores),
+                    purchased=purchased,
+                    purchased_from=random.choice(stores) if purchased and stores else None,
+                    health_rating=health_rating,
+                    meal_type=meal_type,
+                    notes=notes,
+                    protein=protein,
+                    carbs=carbs,
+                    fat=fat,
+                    frequency=frequency,
                     created_at=log_date
                 ))
-            FoodLog.objects.bulk_create(food_entries)
+
+            FoodEntry.objects.bulk_create(food_entries)
+
+        food_entries = []
+        defaultItems = [
+            {
+                'id': 'default-1',
+                'foodName': 'Apple',
+                'calories': 95,
+                'protein': 5,
+                'carbs': 25,
+                'fat': 3,
+                'mealType': 'snack',
+                'healthRating': '3',
+                'isDefault': True
+            },
+            {
+                'id': 'default-2',
+                'foodName': 'Banana',
+                'calories': 105,
+                'protein': 1,
+                'carbs': 27,
+                'fat': 0,
+                'mealType': 'snack',
+                'healthRating': '3',
+                'isDefault': True
+            },
+            {
+                'id': 'default-3',
+                'foodName': 'Chicken Breast',
+                'calories': 165,
+                'protein': 31,
+                'carbs': 0,
+                'fat': 3,
+                'mealType': 'lunch',
+                'healthRating': '3',
+                'isDefault': True
+            },
+            {
+                'id': 'default-4',
+                'foodName': 'Salad',
+                'calories': 120,
+                'protein': 2,
+                'carbs': 10,
+                'fat': 8,
+                'mealType': 'lunch',
+                'healthRating': '3',
+                'isDefault': True
+            },
+            {
+                'id': 'default-5',
+                'foodName': 'Oatmeal',
+                'calories': 150,
+                'protein': 5,
+                'carbs': 27,
+                'fat': 2,
+                'mealType': 'breakfast',
+                'healthRating': '3',
+                'isDefault': True
+            },
+            {
+                'id': 'default-6',
+                'foodName': 'Greek Yogurt',
+                'calories': 100,
+                'protein': 15,
+                'carbs': 5,
+                'fat': 0,
+                'mealType': 'snack',
+                'healthRating': '3',
+                'isDefault': True
+            },
+            {
+                'id': 'default-7',
+                'foodName': 'Eggs (2)',
+                'calories': 155,
+                'protein': 13,
+                'carbs': 1,
+                'fat': 11,
+                'mealType': 'breakfast',
+                'healthRating': '3',
+                'isDefault': True
+            },
+            {
+                'id': 'default-8',
+                'foodName': 'Avocado Toast',
+                'calories': 190,
+                'protein': 5,
+                'carbs': 15,
+                'fat': 10,
+                'mealType': 'breakfast',
+                'healthRating': '3',
+                'isDefault': True
+            }
+        ]
+
+        for item in defaultItems:
+            food_entries.append(FoodEntry(
+                entry_id=item['id'],
+                user=user,
+                food_name=item['foodName'],
+                calories=item['calories'],
+                protein=item['protein'],
+                carbs=item['carbs'],
+                fat=item['fat'],
+                meal_type=item['mealType'],
+                health_rating=item['healthRating'],
+                is_default=item['isDefault'],
+                is_active=True,
+                is_quick_add=True,
+            ))
+
+        FoodEntry.objects.bulk_create(food_entries)
 
         print("Demo user and logs created successfully!")

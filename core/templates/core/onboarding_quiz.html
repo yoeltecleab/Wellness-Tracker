@@ -500,14 +500,120 @@
             </div>
         </div>
         <div class="form-control">
+            <label>Which of these food do you usually consume? (Select all that
+                apply)</label
+            >
+            <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(3, 1fr);">
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="default-apple"
+                            name="default-foods"
+                            value="apple"
+                            {% if 'apple' in user.user_profile.default_foods %}checked{% endif %}
+                    />
+                    <label for="default-apple">Apple</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="default-banana"
+                            name="default-foods"
+                            value="banana"
+                            {% if 'banana' in user.user_profile.default_foods %}checked{% endif %}
+                    />
+                    <label for="default-banana">Banana</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="default-chicken-breast"
+                            name="default-foods"
+                            value="chicken-breast"
+                            {% if 'chicken-breast' in user.user_profile.default_foods %}checked{% endif %}
+                    />
+                    <label for="default-chicken-breast">Chicken Breast</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="default-salad"
+                            name="default-foods"
+                            value="salad"
+                            {% if 'salad' in user.user_profile.default_foods %}checked{% endif %}
+                    />
+                    <label for="default-salad">Salad</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="default-oatmeal"
+                            name="default-foods"
+                            value="oatmeal"
+                            {% if 'oatmeal' in user.user_profile.default_foods %}checked{% endif %}
+                    />
+                    <label for="default-oatmeal">Oatmeal</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="default-greek-yogurt"
+                            name="default-foods"
+                            value="greek-yogurt"
+                            {% if 'greek-yogurt' in user.user_profile.default_foods %}checked{% endif %}
+                    />
+                    <label for="default-greek-yogurt">Greek Yogurt</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="default-eggs"
+                            name="default-foods"
+                            value="eggs"
+                            {% if 'eggs' in user.user_profile.default_foods %}checked{% endif %}
+                    />
+                    <label for="default-eggs">Eggs</label>
+                </div>
+                <div class="checkbox-option">
+                    <input
+                            type="checkbox"
+                            id="default-avocado-toast"
+                            name="default-foods"
+                            value="avocado-toast"
+                            {% if 'avocado-toast' in user.user_profile.default_foods %}checked{% endif %}
+                    />
+                    <label for="default-avocado-toast">Avocado Toast</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="step">
+        <h3>Goals</h3>
+        <div class="form-control">
             <label for="water-goal">What is your daily water intake goal? (in ml)</label>
             <input type="text" id="water-goal" name="water-goal" required
-                   value="{% if user.user_profile %} {{ user.user_profile.water_goal|default_if_none:'' }}{% endif %}"/>
+                   value="{% if user.goal %} {{ user.goal.water_goal|default_if_none:'3200' }}{% endif %}"/>
         </div>
         <div class="form-control">
             <label for="calorie-goal">What is your daily calorie goal?</label>
             <input type="text" id="calorie-goal" name="calorie-goal" required
-                   value="{% if user.user_profile %} {{ user.user_profile.calorie_goal|default_if_none:'' }}{% endif %}"/>
+                   value="{% if user.goal %} {{ user.goal.calorie_goal|default_if_none:'2250' }}{% endif %}"/>
+        </div>
+        <h3>Nutrition</h3>
+        <div class="form-control">
+            <label for="protein-goal">What is your daily protein goal? (in g)</label>
+            <input type="text" id="protein-goal" name="protein-goal" required
+                   value="{% if user.goal %} {{ user.goal.protein_goal|default_if_none:'50' }}{% endif %}"/>
+        </div>
+        <div class="form-control">
+            <label for="carbs-goal">What is your daily carbohydrate goal? (in g)</label>
+            <input type="text" id="carbs-goal" name="carbs-goal" required
+                   value="{% if user.goal %} {{ user.goal.carbs_goal|default_if_none:'300' }}{% endif %}"/>
+        </div>
+        <div class="form-control">
+            <label for="fat-goal">What is your daily fat goal?</label>
+            <input type="text" id="fat-goal" name="fat-goal" required
+                   value="{% if user.goal %} {{ user.goal.fat_goal|default_if_none:'60' }}{% endif %}"/>
         </div>
     </div>
 </div>

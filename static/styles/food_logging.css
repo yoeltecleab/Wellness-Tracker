@@ -55,7 +55,8 @@ body {
     grid-template-columns: 1fr 12fr;
 }
 
-.tab-content {
+.col-lg-5 {
+    max-height: 40rem;
 }
 
 .sidebar {
