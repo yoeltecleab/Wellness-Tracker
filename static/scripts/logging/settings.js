@@ -34,37 +34,37 @@ class SettingsManager {
      */
     setupEventListeners() {
         // Settings save button click
-        document.getElementById('saveSettings').addEventListener('click', () => {
+        document.getElementById('saveSettings').addEventListener('click', async () => {
             // Save settings
             const calorieGoal = document.getElementById('calorieGoalInput').value;
             const proteinGoal = document.getElementById('proteinGoalInput').value;
             const carbsGoal = document.getElementById('carbsGoalInput').value;
             const fatGoal = document.getElementById('fatGoalInput').value;
             const waterGoal = document.getElementById('waterGoalInput').value;
-            
+
             localStorage.setItem('calorieGoal', calorieGoal);
             localStorage.setItem('proteinGoal', proteinGoal);
             localStorage.setItem('carbsGoal', carbsGoal);
             localStorage.setItem('fatGoal', fatGoal);
             localStorage.setItem('waterGoal', waterGoal);
-            
+
             // Convert water goal from glasses to ml for the water tracking display
             localStorage.setItem('waterGoalML', (parseInt(waterGoal) * 250).toString());
-            
+
             // Update the application
-            app.chartManager.updateChart(app.storageManager.getTotalCalories(app.currentDisplayDate));
-            app.statisticsManager.updateNutritionSummary(app.currentDisplayDate);
-            
+            app.chartManager.updateChart(await app.storageManager.getTotalCalories(app.currentDisplayDate));
+            await app.statisticsManager.updateNutritionSummary(app.currentDisplayDate);
+
             // Update water tracking if it exists
             if (app.waterTrackingManager) {
                 app.waterTrackingManager.waterGoal = parseInt(localStorage.getItem('waterGoalML')) || 2500;
                 app.waterTrackingManager.updateWaterUI();
             }
-            
+
             // Close modal
             const modal = bootstrap.Modal.getInstance(document.getElementById('settingsModal'));
             modal.hide();
-            
+
             // Show success message
             this.showToast('Settings saved successfully', 'success');
         });
@@ -82,15 +82,15 @@ class SettingsManager {
         document.querySelectorAll('.quick-add-menu .dropdown-item').forEach(item => {
             if (!item.dataset.food) return; // Skip if not a food item
             
-            item.addEventListener('click', (e) => {
+            item.addEventListener('click', async (e) => {
                 e.preventDefault();
-                
+
                 // Get data from item
                 const foodName = item.dataset.food;
                 const calories = parseInt(item.dataset.calories, 10);
                 const healthRating = item.dataset.health;
                 const mealType = item.dataset.meal;
-                
+
                 // Create food entry
                 const foodEntry = {
                     foodName,
@@ -104,13 +104,13 @@ class SettingsManager {
                     carbs: 0,
                     fat: 0
                 };
-                
+
                 // Add to storage
-                app.storageManager.addFoodEntry(foodEntry, app.currentDisplayDate);
-                
+                await app.storageManager.addFoodEntry(foodEntry, app.currentDisplayDate);
+
                 // Show success message
                 this.showToast(`Added ${foodName} to your food log!`, 'success');
-                
+
                 // Update UI
                 app.refreshUI();
             });

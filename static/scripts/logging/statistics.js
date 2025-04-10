@@ -7,9 +7,9 @@ class StatisticsManager {
         
         // Initialize charts when the weekly stats modal is opened
         document.getElementById('weeklyStatsBtn').addEventListener('click', () => {
-            setTimeout(() => {
-                this.initWeeklyCharts();
-                this.updateWeeklyStats();
+            setTimeout(async () => {
+                await this.initWeeklyCharts();
+                await this.updateWeeklyStats();
             }, 5); // Small delay to ensure DOM is ready
         });
     }
@@ -190,8 +190,8 @@ class StatisticsManager {
      * Gets weekly calorie data for the last 7 days
      * @returns {Object} - Object with labels and calorie data
      */
-    getWeeklyCalorieData() {
-        const weeklyData = this.storageManager.getWeeklyData();
+    async getWeeklyCalorieData() {
+        const weeklyData = await this.storageManager.getWeeklyData();
         const labels = [];
         const calories = [];
         
@@ -212,46 +212,46 @@ class StatisticsManager {
      * Gets weekly nutrition data for the last 7 days
      * @returns {Object} - Object with labels and nutrition data
      */
-    getWeeklyNutritionData() {
-        const weeklyData = this.storageManager.getWeeklyData();
+    async getWeeklyNutritionData() {
+        const weeklyData = await this.storageManager.getWeeklyData();
         const labels = [];
         const protein = [];
         const carbs = [];
         const fat = [];
-        
+
         weeklyData.forEach(day => {
             // Convert date string to readable format (e.g., "Mon", "Tue")
             const date = new Date(day.date);
-            labels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
-            
+            labels.push(date.toLocaleDateString('en-US', {weekday: 'short'}));
+
             // Calculate total nutrition values for the day
             let totalProtein = 0;
             let totalCarbs = 0;
             let totalFat = 0;
-            
+
             day.entries.forEach(entry => {
                 totalProtein += parseInt(entry.protein || 0, 10);
                 totalCarbs += parseInt(entry.carbs || 0, 10);
                 totalFat += parseInt(entry.fat || 0, 10);
             });
-            
+
             protein.push(totalProtein);
             carbs.push(totalCarbs);
             fat.push(totalFat);
         });
-        
-        return { labels, protein, carbs, fat };
+
+        return {labels, protein, carbs, fat};
     }
     
     /**
      * Gets weekly health data
      * @returns {Object} - Object with health score data
      */
-    getWeeklyHealthData() {
+    async getWeeklyHealthData() {
         // Calculate health scores based on last week's data
-        const weeklyData = this.storageManager.getWeeklyData();
+        const weeklyData = await this.storageManager.getWeeklyData();
         const calorieGoal = parseInt(localStorage.getItem('calorieGoal') || '3000', 10);
-        
+
         // Default scores
         const scores = {
             calorieScore: 5,
@@ -260,7 +260,7 @@ class StatisticsManager {
             mealScore: 5,
             waterScore: 5
         };
-        
+
         // Calculate average values for the week
         let totalEntries = 0;
         let daysWithEntries = 0;
@@ -268,90 +268,90 @@ class StatisticsManager {
         let healthyFoodCount = 0;
         let proteinTotal = 0;
         let waterTotal = 0;
-        
+
         const mealTypeCounts = {
             breakfast: 0,
             lunch: 0,
             dinner: 0,
             snack: 0
         };
-        
+
         weeklyData.forEach(day => {
             if (day.entries.length > 0) {
                 daysWithEntries++;
-                
+
                 // Calculate daily calories
                 const dailyCalories = day.entries.reduce((sum, entry) => sum + parseInt(entry.calories, 10), 0);
                 if (dailyCalories >= calorieGoal * 0.9 && dailyCalories <= calorieGoal * 1.1) {
                     calorieGoalReached++;
                 }
-                
+
                 // Count healthy foods
                 healthyFoodCount += day.entries.filter(entry => entry.healthRating === '3').length;
-                
+
                 // Calculate protein intake
                 const dailyProtein = day.entries.reduce((sum, entry) => sum + parseInt(entry.protein || 0, 10), 0);
                 proteinTotal += dailyProtein;
-                
+
                 // Count meal types
                 day.entries.forEach(entry => {
                     if (mealTypeCounts[entry.mealType]) {
                         mealTypeCounts[entry.mealType]++;
                     }
                 });
-                
+
                 // Add to total entries
                 totalEntries += day.entries.length;
-                
+
                 // Calculate water intake (from localStorage)
                 const waterKey = `waterIntake_${day.date}`;
                 const dailyWater = parseInt(localStorage.getItem(waterKey) || '0', 10);
                 waterTotal += dailyWater;
             }
         });
-        
+
         // Calculate scores if we have data
         if (daysWithEntries > 0) {
             // Calorie score (0-10) based on how often the goal was reached
             scores.calorieScore = (calorieGoalReached / daysWithEntries) * 10;
-            
+
             // Health score (0-10) based on percentage of healthy foods
             scores.healthScore = totalEntries > 0 ? (healthyFoodCount / totalEntries) * 10 : 5;
-            
+
             // Protein score (0-10) based on average daily protein
             const avgProtein = proteinTotal / daysWithEntries;
             scores.proteinScore = Math.min(avgProtein / 15, 10); // 150g protein = perfect score
-            
+
             // Meal distribution score (0-10)
             const mealBalance = Object.values(mealTypeCounts).reduce((a, b) => a + b, 0);
             const mealVariety = Object.values(mealTypeCounts).filter(count => count > 0).length;
             scores.mealScore = mealBalance > 0 ? (mealVariety / 4) * 10 : 5;
-            
+
             // Water score (0-10) based on average daily water intake
             const avgWater = waterTotal / daysWithEntries;
             scores.waterScore = Math.min(avgWater / 8 * 10, 10); // 8 glasses = perfect score
         }
-        
+
         return scores;
     }
     
     /**
      * Updates the weekly statistics summary
      */
-    updateWeeklyStats() {
-        const weeklyData = this.storageManager.getWeeklyData();
-        
+    async updateWeeklyStats() {
+        const weeklyData = await this.storageManager.getWeeklyData();
+
         // Calculate total calories for the week
         let totalCalories = 0;
         let totalHealthyFoods = 0;
         let totalEntries = 0;
         let daysWithEntries = 0;
-        
+
         weeklyData.forEach(day => {
             if (day.entries.length > 0) {
                 daysWithEntries++;
                 totalEntries += day.entries.length;
-                
+
                 day.entries.forEach(entry => {
                     totalCalories += parseInt(entry.calories, 10);
                     if (entry.healthRating === '3') {
@@ -360,28 +360,27 @@ class StatisticsManager {
                 });
             }
         });
-        
+
         // Calculate averages
         const avgCaloriesPerDay = daysWithEntries > 0 ? Math.round(totalCalories / daysWithEntries) : 0;
         const healthyFoodPercentage = totalEntries > 0 ? Math.round((totalHealthyFoods / totalEntries) * 100) : 0;
-        
+
         // Update the weekly summary
         document.getElementById('weeklyTotalCalories').textContent = totalCalories;
-        document.getElementById('weeklyAvgCalories').textContent = avgCaloriesPerDay;
-        document.getElementById('weeklyDaysLogged').textContent = daysWithEntries;
+        document.getElementById('weeklyAvgCalories').textContent = String(avgCaloriesPerDay);
+        document.getElementById('weeklyDaysLogged').textContent = String(daysWithEntries);
         document.getElementById('weeklyHealthyPercentage').textContent = `${healthyFoodPercentage}%`;
-        
+
         // Get current streak
-        const streak = this.storageManager.getStreak();
-        document.getElementById('weeklyCurrStreak').textContent = streak;
+        document.getElementById('weeklyCurrStreak').textContent = await this.storageManager.getStreak();
     }
     
     /**
      * Updates the nutrition counters on the main page
      * @param {Date} date - The date to show nutrition data for
      */
-    updateNutritionSummary(date) {
-        const nutrition = this.storageManager.getTotalNutrition(date);
+    async updateNutritionSummary(date) {
+        const nutrition = await this.storageManager.getTotalNutrition(date);
         
         // Get goals from settings or use defaults
         const proteinGoal = parseInt(localStorage.getItem('proteinGoal') || '150', 10);
@@ -407,25 +406,22 @@ class StatisticsManager {
      * Updates the stat cards on the main page
      * @param {Date} date - The date to show stats for
      */
-    updateStatCards(date) {
-        const entries = this.storageManager.getFoodEntries(date);
-        const totalCalories = this.storageManager.getTotalCalories(date);
-        
+    async updateStatCards(date) {
+        const entries = await this.storageManager.getFoodEntries(date);
         // Update total calories card
-        document.getElementById('totalCaloriesCard').textContent = totalCalories;
-        
+        document.getElementById('totalCaloriesCard').textContent = await this.storageManager.getTotalCalories(date);
+
         // Update meal count card (unique meal types)
         const mealTypes = new Set();
         entries.forEach(entry => mealTypes.add(entry.mealType));
-        document.getElementById('mealCountCard').textContent = entries.length;
-        
+        document.getElementById('mealCountCard').textContent = String(entries.length);
+
         // Update health score card
         const healthyEntries = entries.filter(entry => entry.healthRating === '3').length;
         const healthScore = entries.length > 0 ? Math.round((healthyEntries / entries.length) * 10) : 0;
         document.getElementById('healthScoreCard').textContent = `${healthScore}/10`;
-        
+
         // Update streak card
-        const streak = this.storageManager.getStreak();
-        document.getElementById('streakCard').textContent = streak;
+        document.getElementById('streakCard').textContent = await this.storageManager.getStreak();
     }
 }

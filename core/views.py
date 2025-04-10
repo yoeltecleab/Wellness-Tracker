@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from core.forms import MyUserCreationForm
-from core.models import User, Profile
+from core.models import User, Profile, Goal
 from .models import FoodEntry
 from .utils import CreateDemoUser
 
@@ -32,10 +32,7 @@ def sign_up(request):
     if request.method == 'POST':
         return register_user(request)
 
-    context = {
-        'form': form,
-        'page': 'signup'
-    }
+    context = {'form': form, 'page': 'signup'}
 
     return render(request, 'core/signup.html', context)
 
@@ -47,9 +44,7 @@ def sign_in(request):
     if request.method == 'POST':
         return login_user(request)
 
-    context = {
-        'page': 'signin'
-    }
+    context = {'page': 'signin'}
 
     return render(request, 'core/signup.html', context)
 
@@ -70,9 +65,7 @@ def water_logging(request):
 
 @login_required(login_url='signin')
 def onboarding_quiz(request):
-    context = {
-        'source': 'onboarding'
-    }
+    context = {'source': 'onboarding'}
     return profile_helper(request, context, 'onboarding_quiz')
 
 
@@ -84,10 +77,7 @@ def register_user(request):
         user.save()
         login(request, user)
         return redirect('onboarding_quiz')
-    context = {
-        'form': form,
-        'page': 'signup'
-    }
+    context = {'form': form, 'page': 'signup'}
     return render(request, 'core/signup.html', context)
 
 
@@ -128,22 +118,37 @@ def food_logging(request):
 
         return redirect('food_logging')
 
-    food_entries = FoodEntry.objects.filter(user=request.user).order_by('-date_added')
+    food_entries = FoodEntry.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'core/food_logging.html', {'food_entries': food_entries})
 
 
 def update_profile(request):
     form = MyUserCreationForm(instance=request.user)
-    context = {
-        'form': form,
-        'source': 'update'
-    }
+    context = {'form': form, 'source': 'update'}
     if form.is_valid():
         form.save(commit=False)
     return profile_helper(request, context, 'update_profile')
 
 
 def profile_helper(request, context, this_page):
+    defaultItems = [
+        {'id': 'default-1', 'foodName': 'Apple', 'tag': 'apple', 'calories': 95, 'protein': 5, 'carbs': 25, 'fat': 3,
+         'mealType': 'snack', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-2', 'foodName': 'Banana', 'tag': 'banana', 'calories': 105, 'protein': 1, 'carbs': 27, 'fat': 0,
+         'mealType': 'snack', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-3', 'foodName': 'Chicken Breast', 'tag': 'chicken-breast', 'calories': 165, 'protein': 31,
+         'carbs': 0, 'fat': 3, 'mealType': 'lunch', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-4', 'foodName': 'Salad', 'tag': 'salad', 'calories': 120, 'protein': 2, 'carbs': 10, 'fat': 8,
+         'mealType': 'lunch', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-5', 'foodName': 'Oatmeal', 'tag': 'oatmeal', 'calories': 150, 'protein': 5, 'carbs': 27,
+         'fat': 2, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-6', 'foodName': 'Greek Yogurt', 'tag': 'greek-yogurt', 'calories': 100, 'protein': 15,
+         'carbs': 5, 'fat': 0, 'mealType': 'snack', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-7', 'foodName': 'Eggs (2)', 'tag': 'eggs', 'calories': 155, 'protein': 13, 'carbs': 1,
+         'fat': 11, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-8', 'foodName': 'Avocado Toast', 'tag': 'avocado-toast', 'calories': 190, 'protein': 5,
+         'carbs': 15, 'fat': 10, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True}]
+
     if request.method == 'POST':
         try:
             user = request.user
@@ -170,12 +175,46 @@ def profile_helper(request, context, this_page):
             profile.usual_store = request.POST['usual-store']
             profile.water_goal = request.POST['water-goal']
             profile.calorie_goal = request.POST['calorie-goal']
+            profile.default_foods = ", ".join(request.POST.getlist('default-foods'))
+
+            # Create or update default foods
+            for item in defaultItems:
+                if item['tag'] not in request.POST.getlist('default-foods'):
+                    item['isActive'] = False
+
+                food, created = FoodEntry.objects.get_or_create(user=user, entry_id=item['id'])
+
+                food.entry_id = item['id']
+                food.user = user
+                food.food_name = item['foodName']
+                food.calories = item['calories']
+                food.protein = item['protein']
+                food.carbs = item['carbs']
+                food.fat = item['fat']
+                food.meal_type = item['mealType']
+                food.health_rating = item['healthRating']
+                food.is_default = item['isDefault']
+                food.is_active = item['isActive'] if item['isActive'] is not None else True
+                food.is_quick_add = True
+
+                food.save()
+
+            # Create or update goal
+            goal, created = Goal.objects.get_or_create(user=user)
+            goal.water_goal = request.POST['water-goal']
+            goal.calorie_goal = request.POST['calorie-goal']
+            goal.protein_goal = request.POST['protein-goal']
+            goal.carbs_goal = request.POST['carbs-goal']
+            goal.fat_goal = request.POST['fat-goal']
+
+            goal.save()
 
             profile.user = user
             user.save()
             profile.save()
             login(request, user)
             return redirect('dashboard')
+
         except Exception as e:
             print(e)
             messages.error(request, "Please fill all fields")

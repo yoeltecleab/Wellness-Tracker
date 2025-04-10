@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{% static 'styles/food_logging.css' %}">
 </head>
 <body>
+{% csrf_token %}
 <div class="app">
     <aside class="sidebar">
         <nav>
@@ -405,6 +406,8 @@
                                                         <label class="form-label">Health Rating</label>
                                                         <div class="health-rating-stars">
                                                             <div class="rating-group">
+                                                                <label aria-label="Unknown" class="rating__label"
+                                                                       for="health-0"></label>
                                                                 <input class="rating__input rating__input--none"
                                                                        name="healthRating"
                                                                        id="health-0" value="0" type="radio">
@@ -1344,10 +1347,10 @@
 <script src="{% static '/scripts/logging/api.js' %}"></script>
 
 <!-- Current client using localStorage -->
-<script src="{% static '/scripts/logging/storage.js' %}"></script>
+{#<script src="{% static '/scripts/logging/storage.js' %}"></script>#}
 
 <!-- To use the API-based storage instead of localStorage, comment out the line above and uncomment this: -->
-{#<script src="{% static '/scripts/logging/api-storage.js' %}"></script>#}
+<script src="{% static '/scripts/logging/api-storage.js' %}"></script>
 
 <script src="{% static '/scripts/logging/chart.js' %}"></script>
 <script src="{% static '/scripts/logging/confetti.js' %}"></script>

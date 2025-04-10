@@ -7,27 +7,27 @@ class WaterTrackingManager {
         this.waterChart = null;
         this.weeklyWaterChart = null;
         this.currentDate = new Date();
-        
+
         // Get water goal in ml from settings
         const waterGoalInGlasses = parseInt(localStorage.getItem('waterGoal')) || 8;
         this.waterGoal = parseInt(localStorage.getItem('waterGoalML')) || (waterGoalInGlasses * 250); // Default: glasses * 250ml
-        
+
         // Initialize custom container storage if not exists
         if (!localStorage.getItem('customWaterContainers')) {
             localStorage.setItem('customWaterContainers', JSON.stringify([]));
         }
-        
+
         // Initialize default containers visibility setting if not exists
         if (localStorage.getItem('showDefaultContainers') === null) {
             localStorage.setItem('showDefaultContainers', 'true');
         }
-        
+
         // Define default containers for easy access
         this.defaultContainers = [
-            { amount: 250, label: 'Small Glass (250ml)', icon: 'fa-tint-slash' },
-            { amount: 500, label: 'Large Glass (500ml)', icon: 'fa-tint' },
-            { amount: 750, label: 'Bottle (750ml)', icon: 'fa-glass-water' },
-            { amount: 1000, label: 'Large Bottle (1000ml)', icon: 'fa-bottle-water' }
+            {amount: 250, label: 'Small Glass (250ml)', icon: 'fa-tint-slash'},
+            {amount: 500, label: 'Large Glass (500ml)', icon: 'fa-tint'},
+            {amount: 750, label: 'Bottle (750ml)', icon: 'fa-glass-water'},
+            {amount: 1000, label: 'Large Bottle (1000ml)', icon: 'fa-bottle-water'}
         ];
 
         this.initWaterChart();
@@ -44,12 +44,12 @@ class WaterTrackingManager {
      */
     initWaterChart() {
         const ctx = document.getElementById('waterChart').getContext('2d');
-        
+
         // Destroy existing chart if it exists
         if (this.waterChart) {
             this.waterChart.destroy();
         }
-        
+
         this.waterChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -70,7 +70,7 @@ class WaterTrackingManager {
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 return context.label + ': ' + context.raw + 'ml';
                             }
                         }
@@ -87,12 +87,12 @@ class WaterTrackingManager {
     updateWaterChart(consumedWater) {
         this.waterChart.data.datasets[0].data = [consumedWater, Math.max(0, this.waterGoal - consumedWater)];
         this.waterChart.update();
-        
+
         // Update water counter and progress bar
         const percentage = Math.min(100, Math.round((consumedWater / this.waterGoal) * 100));
         document.getElementById('waterCounter').textContent = `${consumedWater} / ${this.waterGoal} ml`;
         document.getElementById('waterProgressBar').style.width = `${percentage}%`;
-        
+
         // Update stat cards
         document.getElementById('totalWaterCard').textContent = `${consumedWater} ml`;
         document.getElementById('waterGoalCompletionCard').textContent = `${percentage}%`;
@@ -111,17 +111,16 @@ class WaterTrackingManager {
         // Water preset buttons
         document.querySelectorAll('.water-preset').forEach(button => {
             button.addEventListener('click', () => {
-                const amount = parseInt(button.dataset.amount);
-                document.getElementById('waterAmount').value = amount;
+                document.getElementById('waterAmount').value = parseInt(button.dataset.amount);
             });
         });
-        
+
         // Setup custom water container form
         document.getElementById('waterContainerForm').addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleAddCustomContainer();
         });
-        
+
         // Setup water container deletion
         document.addEventListener('click', (e) => {
             if (e.target && e.target.classList.contains('delete-container')) {
@@ -131,13 +130,13 @@ class WaterTrackingManager {
                 }
             }
         });
-        
+
         // Setup default containers toggle
         const showDefaultContainersToggle = document.getElementById('showDefaultContainers');
         if (showDefaultContainersToggle) {
             // Set initial state based on stored preference
             showDefaultContainersToggle.checked = localStorage.getItem('showDefaultContainers') === 'true';
-            
+
             // Add change event listener
             showDefaultContainersToggle.addEventListener('change', () => {
                 localStorage.setItem('showDefaultContainers', showDefaultContainersToggle.checked);
@@ -152,20 +151,20 @@ class WaterTrackingManager {
     /**
      * Handle water form submission
      */
-    handleWaterFormSubmit() {
+    async handleWaterFormSubmit() {
         const waterAmount = parseInt(document.getElementById('waterAmount').value);
-        
+
         if (!waterAmount || waterAmount <= 0) {
             return;
         }
-        
+
         const waterEntry = {
-            id: this.storageManager.generateUniqueId(),
+            id: await this.storageManager.generateUniqueId(),
             amount: waterAmount,
             timestamp: new Date().toISOString()
         };
-        
-        this.addWaterEntry(waterEntry);
+
+        await this.addWaterEntry(waterEntry);
         document.getElementById('waterEntryForm').reset();
     }
 
@@ -173,18 +172,18 @@ class WaterTrackingManager {
      * Adds a water entry to storage and updates UI
      * @param {Object} waterEntry - The water entry to add
      */
-    addWaterEntry(waterEntry) {
+    async addWaterEntry(waterEntry) {
         // Get existing water entries for the current date
-        const dateKey = this.storageManager.getDateKey(this.currentDate);
+        const dateKey = await this.storageManager.getDateKey(this.currentDate);
         let waterData = localStorage.getItem(`water_${dateKey}`);
         let waterEntries = waterData ? JSON.parse(waterData) : [];
-        
+
         // Add new entry
         waterEntries.push(waterEntry);
-        
+
         // Save updated entries
         localStorage.setItem(`water_${dateKey}`, JSON.stringify(waterEntries));
-        
+
         // Update UI
         this.updateWaterUI();
     }
@@ -193,10 +192,10 @@ class WaterTrackingManager {
      * Removes a water entry and updates UI
      * @param {string} entryId - ID of the entry to remove
      */
-    removeWaterEntry(entryId) {
-        const dateKey = this.storageManager.getDateKey(this.currentDate);
+    async removeWaterEntry(entryId) {
+        const dateKey = await this.storageManager.getDateKey(this.currentDate);
         let waterData = localStorage.getItem(`water_${dateKey}`);
-        
+
         if (waterData) {
             let waterEntries = JSON.parse(waterData);
             waterEntries = waterEntries.filter(entry => entry.id !== entryId);
@@ -225,10 +224,10 @@ class WaterTrackingManager {
     updateWaterUI() {
         // Update water log table
         this.updateWaterLog();
-        
+
         // Update water chart and stats
         this.updateWaterData();
-        
+
         // Update date display
         this.updateWaterDateDisplay();
     }
@@ -236,12 +235,12 @@ class WaterTrackingManager {
     /**
      * Updates the water log table
      */
-    updateWaterLog() {
+    async updateWaterLog() {
         const waterLogTable = document.getElementById('waterLogTable');
-        const dateKey = this.storageManager.getDateKey(this.currentDate);
+        const dateKey = await this.storageManager.getDateKey(this.currentDate);
         let waterData = localStorage.getItem(`water_${dateKey}`);
         let waterEntries = waterData ? JSON.parse(waterData) : [];
-        
+
         if (waterEntries.length === 0) {
             waterLogTable.innerHTML = `
                 <tr class="empty-state">
@@ -256,13 +255,13 @@ class WaterTrackingManager {
             `;
             return;
         }
-        
+
         // Sort entries by timestamp (newest first)
         waterEntries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        
+
         let tableHtml = '';
         waterEntries.forEach(entry => {
-            const time = new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const time = new Date(entry.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
             tableHtml += `
                 <tr>
                     <td>${time}</td>
@@ -275,21 +274,21 @@ class WaterTrackingManager {
                 </tr>
             `;
         });
-        
+
         waterLogTable.innerHTML = tableHtml;
     }
 
     /**
      * Updates water data and chart
      */
-    updateWaterData() {
-        const dateKey = this.storageManager.getDateKey(this.currentDate);
+    async updateWaterData() {
+        const dateKey = await this.storageManager.getDateKey(this.currentDate);
         let waterData = localStorage.getItem(`water_${dateKey}`);
         let waterEntries = waterData ? JSON.parse(waterData) : [];
-        
+
         // Calculate total water intake
         const totalWater = waterEntries.reduce((sum, entry) => sum + entry.amount, 0);
-        
+
         // Update chart
         this.updateWaterChart(totalWater);
     }
@@ -302,18 +301,18 @@ class WaterTrackingManager {
             this.currentDate.setDate(this.currentDate.getDate() - 1);
             this.updateWaterUI();
         });
-        
+
         document.getElementById('waterNextDay').addEventListener('click', () => {
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            
+
             // Don't allow navigating to future dates
             if (this.currentDate < tomorrow) {
                 this.currentDate.setDate(this.currentDate.getDate() + 1);
                 this.updateWaterUI();
             }
         });
-        
+
         document.getElementById('waterCurrentDay').addEventListener('click', () => {
             this.currentDate = new Date();
             this.updateWaterUI();
@@ -324,15 +323,14 @@ class WaterTrackingManager {
      * Updates the water current date display
      */
     updateWaterDateDisplay() {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const dateString = this.currentDate.toLocaleDateString(undefined, options);
-        document.getElementById('waterCurrentDate').textContent = dateString;
+        const options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+        document.getElementById('waterCurrentDate').textContent = this.currentDate.toLocaleDateString(undefined, options);
     }
 
     /**
      * Initializes the weekly water chart
      */
-    initWeeklyWaterChart() {
+    async initWeeklyWaterChart() {
         const ctx = document.getElementById('weeklyWaterChart');
         if (!ctx) return;
 
@@ -341,7 +339,7 @@ class WaterTrackingManager {
             this.weeklyWaterChart.destroy();
         }
 
-        const weeklyData = this.getWeeklyWaterData();
+        const weeklyData = await this.getWeeklyWaterData();
 
         this.weeklyWaterChart = new Chart(ctx, {
             type: 'bar',
@@ -393,7 +391,7 @@ class WaterTrackingManager {
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 if (context.dataset.label === 'Goal') {
                                     return `Goal: ${context.raw} ml`;
                                 }
@@ -413,44 +411,45 @@ class WaterTrackingManager {
      * Gets weekly water data
      * @returns {Object} - Object with labels and water data
      */
-    getWeeklyWaterData() {
-        const weeklyData = this.storageManager.getWeeklyData(7);
+    async getWeeklyWaterData() {
+        const weeklyData = await this.storageManager.getWeeklyData(7);
         const labels = [];
         const data = [];
 
+        if (weeklyData) return {labels, data};
         weeklyData.forEach(day => {
             // Format date for label (e.g., "Mon 5")
             const date = new Date(day.date);
-            const dayName = date.toLocaleDateString(undefined, { weekday: 'short' });
+            const dayName = date.toLocaleDateString(undefined, {weekday: 'short'});
             const dayNumber = date.getDate();
             labels.push(`${dayName} ${dayNumber}`);
 
             // Get water data for this day
             const waterData = localStorage.getItem(`water_${day.date}`);
             let waterEntries = waterData ? JSON.parse(waterData) : [];
-            
+
             // Sum water intake for this day
             const dayTotal = waterEntries.reduce((sum, entry) => sum + entry.amount, 0);
             data.push(dayTotal);
         });
 
-        return { labels, data };
+        return {labels, data};
     }
 
     /**
      * Updates the weekly water statistics
      */
-    updateWeeklyWaterStats() {
-        const weeklyData = this.getWeeklyWaterData();
+    async updateWeeklyWaterStats() {
+        const weeklyData = await this.getWeeklyWaterData();
         const totalWeeklyWater = weeklyData.data.reduce((sum, amount) => sum + amount, 0);
         const avgDailyWater = Math.round(totalWeeklyWater / 7);
         const daysAboveGoal = weeklyData.data.filter(amount => amount >= this.waterGoal).length;
-        
+
         // Update stats in the UI
         document.getElementById('totalWeeklyWater').textContent = `${totalWeeklyWater} ml`;
         document.getElementById('avgDailyWater').textContent = `${avgDailyWater} ml`;
         document.getElementById('daysAboveWaterGoal').textContent = `${daysAboveGoal} / 7`;
-        
+
         // Calculate streak
         let currentStreak = 0;
         for (let i = weeklyData.data.length - 1; i >= 0; i--) {
@@ -461,19 +460,19 @@ class WaterTrackingManager {
             }
         }
         document.getElementById('waterStreak').textContent = `${currentStreak} day${currentStreak !== 1 ? 's' : ''}`;
-        
+
         // Calculate percentage change from previous week
-        const previousWeekData = this.getPreviousWeekWaterData();
+        window.previousWeekData = await this.getPreviousWeekWaterData();
         const previousWeekTotal = previousWeekData.reduce((sum, amount) => sum + amount, 0);
-        
+
         let percentChange = 0;
         if (previousWeekTotal > 0) {
             percentChange = Math.round((totalWeeklyWater - previousWeekTotal) / previousWeekTotal * 100);
         }
-        
+
         const changeElement = document.getElementById('waterWeeklyChange');
         changeElement.textContent = `${Math.abs(percentChange)}%`;
-        
+
         if (percentChange > 0) {
             changeElement.classList.remove('text-danger');
             changeElement.classList.add('text-success');
@@ -487,35 +486,35 @@ class WaterTrackingManager {
             document.getElementById('waterChangeIcon').innerHTML = '<i class="fas fa-equals"></i>';
         }
     }
-    
+
     /**
      * Gets water data for the previous week
      * @returns {Array} - Array of daily totals for previous week
      */
-    getPreviousWeekWaterData() {
+    async getPreviousWeekWaterData() {
         const data = [];
         const today = new Date();
-        
+
         // Calculate start and end dates for the previous week
         const end = new Date(today);
         end.setDate(end.getDate() - 7);
         const start = new Date(end);
         start.setDate(start.getDate() - 6);
-        
+
         // Loop through each day of the previous week
         for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
-            const dateKey = this.storageManager.getDateKey(date);
+            const dateKey = await this.storageManager.getDateKey(date);
             const waterData = localStorage.getItem(`water_${dateKey}`);
             let waterEntries = waterData ? JSON.parse(waterData) : [];
-            
+
             // Sum water intake for this day
             const dayTotal = waterEntries.reduce((sum, entry) => sum + entry.amount, 0);
             data.push(dayTotal);
         }
-        
+
         return data;
     }
-    
+
     /**
      * Sets up the water stats button to toggle weekly stats view
      */
@@ -523,7 +522,7 @@ class WaterTrackingManager {
         // Setup toggle button for weekly stats
         const statsButton = document.getElementById('toggleWaterStats');
         const statsSection = document.getElementById('waterWeeklyStatsSection');
-        
+
         if (statsButton && statsSection) {
             statsButton.addEventListener('click', () => {
                 if (statsSection.classList.contains('d-none')) {
@@ -536,7 +535,7 @@ class WaterTrackingManager {
                 }
             });
         }
-        
+
         // Setup modal water stats button
         const weeklyWaterStatsBtn = document.getElementById('weeklyWaterStatsBtn');
         if (weeklyWaterStatsBtn) {
@@ -545,21 +544,21 @@ class WaterTrackingManager {
             });
         }
     }
-    
+
     /**
      * Initialize the modal weekly water chart
      */
     initModalWeeklyWaterChart() {
         const ctx = document.getElementById('modalWeeklyWaterChart');
         if (!ctx) return;
-        
+
         const modalWaterChart = Chart.getChart(ctx);
         if (modalWaterChart) {
             modalWaterChart.destroy();
         }
-        
+
         const weeklyData = this.getWeeklyWaterData();
-        
+
         new Chart(ctx, {
             type: 'bar',
             data: {
@@ -610,7 +609,7 @@ class WaterTrackingManager {
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 if (context.dataset.label === 'Goal') {
                                     return `Goal: ${context.raw} ml`;
                                 }
@@ -622,37 +621,37 @@ class WaterTrackingManager {
             }
         });
     }
-    
+
     /**
      * Populate the water statistics modal with data
      */
-    populateWaterStatsModal() {
+    async populateWaterStatsModal() {
         // Initialize the chart
         this.initModalWeeklyWaterChart();
-        
+
         // Get weekly data
-        const weeklyData = this.getWeeklyWaterData();
+        const weeklyData = await this.getWeeklyWaterData();
         const totalWeeklyWater = weeklyData.data.reduce((sum, amount) => sum + amount, 0);
         const avgDailyWater = Math.round(totalWeeklyWater / 7);
         const daysAboveGoal = weeklyData.data.filter(amount => amount >= this.waterGoal).length;
-        
+
         // Update stats in the modal
         document.getElementById('modalTotalWeeklyWater').textContent = `${totalWeeklyWater} ml`;
         document.getElementById('modalAvgDailyWater').textContent = `${avgDailyWater} ml`;
         document.getElementById('modalDaysAboveWaterGoal').textContent = `${daysAboveGoal}/7`;
-        
+
         // Calculate percentage change from previous week
         const previousWeekData = this.getPreviousWeekWaterData();
         const previousWeekTotal = previousWeekData.reduce((sum, amount) => sum + amount, 0);
-        
+
         let percentChange = 0;
         if (previousWeekTotal > 0) {
             percentChange = Math.round((totalWeeklyWater - previousWeekTotal) / previousWeekTotal * 100);
         }
-        
+
         const changeElement = document.getElementById('modalWaterWeeklyChange');
         changeElement.textContent = `${Math.abs(percentChange)}%`;
-        
+
         if (percentChange > 0) {
             changeElement.classList.remove('text-danger');
             changeElement.classList.add('text-success');
@@ -665,11 +664,11 @@ class WaterTrackingManager {
             changeElement.classList.remove('text-success', 'text-danger');
             document.getElementById('modalWaterChangeIcon').innerHTML = '<i class="fas fa-equals"></i>';
         }
-        
+
         // Populate daily breakdown table
         this.populateWaterDailyBreakdown(weeklyData);
     }
-    
+
     /**
      * Populate the daily breakdown table in the water stats modal
      * @param {Object} weeklyData - The weekly water data
@@ -677,10 +676,10 @@ class WaterTrackingManager {
     populateWaterDailyBreakdown(weeklyData) {
         const tbody = document.getElementById('waterDailyBreakdown');
         if (!tbody) return;
-        
+
         // Clear existing rows
         tbody.innerHTML = '';
-        
+
         // Get the dates for the past 7 days
         const weeklyDates = [];
         for (let i = 6; i >= 0; i--) {
@@ -688,18 +687,18 @@ class WaterTrackingManager {
             date.setDate(date.getDate() - i);
             weeklyDates.push(date);
         }
-        
+
         // Create rows for each day
         weeklyData.labels.forEach((label, index) => {
             const amount = weeklyData.data[index];
             const percentOfGoal = Math.round((amount / this.waterGoal) * 100);
             const date = weeklyDates[index];
-            const dateString = date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
-            
+            const dateString = date.toLocaleDateString(undefined, {weekday: 'short', month: 'short', day: 'numeric'});
+
             const row = document.createElement('tr');
-            
+
             // Determine status and badge class
-            let statusBadge = '';
+            let statusBadge;
             if (percentOfGoal >= 100) {
                 statusBadge = '<span class="badge bg-success">Goal Met</span>';
             } else if (percentOfGoal >= 75) {
@@ -707,7 +706,7 @@ class WaterTrackingManager {
             } else {
                 statusBadge = '<span class="badge bg-danger">Below Goal</span>';
             }
-            
+
             row.innerHTML = `
                 <td>${dateString}</td>
                 <td>${amount} ml</td>
@@ -721,11 +720,11 @@ class WaterTrackingManager {
                 </td>
                 <td>${statusBadge}</td>
             `;
-            
+
             tbody.appendChild(row);
         });
     }
-    
+
     /**
      * Loads custom water containers from storage and displays them
      */
@@ -733,11 +732,11 @@ class WaterTrackingManager {
         const containers = this.getCustomContainers();
         this.updateCustomContainersTable(containers);
         this.updateCustomContainerPresets(containers);
-        
+
         // Setup event listeners for dynamically added presets
         this.setupDynamicPresetsListeners();
     }
-    
+
     /**
      * Gets custom water containers from storage
      * @returns {Array} - Array of custom container objects
@@ -746,14 +745,14 @@ class WaterTrackingManager {
         const containers = localStorage.getItem('customWaterContainers');
         return containers ? JSON.parse(containers) : [];
     }
-    
+
     /**
      * Updates the custom containers table in the modal
      * @param {Array} containers - Array of container objects
      */
     updateCustomContainersTable(containers) {
         const table = document.getElementById('customContainersTable');
-        
+
         if (containers.length === 0) {
             table.innerHTML = `
                 <tr class="empty-state">
@@ -764,7 +763,7 @@ class WaterTrackingManager {
             `;
             return;
         }
-        
+
         let html = '';
         containers.forEach(container => {
             html += `
@@ -780,10 +779,10 @@ class WaterTrackingManager {
                 </tr>
             `;
         });
-        
+
         table.innerHTML = html;
     }
-    
+
     /**
      * Updates the custom container presets in the water form
      * @param {Array} containers - Array of container objects
@@ -791,13 +790,13 @@ class WaterTrackingManager {
     updateCustomContainerPresets(containers) {
         // Get the container where presets will be added
         const presetsContainer = document.getElementById('waterPresetsContainer');
-        
+
         // Check if default containers should be shown
         const showDefaultContainers = localStorage.getItem('showDefaultContainers') === 'true';
-        
+
         // Clear all existing presets
         presetsContainer.innerHTML = '';
-        
+
         // Add default presets if enabled
         if (showDefaultContainers) {
             this.defaultContainers.forEach(container => {
@@ -806,11 +805,11 @@ class WaterTrackingManager {
                 button.className = 'btn btn-outline-info water-preset default-water-preset';
                 button.dataset.amount = container.amount;
                 button.innerHTML = `<i class="fas ${container.icon} me-1"></i> ${container.label}`;
-                
+
                 presetsContainer.appendChild(button);
             });
         }
-        
+
         // Add custom presets
         containers.forEach(container => {
             const button = document.createElement('button');
@@ -818,10 +817,10 @@ class WaterTrackingManager {
             button.className = 'btn btn-outline-primary water-preset custom-water-preset';
             button.dataset.amount = container.size;
             button.innerHTML = `<i class="fas ${container.icon || 'fa-tint'} me-1"></i> ${container.name} (${container.size}ml)`;
-            
+
             presetsContainer.appendChild(button);
         });
-        
+
         // If no containers are visible, show a message
         if (!showDefaultContainers && containers.length === 0) {
             const message = document.createElement('div');
@@ -830,53 +829,52 @@ class WaterTrackingManager {
             presetsContainer.appendChild(message);
         }
     }
-    
+
     /**
      * Sets up event listeners for dynamically added preset buttons
      */
     setupDynamicPresetsListeners() {
         document.querySelectorAll('.water-preset').forEach(button => {
             button.addEventListener('click', () => {
-                const amount = parseInt(button.dataset.amount);
-                document.getElementById('waterAmount').value = amount;
+                document.getElementById('waterAmount').value = parseInt(button.dataset.amount);
             });
         });
     }
-    
+
     /**
      * Handles adding a new custom container
      */
-    handleAddCustomContainer() {
+    async handleAddCustomContainer() {
         const nameInput = document.getElementById('containerName');
         const sizeInput = document.getElementById('containerSize');
         const iconInput = document.getElementById('containerIcon');
-        
+
         const name = nameInput.value.trim();
         const size = parseInt(sizeInput.value);
         const icon = iconInput.value;
-        
+
         if (!name || !size || size <= 0) {
             alert('Please enter a valid container name and size.');
             return;
         }
-        
+
         const newContainer = {
-            id: this.storageManager.generateUniqueId(),
+            id: await this.storageManager.generateUniqueId(),
             name: name,
             size: size,
             icon: icon
         };
-        
+
         this.addCustomContainer(newContainer);
-        
+
         // Reset form
         nameInput.value = '';
         sizeInput.value = '';
-        
+
         // Show success message
         alert(`Added "${name}" container successfully!`);
     }
-    
+
     /**
      * Adds a custom container to storage and updates UI
      * @param {Object} container - The container object to add
@@ -884,19 +882,19 @@ class WaterTrackingManager {
     addCustomContainer(container) {
         // Get existing containers
         const containers = this.getCustomContainers();
-        
+
         // Add new container
         containers.push(container);
-        
+
         // Save to storage
         localStorage.setItem('customWaterContainers', JSON.stringify(containers));
-        
+
         // Update UI
         this.updateCustomContainersTable(containers);
         this.updateCustomContainerPresets(containers);
         this.setupDynamicPresetsListeners();
     }
-    
+
     /**
      * Deletes a custom container from storage and updates UI
      * @param {string} containerId - ID of the container to delete
@@ -904,13 +902,13 @@ class WaterTrackingManager {
     deleteCustomContainer(containerId) {
         // Get existing containers
         let containers = this.getCustomContainers();
-        
+
         // Filter out the container to delete
         containers = containers.filter(container => container.id !== containerId);
-        
+
         // Save to storage
         localStorage.setItem('customWaterContainers', JSON.stringify(containers));
-        
+
         // Update UI
         this.updateCustomContainersTable(containers);
         this.updateCustomContainerPresets(containers);

@@ -1,3 +1,4 @@
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
@@ -35,11 +36,9 @@ class Profile(models.Model):
     dietary_restrictions = models.CharField(max_length=100, blank=True, null=True)
     exercise = models.CharField(max_length=100, blank=True, null=True)
     usual_store = models.CharField(max_length=100, blank=True, null=True)
+    default_foods = models.CharField(max_length=100, blank=True, null=True)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user_profile')
-
-    water_goal = models.IntegerField(blank=True, null=True)
-    calorie_goal = models.IntegerField(blank=True, null=True)
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
@@ -62,44 +61,37 @@ class WaterLog(models.Model):
         verbose_name_plural = 'Water Logs'
 
 
-class Food(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True, unique=True)
-    frequency = models.IntegerField(blank=True, null=True)
-    description = models.CharField(max_length=100, blank=True, null=True)
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='foods')
-
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = 'Food'
-        verbose_name_plural = 'Foods'
-
-
-class FoodLog(models.Model):
-    food = models.ForeignKey('Food', on_delete=models.CASCADE, blank=True, null=True, related_name='food_logs')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='food_logs')
-    is_healthy = models.BooleanField(blank=True, null=True)
-
-    homemade_or_purchased = models.CharField(max_length=100, blank=True, null=True)
+class FoodEntry(models.Model):
+    entry_id = models.CharField(max_length=100, blank=True, null=True)
+    food_name = models.CharField(max_length=100, blank=True, null=True)
     calories = models.IntegerField(blank=True, null=True)
+    purchased = models.BooleanField(blank=True, null=True, default=False)
     purchased_from = models.ForeignKey('Store', on_delete=models.CASCADE,
-                                       blank=True, null=True, related_name='food_logs')
+                                       blank=True, null=True, related_name='food_entries')
+    health_rating = models.CharField(max_length=100, blank=True, null=True)
+    meal_type = models.CharField(max_length=100, blank=True, null=True)
+    notes = models.CharField(max_length=100, blank=True, null=True)
+    protein = models.IntegerField(blank=True, null=True)
+    carbs = models.IntegerField(blank=True, null=True)
+    fat = models.IntegerField(blank=True, null=True)
+    frequency = models.IntegerField(blank=True, null=True)
+    is_active = models.BooleanField(blank=True, null=True, default=True)
+    is_quick_add = models.BooleanField(blank=True, null=True, default=False)
+    is_default = models.BooleanField(blank=True, null=True, default=False)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='food_entries')
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Food Log'
-        verbose_name_plural = 'Food Logs'
+        verbose_name = 'Food Entry'
+        verbose_name_plural = 'Food Entries'
 
 
 class Store(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
-    latitude = models.FloatField(blank=True, null=True)
-    longitude = models.FloatField(blank=True, null=True)
     visits = models.IntegerField(blank=True, null=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='stores')
@@ -112,15 +104,17 @@ class Store(models.Model):
         verbose_name_plural = 'Stores'
 
 
-class FoodEntry(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Links food entries to a user
-    food_name = models.CharField(max_length=255)
-    calories = models.PositiveIntegerField()
-    date_added = models.DateTimeField(default=timezone.now)  # Automatically sets the timestamp
-
-    def __str__(self):
-        return f"{self.food_name} - {self.calories} cal"
+class Goal(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='goal')
+    calorie_goal = models.IntegerField(blank=True, null=True)
+    water_goal = models.IntegerField(blank=True, null=True)
+    protein_goal = models.IntegerField(blank=True, null=True)
+    carbs_goal = models.IntegerField(blank=True, null=True)
+    fat_goal = models.IntegerField(blank=True, null=True)
+    
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Food Entry'
-        verbose_name_plural = 'Food Entries'
+        verbose_name = 'Goal'
+        verbose_name_plural = 'Goals'
