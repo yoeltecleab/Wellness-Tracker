@@ -27,7 +27,7 @@ urlpatterns = [
     # get all entries on the given date - GET
     path('water-entries/<str:date>/', views.water_entries),
     # delete an entry with the given id - DELETE
-    path('water-entries/<str:entryId>/', views.water_entries),
+    path('water-entries/delete/<str:entryId>/', views.water_entries),
 
     # Food and Store Database APIs
     path('food-database/', views.food_database),

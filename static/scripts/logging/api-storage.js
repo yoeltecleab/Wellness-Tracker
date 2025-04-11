@@ -202,6 +202,7 @@ class StorageManager {
         )
     }
 
+
     /**
      * Adds a quick add food item
      * @param {Object} foodItem - Quick add food item object
@@ -237,13 +238,8 @@ class StorageManager {
      * @param {Object} waterEntry - Water entry object
      * @param {Date} date - Date object
      */
-    async addWaterEntry(waterEntry, date) {
-        // Generate a unique ID if not provided
-        if (!waterEntry.id) {
-            waterEntry.id = this.generateUniqueId();
-        }
-
-        return await this.apiClient.addWaterEntry(waterEntry, date);
+    async addWaterEntry(waterEntry) {
+        return await this.apiClient.addWaterEntry(waterEntry);
     }
 
     /**
@@ -268,8 +264,18 @@ class StorageManager {
      * Gets custom water containers
      * @returns {Promise<Array>} - Promise resolving to an array of container objects
      */
-    async getCustomWaterContainers() {
-        return await this.apiClient.getWaterContainers();
+    async getWaterContainers() {
+        return (await this.apiClient.getWaterContainers())
+            .filter(c => c.isActive && !c.isDefault);
+    }
+
+    /**
+     * Gets custom water containers
+     * @returns {Promise<Array>} - Promise resolving to an array of container objects
+     */
+    async getDefaultWaterContainers() {
+        return (await this.apiClient.getWaterContainers())
+            .filter(c => c.isDefault);
     }
 
     /**
@@ -277,11 +283,6 @@ class StorageManager {
      * @param {Object} container - The container object to add
      */
     async addCustomWaterContainer(container) {
-        // Generate a unique ID if not provided
-        if (!container.id) {
-            container.id = this.generateUniqueId();
-        }
-
         return await this.apiClient.addWaterContainer(container);
     }
 
@@ -310,4 +311,24 @@ class StorageManager {
     async setSetting(key, value) {
         return await this.apiClient.setSetting(key, value);
     }
+
+    /**
+     * Get goals
+     * @returns {Promise<Array>} - Promise resolving to an array of goals
+     */
+    async getGoals() {
+        return await this.apiClient.getGoals();
+    }
+
+    /**
+     * Update goals
+     * @returns {Promise<Array>} - Promise resolving to an array of goals
+     */
+    async updateGoals(goals) {
+        return await this.apiClient.updateGoals(goals);
+    }
+
+    // async getCalorieGoal() {
+    //     return (await this.getGoals()).f
+    // }
 }

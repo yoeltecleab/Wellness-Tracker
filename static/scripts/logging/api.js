@@ -156,7 +156,7 @@ class ApiClient {
      */
     async getWaterEntries(date) {
         const dateStr = this._formatDate(date);
-        return await this.get(`/water-entries/${dateStr}`);
+        return await this.get(`/water-entries/${dateStr}/`);
     }
 
     /**
@@ -165,14 +165,8 @@ class ApiClient {
      * @param {Date} date - Date object
      * @returns {Promise<Object>} - Promise resolving to the added water entry
      */
-    async addWaterEntry(waterEntry, date) {
-        const dateStr = this._formatDate(date);
-        const entry = {
-            ...waterEntry,
-            date: dateStr
-        };
-
-        return await this.post('/water-entries/', entry);
+    async addWaterEntry(waterEntry) {
+        return await this.post('/water-entries/', waterEntry);
     }
 
     /**
@@ -181,7 +175,7 @@ class ApiClient {
      * @returns {Promise<boolean>} - Promise resolving to true if successful
      */
     async removeWaterEntry(entryId) {
-        return await this.delete(`/water-entries/${entryId}`);
+        return await this.delete(`/water-entries/delete/${entryId}/`);
     }
 
     // Food and Store Database API methods
@@ -211,6 +205,13 @@ class ApiClient {
      */
     async getQuickAddFoods() {
         return await this.get('/quick-add-foods/');
+    }
+
+    async defaultQuickAddFoods() {
+        return (await this.getQuickAddFoods()).filter(item => {
+                return item.isDefault;
+            }
+        )
     }
 
 
@@ -257,7 +258,7 @@ class ApiClient {
      * @returns {Promise<boolean>} - Promise resolving to true if successful
      */
     async removeWaterContainer(containerId) {
-        return await this.delete(`/water-containers/${containerId}`);
+        return await this.delete(`/water-containers/${containerId}/`);
     }
 
     // Settings API methods
@@ -315,5 +316,21 @@ class ApiClient {
             }
         }
         return null;
+    }
+
+    /**
+     * Get goals
+     * @returns {Promise<Array>} - Promise resolving to an array of goals
+     */
+    async getGoals() {
+        return await this.get(`/goals/`);
+    }
+
+    /**
+     * Update goals
+     * @returns {Promise<Array>} - Promise resolving to an array of goals
+     */
+    async updateGoals(goals) {
+        return await this.post(`/goals/`, goals);
     }
 }

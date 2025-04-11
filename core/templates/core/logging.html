@@ -53,6 +53,8 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
+
+                {% if source == 'food' %}
                 <li class="nav-link-left">
                     <a href="{% url 'water_logging' %}">
                         <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
@@ -65,6 +67,20 @@
                         <span>Log Food</span>
                     </a>
                 </li>
+                {% elif source == 'water' %}
+                    <li class="nav-link-left">
+                    <a href="#" class="active">
+                        <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
+                        <span>Log Water</span>
+                    </a>
+                </li>
+                <li class="nav-link-left">
+                    <a href="{% url 'food_logging' %}">
+                        <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
+                        <span>Log Food</span>
+                    </a>
+                </li>
+                {% endif %}
 
             </ul>
         </nav>
@@ -131,6 +147,7 @@
                 <!-- Track Type Navigation Tabs -->
                 <div class="mb-4">
                     <ul class="nav nav-pills nav-justified tracking-tabs" id="trackingTabs">
+                        {% if source == 'food' %}
                         <li class="nav-item">
                             <button class="nav-link active" id="food-tab" data-bs-toggle="pill"
                                     data-bs-target="#food-tracking"
@@ -138,13 +155,15 @@
                                 <i class="fas fa-utensils me-2"></i>Food Tracking
                             </button>
                         </li>
+                        {% elif source == 'water' %}
                         <li class="nav-item">
-                            <button class="nav-link" id="water-tab" data-bs-toggle="pill"
+                            <button class="nav-link active" id="water-tab" data-bs-toggle="pill"
                                     data-bs-target="#water-tracking"
                                     type="button">
                                 <i class="fas fa-tint me-2"></i>Water Tracking
                             </button>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
 
@@ -823,7 +842,7 @@
                                            value="3000">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="waterGoalInput" class="form-label">Daily Water Goal (glasses)</label>
+                                    <label for="waterGoalInput" class="form-label">Daily Water Goal (ml)</label>
                                     <input type="number" class="form-control" id="waterGoalInput" min="1" max="20"
                                            value="8">
                                 </div>
@@ -1344,6 +1363,23 @@
 </div>
 <!-- JavaScript Files -->
 <!-- API Client for server communication -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const waterTrackingTab = document.getElementById('water-tracking');
+        const foodTrackingTab = document.getElementById('food-tracking');
+
+        {% if source == 'food' %}
+            waterTrackingTab.style.display = 'none';
+            foodTrackingTab.style.display = 'block';
+        {% elif source == 'water' %}
+            waterTrackingTab.style.display = 'block';
+            waterTrackingTab.style.opacity = '1';
+            foodTrackingTab.style.display = 'none';
+        {% endif %}
+    });
+</script>
+
 <script src="{% static '/scripts/logging/api.js' %}"></script>
 
 <!-- Current client using localStorage -->
