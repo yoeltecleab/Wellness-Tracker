@@ -269,18 +269,17 @@ class ApiClient {
      * @returns {Promise<any>} - Promise resolving to the setting value
      */
     async getSetting(key) {
-        const result = await this.get(`/settings/${key}`);
-        return result.value;
+        const result = await this.get(`/settings/`);
+        return result[key];
     }
 
     /**
      * Set a setting
-     * @param {string} key - Setting key
-     * @param {any} value - Setting value
      * @returns {Promise<boolean>} - Promise resolving to true if successful
+     * @param data
      */
-    async setSetting(key, value) {
-        return await this.post('/settings/', {key, value});
+    async setSetting(data) {
+        return await this.post('/settings/', data);
     }
 
     // Weekly Data API methods
@@ -332,5 +331,17 @@ class ApiClient {
      */
     async updateGoals(goals) {
         return await this.post(`/goals/`, goals);
+    }
+
+    async clearData() {
+        return await this.get(`/clear-data/`);
+    }
+
+    async exportData() {
+        return await this.get(`/export-data/`);
+    }
+
+    async importData(jsonData) {
+        return await this.post(`/import-data/`, jsonData);
     }
 }

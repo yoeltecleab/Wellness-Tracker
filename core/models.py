@@ -40,6 +40,7 @@ class Profile(models.Model):
     usual_store = models.CharField(max_length=100, blank=True, null=True)
     default_foods = models.CharField(max_length=100, blank=True, null=True)
     default_water_containers = models.CharField(max_length=100, blank=True, null=True)
+    streak = models.IntegerField(blank=True, null=True, default=0)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user_profile')
 

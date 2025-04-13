@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Exported Data</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .collapsible {
+            cursor: pointer;
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .collapsible::before {
+            content: "▶ ";
+            color: #777;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .collapsible.active::before {
+            content: "▼ ";
+        }
+
+        .content {
+            padding-left: 20px;
+            display: none;
+        }
+
+        .content.show {
+            display: block;
+        }
+
+        .key {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .key-quote {
+            color: #333; /* Color for the quotes around object keys */
+        }
+
+        .value {
+            color: #28a745;
+        }
+
+        .string {
+            color: #dc3545;
+        }
+
+        .number {
+            color: #fd7e14;
+        }
+
+        .boolean {
+            color: #6c757d;
+        }
+
+        .null {
+            color: #6c757d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<h1>Exported Data</h1>
+<button id="download-button">Download JSON</button>
+<div id="json-container"></div>
+<script>
+    function formatAndCollapse(obj, container) {
+        const type = typeof obj;
+        if (type === 'object' && obj !== null) {
+            const isArray = Array.isArray(obj);
+            const collapsible = document.createElement('div');
+            collapsible.classList.add('collapsible');
+            collapsible.textContent = isArray ? '[' : '{';
+            collapsible.addEventListener('click', function () {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('show');
+            });
+            container.appendChild(collapsible);
+
+            const content = document.createElement('div');
+            content.classList.add('content', 'show'); // Add 'show' class initially
+
+            for (const key in obj) {
+                const item = document.createElement('div');
+                const keySpan = document.createElement('span');
+                keySpan.classList.add('key');
+                keySpan.innerHTML = isArray ? `[${key}]: ` : `<span class="key-quote">"</span>${key}<span class="key-quote">"</span>: `;
+                item.appendChild(keySpan);
+
+                const value = obj[key];
+                const valueType = typeof value;
+                const valueSpan = document.createElement('span');
+                valueSpan.classList.add('value');
+
+                if (valueType === 'object' && value !== null) {
+                    formatAndCollapse(value, item);
+                } else {
+                    if (valueType === 'string') valueSpan.classList.add('string');
+                    else if (valueType === 'number') valueSpan.classList.add('number');
+                    else if (valueType === 'boolean') valueSpan.classList.add('boolean');
+                    else if (value === null) valueSpan.classList.add('null');
+                    valueSpan.textContent = JSON.stringify(value);
+                    item.appendChild(valueSpan);
+                }
+                content.appendChild(item);
+            }
+            const closingBracket = document.createElement('div');
+            closingBracket.textContent = isArray ? ']' : '}';
+            content.appendChild(closingBracket);
+            container.appendChild(content);
+
+            collapsible.classList.add('active');
+
+        } else {
+            const span = document.createElement('span');
+            span.classList.add('value');
+            if (type === 'string') span.classList.add('string');
+            else if (type === 'number') span.classList.add('number');
+            else if (type === 'boolean') span.classList.add('boolean');
+            else if (obj === null) span.classList.add('null');
+            span.textContent = JSON.stringify(obj);
+            container.appendChild(span);
+        }
+    }
+
+    const jsonDataString = localStorage.getItem('exported_json_data');
+    if (jsonDataString) {
+        const jsonData = JSON.parse(jsonDataString);
+        const jsonContainer = document.getElementById('json-container');
+        formatAndCollapse(jsonData, jsonContainer);
+
+        // Add download functionality AFTER the DOM is likely loaded
+        const downloadButton = document.getElementById('download-button');
+        downloadButton.addEventListener('click', () => {
+            const blob = new Blob([jsonDataString], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `nutritrack_export_${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    } else {
+        document.getElementById('json-container').textContent = 'Error: No data to display.';
+        const downloadButton = document.getElementById('download-button');
+        if (downloadButton) {
+            downloadButton.style.display = 'none'; // Hide download button on error
+        }
+    }
+</script>
+</body>
+</html>

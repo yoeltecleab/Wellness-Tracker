@@ -37,6 +37,7 @@
     --steps: 4;
     --progress-width: calc((var(--steps) - 1) / var(--steps) * 100%);
 }
+
 /* sidebar */
 body {
     /*height: 100vh;*/
@@ -141,6 +142,7 @@ body {
         width: 6rem;
     }
 }
+
 .open-btn {
     font-size: 1.5rem;
     cursor: pointer;
@@ -306,7 +308,6 @@ body {
 }
 
 /* Navbar */
-
 
 
 /* General Styles */
@@ -592,4 +593,32 @@ body {
         padding: 0.25rem 0.5rem;
         font-size: 0.875rem;
     }
+}
+
+/* For download page */
+.json-display-container {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.json-display-container .string {
+    color: #008000;
+}
+
+.json-display-container .number {
+    color: #0000ff;
+}
+
+.json-display-container .boolean {
+    color: #b22222;
+}
+
+.json-display-container .null {
+    color: #808080;
+}
+
+.json-display-container .key {
+    color: #a52a2a;
+    font-weight: bold;
 }

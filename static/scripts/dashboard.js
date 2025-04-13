@@ -378,11 +378,6 @@ async function updateUI() {
     let today_goal = today_water_chart['goal'];
     let remaining = today_goal - todays_intake_value > 0 ? today_goal - todays_intake_value : 0;
 
-    console.log("Today's intake value: ", todays_intake_value);
-    console.log("Last week same day: ", last_week_same_day);
-    console.log("Change: ", change);
-    console.log("Today's goal: ", today_goal);
-
 
     new Chart(radialCtx, {
         type: 'doughnut',
@@ -445,7 +440,7 @@ async function updateUI() {
 
                 // Array of lines
                 let lines = ["GOAL: " + today_goal + " ml"]; // Replace with dynamic values
-                if (todays_intake_value >= today_goal) {
+                if (todays_intake_value >= today_goal && todays_intake_value > 0) {
                     lines.push("GOAL REACHED 🎉🎉🎉");
                     if (todays_intake_value > today_goal) {
                         lines.push("Over by " + (todays_intake_value - today_goal) + " ml");

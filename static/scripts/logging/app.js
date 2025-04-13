@@ -4,17 +4,36 @@
 class FoodIntakeApp {
     constructor() {
         // Initialize managers
-        this.storageManager = new StorageManager();
+        if (typeof StorageManager !== 'undefined') {
+            this.storageManager = new StorageManager();
+        }
 
 
         // Add a small delay to ensure DOM is fully loaded
         setTimeout(async () => {
-            this.chartManager = new ChartManager(this.storageManager);
-            this.confettiManager = new ConfettiManager();
-            this.statisticsManager = new StatisticsManager(this.storageManager);
-            this.settingsManager = new SettingsManager(this.storageManager);
-            this.waterTrackingManager = new WaterTrackingManager(this.storageManager);
-            new FormManager(this.storageManager);
+            if (typeof ChartManager !== 'undefined') {
+                this.chartManager = new ChartManager(this.storageManager);
+            }
+
+            if (typeof ConfettiManager !== 'undefined') {
+                this.confettiManager = new ConfettiManager();
+            }
+
+            if (typeof StatisticsManager !== 'undefined') {
+                this.statisticsManager = new StatisticsManager(this.storageManager);
+            }
+
+            if (typeof SettingsManager !== 'undefined') {
+                this.settingsManager = new SettingsManager(this.storageManager);
+            }
+
+            if (typeof WaterTrackingManager !== 'undefined' ) {
+                this.waterTrackingManager = new WaterTrackingManager(this.storageManager);
+            }
+
+            if (typeof FormManager !== 'undefined') {
+                new FormManager(this.storageManager);
+            }
 
             // Current date being displayed (default to today)
             this.currentDisplayDate = new Date();
@@ -145,8 +164,10 @@ class FoodIntakeApp {
     async refreshUI() {
         await this.updateFoodLog();
         await this.updateCalorieData();
-        await this.statisticsManager.updateNutritionSummary(this.currentDisplayDate);
-        await this.statisticsManager.updateStatCards(this.currentDisplayDate);
+        if(this.statisticsManager) {
+            await this.statisticsManager.updateNutritionSummary(this.currentDisplayDate);
+            await this.statisticsManager.updateStatCards(this.currentDisplayDate);
+        }
     }
 
     /**

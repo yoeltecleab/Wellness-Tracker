@@ -58,6 +58,7 @@ class CreateDemoUser:
             dietary_restrictions='none',
             exercise='none',
             usual_store='Supermarket',
+            streak=random.randint(10, 50),
         )
 
         Goal.objects.create(
@@ -117,8 +118,8 @@ class CreateDemoUser:
                 log_date = get_random_time(log_date_base)
                 food_name = random.choice(food_names)
                 purchased = random.choice([True, False])
-                calories = random.randint(350, 750) if purchased else random.randint(200, 4500)
-                health_rating = random.choice(['1', '2', '3', '4'])
+                calories = random.randint(350, 750) if purchased else random.randint(200, 450)
+                health_rating = random.choice(['1', '2', '3'])
                 meal_type = random.choice(['Breakfast', 'Lunch', 'Dinner', 'Snack'])
                 notes = random.choice([None, 'Extra cheese', 'Lightly seasoned'])
                 protein = random.randint(5, 30)
