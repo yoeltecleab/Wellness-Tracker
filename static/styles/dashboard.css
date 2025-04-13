@@ -705,7 +705,7 @@ td {
     cursor: pointer;
 }
 
-.right-nav .profile .profile-link {
+.right-nav .profile .x-profile-link {
     position: absolute;
     top: calc(100% + 15px);
     right: 10px;
@@ -723,17 +723,17 @@ td {
     justify-content: center;
 }
 
-.right-nav .profile .profile-link.show {
+.right-nav .profile .x-profile-link.show {
     opacity: 1;
     pointer-events: visible;
     top: 100%;
 }
 
-.right-nav .profile .profile-link li {
+.right-nav .profile .x-profile-link li {
     list-style: none;
 }
 
-.right-nav .profile .profile-link a {
+.right-nav .profile .x-profile-link a {
     padding: 25px 25px 25px 5rem;
     display: flex;
     grid-gap: 20px;
@@ -744,7 +744,7 @@ td {
     align-items: center;
 }
 
-.right-nav .profile .profile-link a:hover {
+.right-nav .profile .x-profile-link a:hover {
     background: var(--primary-color);
     color: white;
 }

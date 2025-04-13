@@ -78,7 +78,7 @@ initializeDashboard();
 // PROFILE DROPDOWN
 const profile = document.querySelector('.right-nav .profile');
 const imgProfile = profile.querySelector('.right-nav .profile img');
-const dropdownProfile = profile.querySelector('.profile-link');
+const dropdownProfile = profile.querySelector('.x-profile-link');
 
 imgProfile.addEventListener('click', function () {
     dropdownProfile.classList.toggle('show');

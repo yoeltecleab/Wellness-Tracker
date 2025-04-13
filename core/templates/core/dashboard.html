@@ -98,7 +98,7 @@
                 <div class="profile">
                     <img src="{% static 'images/SVGs/avatar.svg' %}"
                          alt="">
-                    <ul class="profile-link">
+                    <ul class="x-profile-link">
                         <li><a href="{% url 'update_profile' %}"><i
                                 class='bx bxs-user-circle icon'></i> {{ request.user.username|default_if_none:"User" }}
                         </a></li>

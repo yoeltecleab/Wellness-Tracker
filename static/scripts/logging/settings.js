@@ -36,8 +36,12 @@ class SettingsManager {
             await this.storageManager.updateGoals(goals);
 
             // Update the application
-            await app.chartManager.updateChart(await app.storageManager.getTotalCalories(app.currentDisplayDate));
-            await app.statisticsManager.updateNutritionSummary(app.currentDisplayDate);
+            if(app.chartManager) {
+                await app.chartManager.updateChart(await app.storageManager.getTotalCalories(app.currentDisplayDate));
+            }
+            if (app.statisticsManager) {
+                await app.statisticsManager.updateNutritionSummary(app.currentDisplayDate);
+            }
 
             // Update water tracking if it exists
             if (app.waterTrackingManager) {
