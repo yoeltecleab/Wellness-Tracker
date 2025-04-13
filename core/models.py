@@ -1,3 +1,5 @@
+import uuid
+from uuid import uuid4
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -37,6 +39,7 @@ class Profile(models.Model):
     exercise = models.CharField(max_length=100, blank=True, null=True)
     usual_store = models.CharField(max_length=100, blank=True, null=True)
     default_foods = models.CharField(max_length=100, blank=True, null=True)
+    default_water_containers = models.CharField(max_length=100, blank=True, null=True)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user_profile')
 
@@ -48,21 +51,23 @@ class Profile(models.Model):
         verbose_name_plural = 'Profiles'
 
 
-class WaterLog(models.Model):
+class WaterEntry(models.Model):
+    entry_id = models.CharField(max_length=100, blank=True, null=True, default=uuid.uuid4)
     amount = models.IntegerField(blank=True, null=True)
+    is_active = models.BooleanField(blank=True, null=True, default=True)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='water_logs')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='water_entries')
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Water Log'
-        verbose_name_plural = 'Water Logs'
+        verbose_name = 'Water Entry'
+        verbose_name_plural = 'Water Entries'
 
 
 class FoodEntry(models.Model):
-    entry_id = models.CharField(max_length=100, blank=True, null=True)
+    entry_id = models.CharField(max_length=100, blank=True, null=True, default=uuid.uuid4)
     food_name = models.CharField(max_length=100, blank=True, null=True)
     calories = models.IntegerField(blank=True, null=True)
     purchased = models.BooleanField(blank=True, null=True, default=False)
@@ -118,3 +123,20 @@ class Goal(models.Model):
     class Meta:
         verbose_name = 'Goal'
         verbose_name_plural = 'Goals'
+
+
+class WaterContainer(models.Model):
+    container_id = models.CharField(max_length=100, blank=True, null=True, default=uuid.uuid4)
+    amount = models.IntegerField(blank=True, null=True)
+    label = models.CharField(max_length=100, blank=True, null=True)
+    icon = models.CharField(max_length=100, blank=True, null=True)
+    is_active = models.BooleanField(blank=True, null=True, default=True)
+    is_default = models.BooleanField(blank=True, null=True, default=False)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='water_containers')
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Water Container'
+        verbose_name_plural = 'Water Containers'

@@ -4,10 +4,11 @@ from datetime import date, timedelta
 
 from django.db.models import Q, Window, F
 from django.db.models.functions import RowNumber
+from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from core.models import User, FoodEntry, Store
+from core.models import User, FoodEntry, Store, WaterContainer, WaterEntry
 
 MULTIPLIER = 0.314159265358979
 
@@ -31,12 +32,12 @@ def get_favourite_stores(user: User, count):
     return user.stores.filter(visits__gt=0).order_by('-visits')[:count]
 
 
-def get_water_logs_from_date(user: User, date):
-    return user.water_logs.filter(created_at__date=date)
+def get_water_entries_from_date(user: User, date):
+    return user.water_entries.filter(created_at__date=date)
 
 
-def get_water_logs_from_month(user: User, month, year):
-    return user.water_logs.filter(Q(created_at__month=month) & Q(created_at__year=year))
+def get_water_entries_from_month(user: User, month, year):
+    return user.water_entries.filter(Q(created_at__month=month) & Q(created_at__year=year))
 
 
 def get_food_entries_from_date(user: User, date):
@@ -57,9 +58,9 @@ def dashboard_data_todays_intake(request):
 
     # for water
     today_water_intake = sum([log.amount for log in
-                              get_water_logs_from_date(user, date.today())])
+                              get_water_entries_from_date(user, date.today())])
     yesterday_water_intake = sum([log.amount for log in
-                                  get_water_logs_from_date(user, date.today() - timedelta(days=1))])
+                                  get_water_entries_from_date(user, date.today() - timedelta(days=1))])
 
     water_change_percentage = ((today_water_intake - yesterday_water_intake) /
                                (yesterday_water_intake if yesterday_water_intake != 0 else 1)) * 100
@@ -156,7 +157,7 @@ def weekly_comparison(request):
     this_week_total = 0
     for i in range(6, -1, -1):
         this_date = date.today() - timedelta(days=i)
-        logs = get_water_logs_from_date(user, this_date)
+        logs = get_water_entries_from_date(user, this_date)
         total = sum([log.amount for log in logs])
         this_week_total += total
         this_week_data.append({'date': calendar.day_name[this_date.weekday()], 'total': total})
@@ -169,7 +170,7 @@ def weekly_comparison(request):
     past_week_total = 0
     for i in range(7):
         this_date = date.today() - timedelta(days=i + 7)
-        logs = get_water_logs_from_date(user, this_date)
+        logs = get_water_entries_from_date(user, this_date)
         total = sum([log.amount for log in logs])
         past_week_total += total
         past_week_data.append({'date': calendar.day_name[this_date.weekday()], 'total': total})
@@ -186,9 +187,9 @@ def weekly_comparison(request):
 def today_water_intake_chart(request):
     user = request.user
 
-    today_intake = sum([log.amount for log in get_water_logs_from_date(user, date.today())])
+    today_intake = sum([log.amount for log in get_water_entries_from_date(user, date.today())])
     same_day_last_week_intake = sum([log.amount for log in
-                                     get_water_logs_from_date(user, date.today() - timedelta(days=7))])
+                                     get_water_entries_from_date(user, date.today() - timedelta(days=7))])
 
     percentage_change = ((today_intake - same_day_last_week_intake) /
                          (same_day_last_week_intake if same_day_last_week_intake != 0 else 1)) * 100
@@ -209,16 +210,17 @@ def yearly_water_intake_chart(request):
 
     month_data = []
     total_this_year = 0
+    today = date.today()
+    current_year = today.year
+    current_month = today.month
+
     for i in range(11, -1, -1):
-        this_month = (date.today().month - i) % 12
-        this_year = date.today().year
+        # Calculate the year and month for the current iteration
+        year = current_year - (current_month - 1 - i < 0)
+        month = (current_month - 1 - i) % 12 + 1
 
-        if this_month == 0:
-            this_year -= 1
-            this_month = 12
-
-        month_intake = sum([log.amount for log in get_water_logs_from_month(user, this_month, this_year)])
-        month_name = calendar.month_name[this_month]
+        month_intake = sum([log.amount for log in get_water_entries_from_month(user, month, year)])
+        month_name = calendar.month_name[month]
         month_data.append({'month': month_name, 'intake': month_intake})
         total_this_year += month_intake
 
@@ -259,10 +261,9 @@ def food_entries(request, date=None, entryId=None):
         data = request.data
         entry, entry_created = FoodEntry.objects.get_or_create(
             user=request.user, entry_id=data.get('id'), is_quick_add=False)
-        store, store_created = Store.objects.get_or_create(user=request.user, name=data.get('store'))
+
         entry.user = request.user
 
-        entry.entry_id = data.get('id') if data.get('id') else str(uuid.uuid4())
         entry.food_name = data.get('foodName')
         entry.calories = data.get('calories')
         entry.purchased = data.get('purchased')
@@ -274,50 +275,63 @@ def food_entries(request, date=None, entryId=None):
         entry.fat = data.get('fat')
         entry.is_active = True
 
-        if store_created:
-            store.name = data.get('store')
-            store.visits = 1
-            store.user = request.user
-            store.address = '123 Main St New York, NY 10001'
-            store.save()
-        else:
-            store.visits += 1
-            store.save()
+        if data.get('store'):
+            store, store_created = Store.objects.get_or_create(user=request.user, name=data.get('store'))
+            if store_created:
+                store.name = data.get('store')
+                store.visits = 1
+                store.user = request.user
+                store.address = '123 Main St New York, NY 10001'
+                store.save()
+            else:
+                store.visits += 1
+                store.save()
+            entry.purchased_from = store
 
         if entry_created:
             entry.frequency = 1
         else:
             entry.frequency += 1
+            entry.created_at = timezone.now()
 
-        entry.purchased_from = store
         entry.save()
         return Response({'success': True})
 
     elif request.method == 'DELETE':
         # entryId for deletion
-        entry = request.user.food_entries.get(Q(entry_id__exact=entryId) & Q(is_active=True))
+        entry = request.user.food_entries.get(Q(entry_id__exact=entryId))
         if entry.purchased_from:
             entry.purchased_from.visits -= 1
-        entry.is_active = False
-        entry.save()
+        entry.delete()
         return Response({'success': True})
 
     return Response({'success': False})
 
 
 @api_view(['GET', 'POST', 'DELETE'])
-def water_entries(request, date, entryId):
+def water_entries(request, date=None, entryId=None):
     if request.method == 'GET':
-        # date contains the date in YYYY-MM-DD format
-        print("")
-
+        print(date)
+        entries = request.user.water_entries.filter(Q(created_at__date=date) & Q(is_active=True))
+        response = []
+        for entry in entries:
+            response.append({
+                'id': entry.entry_id,
+                'amount': entry.amount,
+                'timestamp': entry.created_at
+            })
+        return Response(response)
     elif request.method == 'POST':
-        # no other parameters -  date and id are within the request
-        print("")
+        data = request.data
+        WaterEntry.objects.create(
+            user=request.user,
+            amount=data.get('amount')
+        )
 
+        return Response({"success": True})
     elif request.method == 'DELETE':
-        # entryId for deletion
-        print("")
+        request.user.water_entries.get(entry_id=entryId).delete()
+        return Response({"success": True})
     return Response({"success": False})
 
 
@@ -390,7 +404,6 @@ def quick_add_foods(request, itemId=None):
                 'isDefault': entry.is_default,
                 'isActive': entry.is_active,
             })
-        print("Response on python ", len(response))
         return Response(response)
 
     elif request.method == 'POST':
@@ -399,7 +412,6 @@ def quick_add_foods(request, itemId=None):
         entry, created = FoodEntry.objects.get_or_create(user=request.user, entry_id=data.get('id'))
         entry.user = request.user
 
-        entry.entry_id = data.get('id') if data.get('id') else str(uuid.uuid4())
         entry.food_name = data.get('foodName')
         entry.calories = data.get('calories')
         entry.health_rating = data.get('healthRating')
@@ -425,18 +437,44 @@ def quick_add_foods(request, itemId=None):
 
 
 @api_view(['GET', 'POST', 'DELETE'])
-def water_containers(request, containerId):
+def water_containers(request, containerId=None):
     if request.method == 'GET':
-        # no parameters
-        print("")
+        containers = request.user.water_containers.all()
+        response = []
+        for container in containers:
+            response.append({
+                'id': container.container_id,
+                'amount': container.amount,
+                'label': container.label,
+                'icon': container.icon,
+                'isActive': container.is_active,
+                'isDefault': container.is_default,
+            })
+        print('Response from python: ', len(response))
+        return Response(response)
 
     elif request.method == 'POST':
-        # no parameters
-        print("")
+        data = request.data
+        container, created = WaterContainer.objects.get_or_create(
+            user=request.user, label=data.get('label'), icon=data.get('icon')
+        )
+
+        container.container_id = data.get('id') if data.get('id') else str(uuid.uuid4())
+        container.amount = data.get('amount')
+        container.label = data.get('label')
+        container.icon = data.get('icon')
+        container.is_active = data.get('isActive') if data.get('isActive') is not None else True
+        container.is_default = data.get('isDefault') if data.get('isDefault') else False
+
+        container.save()
+
+        return Response({'success': True})
 
     elif request.method == 'DELETE':
-        # containerId for deletion
-        print("")
+        container = request.user.water_containers.get(container_id=containerId)
+        container.is_active = False
+        container.save()
+        return Response({'success': True})
     return Response({"success": False})
 
 
@@ -489,7 +527,7 @@ def weekly_data(request, daysBack):
     return Response({"success": False})
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def goals(request):
     if request.method == 'GET':
         goal = request.user.goal
@@ -501,5 +539,17 @@ def goals(request):
             'carbsGoal': goal.carbs_goal,
             'fatGoal': goal.fat_goal
         })
+
+    elif request.method == 'POST':
+        data = request.data
+        goal = request.user.goal
+        goal.water_goal = data.get('waterGoal')
+        goal.calorie_goal = data.get('calorieGoal')
+        goal.protein_goal = data.get('proteinGoal')
+        goal.carbs_goal = data.get('carbsGoal')
+        goal.fat_goal = data.get('fatGoal')
+        goal.save()
+
+        return Response({"success": True})
 
     return Response({"success": False})

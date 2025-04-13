@@ -8,20 +8,6 @@ class WaterTrackingManager {
         this.weeklyWaterChart = null;
         this.currentDate = new Date();
 
-        // Get water goal in ml from settings
-        const waterGoalInGlasses = parseInt(localStorage.getItem('waterGoal')) || 8;
-        this.waterGoal = parseInt(localStorage.getItem('waterGoalML')) || (waterGoalInGlasses * 250); // Default: glasses * 250ml
-
-        // Initialize custom container storage if not exists
-        if (!localStorage.getItem('customWaterContainers')) {
-            localStorage.setItem('customWaterContainers', JSON.stringify([]));
-        }
-
-        // Initialize default containers visibility setting if not exists
-        if (localStorage.getItem('showDefaultContainers') === null) {
-            localStorage.setItem('showDefaultContainers', 'true');
-        }
-
         // Define default containers for easy access
         this.defaultContainers = [
             {amount: 250, label: 'Small Glass (250ml)', icon: 'fa-tint-slash'},
@@ -30,6 +16,7 @@ class WaterTrackingManager {
             {amount: 1000, label: 'Large Bottle (1000ml)', icon: 'fa-bottle-water'}
         ];
 
+        this.updateWaterGoal();
         this.initWaterChart();
         this.initWeeklyWaterChart();
         this.setupEventListeners();
@@ -101,7 +88,7 @@ class WaterTrackingManager {
     /**
      * Sets up event listeners for water tracking functionality
      */
-    setupEventListeners() {
+    async setupEventListeners() {
         // Water form submission
         document.getElementById('waterEntryForm').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -125,9 +112,7 @@ class WaterTrackingManager {
         document.addEventListener('click', (e) => {
             if (e.target && e.target.classList.contains('delete-container')) {
                 const containerId = e.target.closest('.delete-container').dataset.id;
-                if (confirm('Delete this container?')) {
-                    this.deleteCustomContainer(containerId);
-                }
+                this.deleteCustomContainer(containerId);
             }
         });
 
@@ -135,12 +120,19 @@ class WaterTrackingManager {
         const showDefaultContainersToggle = document.getElementById('showDefaultContainers');
         if (showDefaultContainersToggle) {
             // Set initial state based on stored preference
-            showDefaultContainersToggle.checked = localStorage.getItem('showDefaultContainers') === 'true';
+            let defaults = await this.storageManager.getDefaultWaterContainers();
+
+            showDefaultContainersToggle.checked = defaults[0].isActive;
 
             // Add change event listener
-            showDefaultContainersToggle.addEventListener('change', () => {
-                localStorage.setItem('showDefaultContainers', showDefaultContainersToggle.checked);
-                this.updateCustomContainerPresets(this.getCustomContainers());
+            showDefaultContainersToggle.addEventListener('change', async () => {
+                defaults.forEach(c => {
+                    c.isActive = showDefaultContainersToggle.checked;
+                })
+                defaults.forEach(c => {
+                    this.addCustomContainer(c)
+                })
+                await this.updateCustomContainerPresets(await this.getCustomContainers());
             });
         }
 
@@ -159,9 +151,7 @@ class WaterTrackingManager {
         }
 
         const waterEntry = {
-            id: await this.storageManager.generateUniqueId(),
             amount: waterAmount,
-            timestamp: new Date().toISOString()
         };
 
         await this.addWaterEntry(waterEntry);
@@ -174,16 +164,7 @@ class WaterTrackingManager {
      */
     async addWaterEntry(waterEntry) {
         // Get existing water entries for the current date
-        const dateKey = await this.storageManager.getDateKey(this.currentDate);
-        let waterData = localStorage.getItem(`water_${dateKey}`);
-        let waterEntries = waterData ? JSON.parse(waterData) : [];
-
-        // Add new entry
-        waterEntries.push(waterEntry);
-
-        // Save updated entries
-        localStorage.setItem(`water_${dateKey}`, JSON.stringify(waterEntries));
-
+        await this.storageManager.addWaterEntry(waterEntry);
         // Update UI
         this.updateWaterUI();
     }
@@ -193,26 +174,21 @@ class WaterTrackingManager {
      * @param {string} entryId - ID of the entry to remove
      */
     async removeWaterEntry(entryId) {
-        const dateKey = await this.storageManager.getDateKey(this.currentDate);
-        let waterData = localStorage.getItem(`water_${dateKey}`);
-
-        if (waterData) {
-            let waterEntries = JSON.parse(waterData);
-            waterEntries = waterEntries.filter(entry => entry.id !== entryId);
-            localStorage.setItem(`water_${dateKey}`, JSON.stringify(waterEntries));
-            this.updateWaterUI();
-        }
+        await this.storageManager.removeWaterEntry(entryId);
+        this.updateWaterUI();
     }
 
     /**
      * Sets up water log entry deletion
      */
     setupWaterLogDeletion() {
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', async (e) => {
             if (e.target && e.target.classList.contains('delete-water-entry')) {
                 const entryId = e.target.closest('.delete-water-entry').dataset.id;
+                console.log("E target: ", entryId);
                 if (confirm('Are you sure you want to delete this water entry?')) {
-                    this.removeWaterEntry(entryId);
+                    console.log("Yes")
+                    await this.removeWaterEntry(entryId);
                 }
             }
         });
@@ -237,9 +213,7 @@ class WaterTrackingManager {
      */
     async updateWaterLog() {
         const waterLogTable = document.getElementById('waterLogTable');
-        const dateKey = await this.storageManager.getDateKey(this.currentDate);
-        let waterData = localStorage.getItem(`water_${dateKey}`);
-        let waterEntries = waterData ? JSON.parse(waterData) : [];
+        let waterEntries = await this.storageManager.getWaterEntries(this.currentDate);
 
         if (waterEntries.length === 0) {
             waterLogTable.innerHTML = `
@@ -268,7 +242,7 @@ class WaterTrackingManager {
                     <td>${entry.amount} ml</td>
                     <td>
                         <button class="btn btn-sm btn-outline-danger delete-water-entry" data-id="${entry.id}">
-                            <i class="fas fa-trash"></i>
+                            <i class="fas fa-trash" style="pointer-events: none"></i>
                         </button>
                     </td>
                 </tr>
@@ -282,9 +256,7 @@ class WaterTrackingManager {
      * Updates water data and chart
      */
     async updateWaterData() {
-        const dateKey = await this.storageManager.getDateKey(this.currentDate);
-        let waterData = localStorage.getItem(`water_${dateKey}`);
-        let waterEntries = waterData ? JSON.parse(waterData) : [];
+        let waterEntries = await this.storageManager.getWaterEntries(this.currentDate);
 
         // Calculate total water intake
         const totalWater = waterEntries.reduce((sum, entry) => sum + entry.amount, 0);
@@ -728,10 +700,10 @@ class WaterTrackingManager {
     /**
      * Loads custom water containers from storage and displays them
      */
-    loadCustomContainers() {
-        const containers = this.getCustomContainers();
+    async loadCustomContainers() {
+        const [containers] = await Promise.all([this.getCustomContainers()]);
         this.updateCustomContainersTable(containers);
-        this.updateCustomContainerPresets(containers);
+        await this.updateCustomContainerPresets(containers);
 
         // Setup event listeners for dynamically added presets
         this.setupDynamicPresetsListeners();
@@ -741,9 +713,10 @@ class WaterTrackingManager {
      * Gets custom water containers from storage
      * @returns {Array} - Array of custom container objects
      */
-    getCustomContainers() {
-        const containers = localStorage.getItem('customWaterContainers');
-        return containers ? JSON.parse(containers) : [];
+    async getCustomContainers() {
+        const containers = await this.storageManager.getWaterContainers();
+        containers.filter(c => !c.isDefault);
+        return containers;
     }
 
     /**
@@ -765,15 +738,16 @@ class WaterTrackingManager {
         }
 
         let html = '';
+        // console.log("Containers: ", containers);
         containers.forEach(container => {
             html += `
                 <tr>
                     <td><i class="fas ${container.icon || 'fa-tint'}"></i></td>
-                    <td>${container.name}</td>
-                    <td>${container.size} ml</td>
+                    <td>${container.label}</td>
+                    <td>${container.amount} ml</td>
                     <td>
                         <button class="btn btn-sm btn-outline-danger delete-container" data-id="${container.id}">
-                            <i class="fas fa-trash"></i>
+                            <i class="fas fa-trash" style="pointer-events: none"></i>
                         </button>
                     </td>
                 </tr>
@@ -787,12 +761,14 @@ class WaterTrackingManager {
      * Updates the custom container presets in the water form
      * @param {Array} containers - Array of container objects
      */
-    updateCustomContainerPresets(containers) {
+    async updateCustomContainerPresets(containers) {
         // Get the container where presets will be added
         const presetsContainer = document.getElementById('waterPresetsContainer');
 
         // Check if default containers should be shown
-        const showDefaultContainers = localStorage.getItem('showDefaultContainers') === 'true';
+        let defaults = await this.storageManager.getDefaultWaterContainers();
+
+        const showDefaultContainers = defaults[0].isActive;
 
         // Clear all existing presets
         presetsContainer.innerHTML = '';
@@ -811,15 +787,17 @@ class WaterTrackingManager {
         }
 
         // Add custom presets
-        containers.forEach(container => {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'btn btn-outline-primary water-preset custom-water-preset';
-            button.dataset.amount = container.size;
-            button.innerHTML = `<i class="fas ${container.icon || 'fa-tint'} me-1"></i> ${container.name} (${container.size}ml)`;
+        if(containers) {
+            containers.forEach(container => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'btn btn-outline-primary water-preset custom-water-preset';
+                button.dataset.amount = container.amount;
+                button.innerHTML = `<i class="fas ${container.icon || 'fa-tint'} me-1"></i> ${container.label} (${container.amount}ml)`;
 
-            presetsContainer.appendChild(button);
-        });
+                presetsContainer.appendChild(button);
+            });
+        }
 
         // If no containers are visible, show a message
         if (!showDefaultContainers && containers.length === 0) {
@@ -859,36 +837,31 @@ class WaterTrackingManager {
         }
 
         const newContainer = {
-            id: await this.storageManager.generateUniqueId(),
-            name: name,
-            size: size,
+            label: name,
+            amount: size,
             icon: icon
         };
 
-        this.addCustomContainer(newContainer);
+        await this.addCustomContainer(newContainer);
 
         // Reset form
         nameInput.value = '';
         sizeInput.value = '';
 
         // Show success message
-        alert(`Added "${name}" container successfully!`);
+        // alert(`Added "${name}" container successfully!`);
+        app.settingsManager.showToast(`Added "${name}" container successfully!`, 'success');
     }
 
     /**
      * Adds a custom container to storage and updates UI
      * @param {Object} container - The container object to add
      */
-    addCustomContainer(container) {
-        // Get existing containers
-        const containers = this.getCustomContainers();
-
-        // Add new container
-        containers.push(container);
-
+    async addCustomContainer(container) {
         // Save to storage
-        localStorage.setItem('customWaterContainers', JSON.stringify(containers));
+        await this.storageManager.addCustomWaterContainer(container);
 
+        let containers = await this.storageManager.getWaterContainers();
         // Update UI
         this.updateCustomContainersTable(containers);
         this.updateCustomContainerPresets(containers);
@@ -899,19 +872,23 @@ class WaterTrackingManager {
      * Deletes a custom container from storage and updates UI
      * @param {string} containerId - ID of the container to delete
      */
-    deleteCustomContainer(containerId) {
-        // Get existing containers
-        let containers = this.getCustomContainers();
-
-        // Filter out the container to delete
-        containers = containers.filter(container => container.id !== containerId);
+    async deleteCustomContainer(containerId) {
 
         // Save to storage
-        localStorage.setItem('customWaterContainers', JSON.stringify(containers));
+
+        await this.storageManager.deleteCustomWaterContainer(containerId);
+
+        let containers = await this.storageManager.getWaterContainers();
 
         // Update UI
         this.updateCustomContainersTable(containers);
         this.updateCustomContainerPresets(containers);
         this.setupDynamicPresetsListeners();
+    }
+
+    async updateWaterGoal() {
+        const goals = await this.storageManager.getGoals();
+        this.waterGoal = goals.waterGoal;
+        this.updateWaterUI();
     }
 }

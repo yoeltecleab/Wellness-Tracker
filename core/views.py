@@ -60,7 +60,8 @@ def index(request):
 
 @login_required(login_url='signin')
 def water_logging(request):
-    return render(request, 'core/water_logging.html')
+    context = {'source': 'water'}
+    return render(request, 'core/logging.html', context)
 
 
 @login_required(login_url='signin')
@@ -109,6 +110,8 @@ def signout(request):
 
 @login_required(login_url='signin')
 def food_logging(request):
+    context = {'source': 'food'}
+
     if request.method == 'POST':
         food_name = request.POST.get('food_name')
         calories = request.POST.get('calories')
@@ -116,10 +119,9 @@ def food_logging(request):
         if food_name and calories:
             FoodEntry.objects.create(user=request.user, food_name=food_name, calories=calories)
 
-        return redirect('food_logging')
+        return redirect('food_logging', context)
 
-    food_entries = FoodEntry.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'core/food_logging.html', {'food_entries': food_entries})
+    return render(request, 'core/logging.html', context)
 
 
 def update_profile(request):
@@ -148,6 +150,37 @@ def profile_helper(request, context, this_page):
          'fat': 11, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True},
         {'id': 'default-8', 'foodName': 'Avocado Toast', 'tag': 'avocado-toast', 'calories': 190, 'protein': 5,
          'carbs': 15, 'fat': 10, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True}]
+
+    defaultContainers = [
+        {
+            'id': 'default-1',
+            'amount': 250,
+            'label': 'Small Glass (250ml)',
+            'icon': 'fa-tint-slash',
+            'isActive': True
+        },
+        {
+            'id': 'default-2',
+            'amount': 500,
+            'label': 'Large Glass (500ml)',
+            'icon': 'fa-tint',
+            'isActive': True
+        },
+        {
+            'id': 'default-3',
+            'amount': 750,
+            'label': 'Bottle (750ml)',
+            'icon': 'fa-glass-water',
+            'isActive': True
+        },
+        {
+            'id': 'default-4',
+            'amount': 1000,
+            'label': 'Large Bottle (1000ml)',
+            'icon': 'fa-bottle-water',
+            'isActive': True
+        }
+    ]
 
     if request.method == 'POST':
         try:

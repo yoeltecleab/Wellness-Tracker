@@ -2,11 +2,14 @@
  * Chart Manager - Handles the calorie chart visualization
  */
 class ChartManager {
-    constructor(calorieGoal) {
-        this.calorieGoal = calorieGoal;
+    constructor(storageManager) {
+        this.storageManager = storageManager;
+        this.calorieGoal = 3000;
         this.chart = null;
         this.initChart();
     }
+
+
 
     /**
      * Initializes the donut chart
@@ -61,26 +64,30 @@ class ChartManager {
      * Updates the chart with new calorie data
      * @param {number} consumedCalories - Calories consumed
      */
-    updateChart(consumedCalories) {
+    async updateChart(consumedCalories) {
         if (!this.chart) {
             console.error('Chart not initialized');
             return;
         }
-        
+
         // Get the latest calorie goal (in case it was updated in settings)
-        this.calorieGoal = parseInt(localStorage.getItem('calorieGoal') || '3000', 10);
-        
+        const goals = await this.storageManager.getGoals();
+        this.calorieGoal = goals.calorieGoal
+
         // Calculate remaining calories
         let remaining = this.calorieGoal - consumedCalories;
         if (remaining < 0) remaining = 0;
-        
+
         // Update chart data
         this.chart.data.datasets[0].data = [consumedCalories, remaining];
-        
+
         // Update chart colors based on percentage
         const percentConsumed = (consumedCalories / this.calorieGoal) * 100;
-        
-        if (percentConsumed < 50) {
+
+        if (percentConsumed >= 100) {
+            this.chart.data.datasets[0].backgroundColor[0] = 'rgba(2,246,58,0.6)';
+            this.chart.data.datasets[0].borderColor[0] = 'rgb(6,137,246)';
+        } else if (percentConsumed < 50) {
             this.chart.data.datasets[0].backgroundColor[0] = 'rgba(75, 192, 192, 0.6)';
             this.chart.data.datasets[0].borderColor[0] = 'rgba(75, 192, 192, 1)';
         } else if (percentConsumed < 80) {
@@ -90,10 +97,10 @@ class ChartManager {
             this.chart.data.datasets[0].backgroundColor[0] = 'rgba(255, 99, 132, 0.6)';
             this.chart.data.datasets[0].borderColor[0] = 'rgba(255, 99, 132, 1)';
         }
-        
+
         // Update chart
         this.chart.update();
-        
+
         // Update progress bar and counter
         this.updateProgressBar(consumedCalories);
     }

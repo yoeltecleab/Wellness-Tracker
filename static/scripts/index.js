@@ -1,26 +1,6 @@
-// let menu = document.querySelector('#menu-icon');
-// let navlist = document.querySelector('.navlist');
-//
-// menu.onclick = () => {
-//     menu.classList.toggle('bx-x');
-//     navlist.classList.toggle('open');
-// };
-//
-// const sr = ScrollReveal ({
-//     distance: '65px',
-//     duration: 2600,
-// delay: 450,
-// reset: true
-// });
-//
-// sr.reveal('.hero-text', {delay:200, origin:'top'});
-// sr.reveal('.hero-img', {delay:450, origin:'top'});
-// sr.reveal('.icons', {delay:500, origin:'left'});
-// sr.reveal('.scroll-down', {delay:500, origin:'right'});
-
 const demoBtn = document.getElementById('demo-user-button');
-const apiUrl = 'http://localhost:8000/api/check-demo-user/'; // Replace with your actual API endpoint
-const demoUrl = 'http://localhost:8000/demo';
+const checkDemoUserApiUrl = 'http://localhost:8000/api/check-demo-user/'; // API to check if demo user exists
+const createDemoUserApiUrl = 'http://localhost:8000/demo/'; // API to create demo user
 const loginUrl = 'http://localhost:8000/signin/';
 const loadingContainerId = 'loading-container'; // ID of the element to show loading
 
@@ -29,44 +9,27 @@ demoBtn.addEventListener('click', async () => {
         // Show loading scene immediately
         showLoading();
 
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        const checkResponse = await fetch(checkDemoUserApiUrl);
+        if (!checkResponse.ok) {
+            throw new Error(`HTTP error checking demo user: status ${checkResponse.status}`);
         }
-        const data = await response.json();
+        const checkData = await checkResponse.json();
+        const demoUserExists = checkData.exists; // Assuming the API returns { exists: true/false }
 
-        if (data.exists) {
-            const confirmed = confirm('Are you sure you want to proceed? A demo user already exists. ' +
-                'Continuing will erase all data and create a new demo user');
+        if (demoUserExists) {
+            const confirmed = confirm('A demo user already exists. Continuing will erase all data and create a new demo user. Are you sure?');
             if (confirmed) {
-                // Initiate the background request to the demo URL
-                fetch(demoUrl, {
-                    method: 'GET', // Or 'POST' depending on your demo URL
-                    // Add any necessary headers or body here
-                }).then(demoResponse => {
-                    if (!demoResponse.ok) {
-                        console.error('Error fetching demo URL in the background:', demoResponse.status);
-                        // Optionally show an error message to the user
-                    }
-                    // We don't need to process the demoResponse body unless needed
-                }).catch(error => {
-                    console.error('Error fetching demo URL in the background:', error);
-                    // Optionally show an error message to the user
-                });
-
-                // Wait for a few seconds (simulating background work)
-                await delay(3000); // 3 seconds
-
-                // Redirect to the login page
-                window.location.href = loginUrl;
+                await createNewDemoUser();
             } else {
-                // User cancelled, hide loading
                 hideLoading();
             }
         } else {
-            // Data was not true, handle accordingly (e.g., show a message)
-            alert('Operation not allowed based on the data.');
-            hideLoading();
+            const confirmedCreate = confirm('No demo user exists. Do you want to create a new demo user?');
+            if (confirmedCreate) {
+                await createNewDemoUser();
+            } else {
+                hideLoading();
+            }
         }
 
     } catch (error) {
@@ -76,10 +39,43 @@ demoBtn.addEventListener('click', async () => {
     }
 });
 
+async function createNewDemoUser() {
+    try {
+        // Initiate the request to create the demo user
+        const createResponse = await fetch(createDemoUserApiUrl, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+            },
+            // Add any necessary data to the request
+            // Or 'GET' depending on your API
+            // Add any necessary headers or body here
+        });
+
+        if (!createResponse.ok) {
+            console.error('Error creating demo user:', createResponse.status);
+            alert('Failed to create demo user.');
+            hideLoading();
+            return;
+        }
+
+        // Wait for a few seconds (simulating background work)
+        await delay(1000); // 1 second
+
+        // Redirect to the login page
+        window.location.href = loginUrl;
+
+    } catch (error) {
+        console.error('Error creating demo user:', error);
+        alert('An error occurred while creating the demo user.');
+        hideLoading();
+    }
+}
+
 function showLoading() {
     const loadingContainer = document.getElementById(loadingContainerId);
     if (loadingContainer) {
-        loadingContainer.style.display = 'block'; // Or any other way to show your loading element
+        loadingContainer.style.display = 'block';
     } else {
         console.warn(`Loading container with ID '${loadingContainerId}' not found.`);
     }
@@ -94,4 +90,20 @@ function hideLoading() {
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function getCsrfToken() {
+    const name = 'csrftoken=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return null;
 }

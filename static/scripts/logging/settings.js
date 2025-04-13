@@ -4,23 +4,6 @@
 class SettingsManager {
     constructor(storageManager) {
         this.storageManager = storageManager;
-        
-        // Initialize with default values if not set
-        if (!localStorage.getItem('calorieGoal')) {
-            localStorage.setItem('calorieGoal', '3000');
-        }
-        if (!localStorage.getItem('proteinGoal')) {
-            localStorage.setItem('proteinGoal', '150');
-        }
-        if (!localStorage.getItem('carbsGoal')) {
-            localStorage.setItem('carbsGoal', '300');
-        }
-        if (!localStorage.getItem('fatGoal')) {
-            localStorage.setItem('fatGoal', '65');
-        }
-        if (!localStorage.getItem('waterGoal')) {
-            localStorage.setItem('waterGoal', '8');
-        }
 
         // Setup event listeners for settings
         this.setupEventListeners();
@@ -32,7 +15,7 @@ class SettingsManager {
     /**
      * Setup event listeners for settings
      */
-    setupEventListeners() {
+    async setupEventListeners() {
         // Settings save button click
         document.getElementById('saveSettings').addEventListener('click', async () => {
             // Save settings
@@ -42,22 +25,23 @@ class SettingsManager {
             const fatGoal = document.getElementById('fatGoalInput').value;
             const waterGoal = document.getElementById('waterGoalInput').value;
 
-            localStorage.setItem('calorieGoal', calorieGoal);
-            localStorage.setItem('proteinGoal', proteinGoal);
-            localStorage.setItem('carbsGoal', carbsGoal);
-            localStorage.setItem('fatGoal', fatGoal);
-            localStorage.setItem('waterGoal', waterGoal);
+            const goals = {
+                calorieGoal: parseInt(calorieGoal),
+                proteinGoal: parseInt(proteinGoal),
+                carbsGoal: parseInt(carbsGoal),
+                fatGoal: parseInt(fatGoal),
+                waterGoal: parseInt(waterGoal)
+            }
 
-            // Convert water goal from glasses to ml for the water tracking display
-            localStorage.setItem('waterGoalML', (parseInt(waterGoal) * 250).toString());
+            await this.storageManager.updateGoals(goals);
 
             // Update the application
-            app.chartManager.updateChart(await app.storageManager.getTotalCalories(app.currentDisplayDate));
+            await app.chartManager.updateChart(await app.storageManager.getTotalCalories(app.currentDisplayDate));
             await app.statisticsManager.updateNutritionSummary(app.currentDisplayDate);
 
             // Update water tracking if it exists
             if (app.waterTrackingManager) {
-                app.waterTrackingManager.waterGoal = parseInt(localStorage.getItem('waterGoalML')) || 2500;
+                app.waterTrackingManager.waterGoal = parseInt(waterGoal);
                 app.waterTrackingManager.updateWaterUI();
             }
 
@@ -68,20 +52,23 @@ class SettingsManager {
             // Show success message
             this.showToast('Settings saved successfully', 'success');
         });
-        
+
+
+
         // Open settings modal - load current settings
-        document.getElementById('settingsModal').addEventListener('show.bs.modal', () => {
-            document.getElementById('calorieGoalInput').value = localStorage.getItem('calorieGoal') || '3000';
-            document.getElementById('proteinGoalInput').value = localStorage.getItem('proteinGoal') || '150';
-            document.getElementById('carbsGoalInput').value = localStorage.getItem('carbsGoal') || '300';
-            document.getElementById('fatGoalInput').value = localStorage.getItem('fatGoal') || '65';
-            document.getElementById('waterGoalInput').value = localStorage.getItem('waterGoal') || '8';
+        document.getElementById('settingsModal').addEventListener('show.bs.modal', async () => {
+            const goal = await app.storageManager.getGoals();
+            document.getElementById('calorieGoalInput').value = goal.calorieGoal;
+            document.getElementById('proteinGoalInput').value = goal.proteinGoal;
+            document.getElementById('carbsGoalInput').value = goal.carbsGoal;
+            document.getElementById('fatGoalInput').value = goal.fatGoal;
+            document.getElementById('waterGoalInput').value = goal.waterGoal;
         });
-        
+
         // Quick add functionality
         document.querySelectorAll('.quick-add-menu .dropdown-item').forEach(item => {
             if (!item.dataset.food) return; // Skip if not a food item
-            
+
             item.addEventListener('click', async (e) => {
                 e.preventDefault();
 
@@ -115,29 +102,29 @@ class SettingsManager {
                 app.refreshUI();
             });
         });
-        
+
         // Export data button
         document.getElementById('exportDataBtn').addEventListener('click', () => {
             this.exportData();
         });
-        
+
         // Import data button
         document.getElementById('importDataBtn').addEventListener('click', () => {
             document.getElementById('importFileInput').click();
         });
-        
+
         // Import file input change
         document.getElementById('importFileInput').addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 this.importData(e.target.files[0]);
             }
         });
-        
+
         // Clear data button
         document.getElementById('clearDataBtn').addEventListener('click', () => {
             if (confirm('Are you sure you want to clear all data? This cannot be undone!')) {
                 localStorage.clear();
-                
+
                 // Reinitialize with default values
                 localStorage.setItem('calorieGoal', '3000');
                 localStorage.setItem('proteinGoal', '150');
@@ -147,16 +134,16 @@ class SettingsManager {
                 localStorage.setItem('foodHistory', JSON.stringify({}));
                 localStorage.setItem('foodDatabase', JSON.stringify([]));
                 localStorage.setItem('storeDatabase', JSON.stringify([]));
-                
+
                 // Show success message
                 this.showToast('All data has been cleared', 'warning');
-                
+
                 // Refresh page
                 window.location.reload();
             }
         });
     }
-    
+
     /**
      * Initialize toast container
      */
@@ -168,7 +155,7 @@ class SettingsManager {
             document.body.appendChild(toastContainer);
         }
     }
-    
+
     /**
      * Show a toast notification
      * @param {string} message - Message to display
@@ -176,14 +163,14 @@ class SettingsManager {
      */
     showToast(message, type = 'info') {
         const toastContainer = document.querySelector('.toast-container');
-        
+
         // Create toast element
         const toastElement = document.createElement('div');
         toastElement.className = `toast align-items-center text-white bg-${type} border-0`;
         toastElement.setAttribute('role', 'alert');
         toastElement.setAttribute('aria-live', 'assertive');
         toastElement.setAttribute('aria-atomic', 'true');
-        
+
         // Create toast content
         toastElement.innerHTML = `
             <div class="d-flex">
@@ -193,19 +180,19 @@ class SettingsManager {
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         `;
-        
+
         toastContainer.appendChild(toastElement);
-        
+
         // Create bootstrap toast instance
         const toast = new bootstrap.Toast(toastElement);
         toast.show();
-        
+
         // Auto-remove after it's hidden
         toastElement.addEventListener('hidden.bs.toast', () => {
             toastElement.remove();
         });
     }
-    
+
     /**
      * Export data as a JSON file
      */
@@ -222,44 +209,44 @@ class SettingsManager {
             streak: localStorage.getItem('streak'),
             theme: localStorage.getItem('theme')
         };
-        
+
         // Convert to JSON string
         const jsonData = JSON.stringify(exportData, null, 2);
-        
+
         // Create blob and download link
         const blob = new Blob([jsonData], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-        
+
         // Create download link
         const downloadLink = document.createElement('a');
         downloadLink.href = url;
         downloadLink.download = `nutritrack_export_${new Date().toISOString().slice(0, 10)}.json`;
-        
+
         // Click the link to download
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
-        
+
         // Show success message
         this.showToast('Data exported successfully', 'success');
     }
-    
+
     /**
      * Import data from a JSON file
      * @param {File} file - The JSON file to import
      */
     importData(file) {
         const reader = new FileReader();
-        
+
         reader.onload = (e) => {
             try {
                 const importedData = JSON.parse(e.target.result);
-                
+
                 // Validate data
                 if (!importedData.foodHistory) {
                     throw new Error('Invalid data format');
                 }
-                
+
                 // Import all data
                 if (importedData.calorieGoal) localStorage.setItem('calorieGoal', importedData.calorieGoal);
                 if (importedData.proteinGoal) localStorage.setItem('proteinGoal', importedData.proteinGoal);
@@ -271,10 +258,10 @@ class SettingsManager {
                 if (importedData.storeDatabase) localStorage.setItem('storeDatabase', JSON.stringify(importedData.storeDatabase));
                 if (importedData.streak) localStorage.setItem('streak', importedData.streak);
                 if (importedData.theme) localStorage.setItem('theme', importedData.theme);
-                
+
                 // Show success message
                 this.showToast('Data imported successfully', 'success');
-                
+
                 // Refresh page
                 window.location.reload();
             } catch (error) {
@@ -282,7 +269,7 @@ class SettingsManager {
                 console.error('Import error', error);
             }
         };
-        
+
         // Read the file
         reader.readAsText(file);
     }

@@ -3,15 +3,13 @@
  */
 class FoodIntakeApp {
     constructor() {
-        // Get calorie goal from settings or use default
-        this.calorieGoal = parseInt(localStorage.getItem('calorieGoal') || '3000', 10);
-
         // Initialize managers
         this.storageManager = new StorageManager();
 
+
         // Add a small delay to ensure DOM is fully loaded
         setTimeout(async () => {
-            this.chartManager = new ChartManager(this.calorieGoal);
+            this.chartManager = new ChartManager(this.storageManager);
             this.confettiManager = new ConfettiManager();
             this.statisticsManager = new StatisticsManager(this.storageManager);
             this.settingsManager = new SettingsManager(this.storageManager);
@@ -253,7 +251,7 @@ class FoodIntakeApp {
 
         // Update the chart if it exists
         if (this.chartManager && this.chartManager.chart) {
-            this.chartManager.updateChart(totalCalories);
+            await this.chartManager.updateChart(totalCalories);
 
             // Check if we should trigger confetti (only for today)
             const today = new Date();
@@ -352,26 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         window.app = new FoodIntakeApp();
     }, 3);
-});
-
-foodTab = document.getElementById('food-tab');
-waterTab = document.getElementById('water-tab');
-waterTrackingTab = document.getElementById('water-tracking');
-foodTrackingTab = document.getElementById('food-tracking');
-
-foodTab.addEventListener('click', () => {
-    foodTab.classList.add('active');
-    waterTab.classList.remove('active');
-    waterTrackingTab.style.display = 'none';
-    foodTrackingTab.style.display = 'block';
-});
-
-
-waterTab.addEventListener('click', () => {
-    waterTab.classList.add('active');
-    foodTab.classList.remove('active');
-    waterTrackingTab.style.display = 'block';
-    foodTrackingTab.style.display = 'none';
 });
 
 // Navbar

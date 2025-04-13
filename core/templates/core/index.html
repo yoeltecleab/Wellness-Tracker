@@ -52,11 +52,19 @@
                 </p>
 
                 <div class="hero_section_button">
-                    <a href="{% url 'signup' %}" style="text-decoration: none"><button class="button">Start Tracking</button></a>
-                    <a href="#service" style="text-decoration: none"><button class="button">Learn More</button></a>
+                    <a href="{% url 'signup' %}" style="text-decoration: none">
+                        <button class="button">Start Tracking</button>
+                    </a>
+                    <a href="#service" style="text-decoration: none">
+                        <button class="button">Learn More</button>
+                    </a>
                     <a style="text-decoration: none">
                         <button id="demo-user-button" class="button">Create Demo Account</button>
                     </a>
+                </div>
+                <div id="loading-container">
+                    <div class="loader"></div>
+                    <p>Loading...</p>
                 </div>
             </div>
 
