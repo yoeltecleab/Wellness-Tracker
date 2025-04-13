@@ -623,6 +623,11 @@
 <div class="controls">
     <button type="button" class="cancel-btn">Cancel</button>
     <button type="button" class="prev-btn">Prev</button>
+    {% if source == 'update' %}
+        <button type="button" style="display: none" class="skip-btn">Skip Onboarding</button>
+    {% else %}
+        <button type="button" class="skip-btn">Skip Onboarding</button>
+    {% endif %}
     <button type="button" class="next-btn">Next</button>
     <button type="submit" class="submit-btn">Submit</button>
 </div>

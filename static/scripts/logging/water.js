@@ -8,14 +8,6 @@ class WaterTrackingManager {
         this.weeklyWaterChart = null;
         this.currentDate = new Date();
 
-        // Define default containers for easy access
-        this.defaultContainers = [
-            {amount: 250, label: 'Small Glass (250ml)', icon: 'fa-tint-slash'},
-            {amount: 500, label: 'Large Glass (500ml)', icon: 'fa-tint'},
-            {amount: 750, label: 'Bottle (750ml)', icon: 'fa-glass-water'},
-            {amount: 1000, label: 'Large Bottle (1000ml)', icon: 'fa-bottle-water'}
-        ];
-
         this.updateWaterGoal();
         this.initWaterChart();
         this.initWeeklyWaterChart();
@@ -38,24 +30,18 @@ class WaterTrackingManager {
         }
 
         this.waterChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Consumed', 'Remaining'],
-                datasets: [{
+            type: 'doughnut', data: {
+                labels: ['Consumed', 'Remaining'], datasets: [{
                     data: [0, this.waterGoal],
                     backgroundColor: ['rgba(13, 110, 253, 0.8)', 'rgba(233, 236, 239, 0.8)'],
                     borderWidth: 0,
                     cutout: '75%'
                 }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
+            }, options: {
+                responsive: true, maintainAspectRatio: false, plugins: {
                     legend: {
                         display: false
-                    },
-                    tooltip: {
+                    }, tooltip: {
                         callbacks: {
                             label: function (context) {
                                 return context.label + ': ' + context.raw + 'ml';
@@ -76,7 +62,7 @@ class WaterTrackingManager {
         this.waterChart.update();
 
         // Update water counter and progress bar
-        const percentage = Math.min(100, Math.round((consumedWater / this.waterGoal) * 100));
+        const percentage = Math.min(100, Math.round((consumedWater / this.waterGoal) * 100)) || 0;
         document.getElementById('waterCounter').textContent = `${consumedWater} / ${this.waterGoal} ml`;
         document.getElementById('waterProgressBar').style.width = `${percentage}%`;
 
@@ -280,6 +266,8 @@ class WaterTrackingManager {
 
             // Don't allow navigating to future dates
             if (this.currentDate < tomorrow) {
+                console.log("Current date: ", this.currentDate);
+                console.log("Tomorrow: ", tomorrow);
                 this.currentDate.setDate(this.currentDate.getDate() + 1);
                 this.updateWaterUI();
             }
@@ -314,54 +302,39 @@ class WaterTrackingManager {
         const weeklyData = await this.getWeeklyWaterData();
 
         this.weeklyWaterChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: weeklyData.labels,
-                datasets: [
-                    {
-                        label: 'Water Intake (ml)',
-                        data: weeklyData.data,
-                        backgroundColor: 'rgba(13, 110, 253, 0.7)',
-                        borderColor: 'rgba(13, 110, 253, 1)',
-                        borderWidth: 1,
-                        borderRadius: 4
-                    },
-                    {
-                        label: 'Goal',
-                        data: Array(7).fill(this.waterGoal),
-                        type: 'line',
-                        borderColor: 'rgba(40, 167, 69, 0.7)',
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        pointRadius: 0,
-                        fill: false
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
+            type: 'bar', data: {
+                labels: weeklyData.labels, datasets: [{
+                    label: 'Water Intake (ml)',
+                    data: weeklyData.data,
+                    backgroundColor: 'rgba(13, 110, 253, 0.7)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }, {
+                    label: 'Goal',
+                    data: Array(7).fill(this.waterGoal),
+                    type: 'line',
+                    borderColor: 'rgba(40, 167, 69, 0.7)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    fill: false
+                }]
+            }, options: {
+                responsive: true, maintainAspectRatio: false, scales: {
                     y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Water (ml)'
+                        beginAtZero: true, title: {
+                            display: true, text: 'Water (ml)'
                         }
-                    },
-                    x: {
+                    }, x: {
                         title: {
-                            display: true,
-                            text: 'Date'
+                            display: true, text: 'Date'
                         }
                     }
-                },
-                plugins: {
+                }, plugins: {
                     legend: {
-                        display: true,
-                        position: 'top'
-                    },
-                    tooltip: {
+                        display: true, position: 'top'
+                    }, tooltip: {
                         callbacks: {
                             label: function (context) {
                                 if (context.dataset.label === 'Goal') {
@@ -388,8 +361,9 @@ class WaterTrackingManager {
         const labels = [];
         const data = [];
 
-        if (weeklyData) return {labels, data};
-        weeklyData.forEach(day => {
+
+        if (!weeklyData) return {labels, data};
+        for (const day of weeklyData) {
             // Format date for label (e.g., "Mon 5")
             const date = new Date(day.date);
             const dayName = date.toLocaleDateString(undefined, {weekday: 'short'});
@@ -397,13 +371,12 @@ class WaterTrackingManager {
             labels.push(`${dayName} ${dayNumber}`);
 
             // Get water data for this day
-            const waterData = localStorage.getItem(`water_${day.date}`);
-            let waterEntries = waterData ? JSON.parse(waterData) : [];
+            let waterEntries = await this.storageManager.getWaterEntries(date)
 
             // Sum water intake for this day
             const dayTotal = waterEntries.reduce((sum, entry) => sum + entry.amount, 0);
             data.push(dayTotal);
-        });
+        }
 
         return {labels, data};
     }
@@ -475,9 +448,7 @@ class WaterTrackingManager {
 
         // Loop through each day of the previous week
         for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
-            const dateKey = await this.storageManager.getDateKey(date);
-            const waterData = localStorage.getItem(`water_${dateKey}`);
-            let waterEntries = waterData ? JSON.parse(waterData) : [];
+            let waterEntries = await this.storageManager.getWaterEntries(date);
 
             // Sum water intake for this day
             const dayTotal = waterEntries.reduce((sum, entry) => sum + entry.amount, 0);
@@ -520,7 +491,7 @@ class WaterTrackingManager {
     /**
      * Initialize the modal weekly water chart
      */
-    initModalWeeklyWaterChart() {
+    async initModalWeeklyWaterChart() {
         const ctx = document.getElementById('modalWeeklyWaterChart');
         if (!ctx) return;
 
@@ -529,57 +500,42 @@ class WaterTrackingManager {
             modalWaterChart.destroy();
         }
 
-        const weeklyData = this.getWeeklyWaterData();
+        const weeklyData = await this.getWeeklyWaterData();
 
         new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: weeklyData.labels,
-                datasets: [
-                    {
-                        label: 'Water Intake (ml)',
-                        data: weeklyData.data,
-                        backgroundColor: 'rgba(13, 110, 253, 0.7)',
-                        borderColor: 'rgba(13, 110, 253, 1)',
-                        borderWidth: 1,
-                        borderRadius: 4
-                    },
-                    {
-                        label: 'Goal',
-                        data: Array(7).fill(this.waterGoal),
-                        type: 'line',
-                        borderColor: 'rgba(40, 167, 69, 0.7)',
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        pointRadius: 0,
-                        fill: false
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
+            type: 'bar', data: {
+                labels: weeklyData.labels, datasets: [{
+                    label: 'Water Intake (ml)',
+                    data: weeklyData.data,
+                    backgroundColor: 'rgba(13, 110, 253, 0.7)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }, {
+                    label: 'Goal',
+                    data: Array(7).fill(this.waterGoal),
+                    type: 'line',
+                    borderColor: 'rgba(40, 167, 69, 0.7)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    fill: false
+                }]
+            }, options: {
+                responsive: true, maintainAspectRatio: false, scales: {
                     y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Water (ml)'
+                        beginAtZero: true, title: {
+                            display: true, text: 'Water (ml)'
                         }
-                    },
-                    x: {
+                    }, x: {
                         title: {
-                            display: true,
-                            text: 'Date'
+                            display: true, text: 'Date'
                         }
                     }
-                },
-                plugins: {
+                }, plugins: {
                     legend: {
-                        display: true,
-                        position: 'top'
-                    },
-                    tooltip: {
+                        display: true, position: 'top'
+                    }, tooltip: {
                         callbacks: {
                             label: function (context) {
                                 if (context.dataset.label === 'Goal') {
@@ -613,7 +569,7 @@ class WaterTrackingManager {
         document.getElementById('modalDaysAboveWaterGoal').textContent = `${daysAboveGoal}/7`;
 
         // Calculate percentage change from previous week
-        const previousWeekData = this.getPreviousWeekWaterData();
+        const previousWeekData = await this.getPreviousWeekWaterData();
         const previousWeekTotal = previousWeekData.reduce((sum, amount) => sum + amount, 0);
 
         let percentChange = 0;
@@ -775,7 +731,7 @@ class WaterTrackingManager {
 
         // Add default presets if enabled
         if (showDefaultContainers) {
-            this.defaultContainers.forEach(container => {
+            defaults.forEach(container => {
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.className = 'btn btn-outline-info water-preset default-water-preset';
@@ -787,7 +743,7 @@ class WaterTrackingManager {
         }
 
         // Add custom presets
-        if(containers) {
+        if (containers) {
             containers.forEach(container => {
                 const button = document.createElement('button');
                 button.type = 'button';
@@ -837,9 +793,7 @@ class WaterTrackingManager {
         }
 
         const newContainer = {
-            label: name,
-            amount: size,
-            icon: icon
+            label: name, amount: size, icon: icon
         };
 
         await this.addCustomContainer(newContainer);
@@ -888,7 +842,7 @@ class WaterTrackingManager {
 
     async updateWaterGoal() {
         const goals = await this.storageManager.getGoals();
-        this.waterGoal = goals.waterGoal;
+        this.waterGoal = goals.waterGoal || 0;
         this.updateWaterUI();
     }
 }

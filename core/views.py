@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from core.forms import MyUserCreationForm
-from core.models import User, Profile, Goal
+from core.models import User, Profile, Goal, WaterContainer
 from .models import FoodEntry
 from .utils import CreateDemoUser
 
@@ -76,6 +76,7 @@ def register_user(request):
         user = form.save(commit=False)
         user.email = user.email.lower()
         user.save()
+        create_default_items(user, [])
         login(request, user)
         return redirect('onboarding_quiz')
     context = {'form': form, 'page': 'signup'}
@@ -133,55 +134,6 @@ def update_profile(request):
 
 
 def profile_helper(request, context, this_page):
-    defaultItems = [
-        {'id': 'default-1', 'foodName': 'Apple', 'tag': 'apple', 'calories': 95, 'protein': 5, 'carbs': 25, 'fat': 3,
-         'mealType': 'snack', 'healthRating': '3', 'isDefault': True, 'isActive': True},
-        {'id': 'default-2', 'foodName': 'Banana', 'tag': 'banana', 'calories': 105, 'protein': 1, 'carbs': 27, 'fat': 0,
-         'mealType': 'snack', 'healthRating': '3', 'isDefault': True, 'isActive': True},
-        {'id': 'default-3', 'foodName': 'Chicken Breast', 'tag': 'chicken-breast', 'calories': 165, 'protein': 31,
-         'carbs': 0, 'fat': 3, 'mealType': 'lunch', 'healthRating': '3', 'isDefault': True, 'isActive': True},
-        {'id': 'default-4', 'foodName': 'Salad', 'tag': 'salad', 'calories': 120, 'protein': 2, 'carbs': 10, 'fat': 8,
-         'mealType': 'lunch', 'healthRating': '3', 'isDefault': True, 'isActive': True},
-        {'id': 'default-5', 'foodName': 'Oatmeal', 'tag': 'oatmeal', 'calories': 150, 'protein': 5, 'carbs': 27,
-         'fat': 2, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True},
-        {'id': 'default-6', 'foodName': 'Greek Yogurt', 'tag': 'greek-yogurt', 'calories': 100, 'protein': 15,
-         'carbs': 5, 'fat': 0, 'mealType': 'snack', 'healthRating': '3', 'isDefault': True, 'isActive': True},
-        {'id': 'default-7', 'foodName': 'Eggs (2)', 'tag': 'eggs', 'calories': 155, 'protein': 13, 'carbs': 1,
-         'fat': 11, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True},
-        {'id': 'default-8', 'foodName': 'Avocado Toast', 'tag': 'avocado-toast', 'calories': 190, 'protein': 5,
-         'carbs': 15, 'fat': 10, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True}]
-
-    defaultContainers = [
-        {
-            'id': 'default-1',
-            'amount': 250,
-            'label': 'Small Glass (250ml)',
-            'icon': 'fa-tint-slash',
-            'isActive': True
-        },
-        {
-            'id': 'default-2',
-            'amount': 500,
-            'label': 'Large Glass (500ml)',
-            'icon': 'fa-tint',
-            'isActive': True
-        },
-        {
-            'id': 'default-3',
-            'amount': 750,
-            'label': 'Bottle (750ml)',
-            'icon': 'fa-glass-water',
-            'isActive': True
-        },
-        {
-            'id': 'default-4',
-            'amount': 1000,
-            'label': 'Large Bottle (1000ml)',
-            'icon': 'fa-bottle-water',
-            'isActive': True
-        }
-    ]
-
     if request.method == 'POST':
         try:
             user = request.user
@@ -209,28 +161,7 @@ def profile_helper(request, context, this_page):
             profile.water_goal = request.POST['water-goal']
             profile.calorie_goal = request.POST['calorie-goal']
             profile.default_foods = ", ".join(request.POST.getlist('default-foods'))
-
-            # Create or update default foods
-            for item in defaultItems:
-                if item['tag'] not in request.POST.getlist('default-foods'):
-                    item['isActive'] = False
-
-                food, created = FoodEntry.objects.get_or_create(user=user, entry_id=item['id'])
-
-                food.entry_id = item['id']
-                food.user = user
-                food.food_name = item['foodName']
-                food.calories = item['calories']
-                food.protein = item['protein']
-                food.carbs = item['carbs']
-                food.fat = item['fat']
-                food.meal_type = item['mealType']
-                food.health_rating = item['healthRating']
-                food.is_default = item['isDefault']
-                food.is_active = item['isActive'] if item['isActive'] is not None else True
-                food.is_quick_add = True
-
-                food.save()
+            create_default_items(user, request.POST.getlist('default-foods'))
 
             # Create or update goal
             goal, created = Goal.objects.get_or_create(user=user)
@@ -259,3 +190,67 @@ def profile_helper(request, context, this_page):
 def generate_demo_user(request):
     CreateDemoUser.run()
     return HttpResponse("Demo user created successfully.")
+
+
+def create_default_items(user, default_food_list):
+    defaultItems = [
+        {'id': 'default-1', 'foodName': 'Apple', 'tag': 'apple', 'calories': 95, 'protein': 5, 'carbs': 25, 'fat': 3,
+         'mealType': 'snack', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-2', 'foodName': 'Banana', 'tag': 'banana', 'calories': 105, 'protein': 1, 'carbs': 27, 'fat': 0,
+         'mealType': 'snack', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-3', 'foodName': 'Chicken Breast', 'tag': 'chicken-breast', 'calories': 165, 'protein': 31,
+         'carbs': 0, 'fat': 3, 'mealType': 'lunch', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-4', 'foodName': 'Salad', 'tag': 'salad', 'calories': 120, 'protein': 2, 'carbs': 10, 'fat': 8,
+         'mealType': 'lunch', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-5', 'foodName': 'Oatmeal', 'tag': 'oatmeal', 'calories': 150, 'protein': 5, 'carbs': 27,
+         'fat': 2, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-6', 'foodName': 'Greek Yogurt', 'tag': 'greek-yogurt', 'calories': 100, 'protein': 15,
+         'carbs': 5, 'fat': 0, 'mealType': 'snack', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-7', 'foodName': 'Eggs (2)', 'tag': 'eggs', 'calories': 155, 'protein': 13, 'carbs': 1,
+         'fat': 11, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True},
+        {'id': 'default-8', 'foodName': 'Avocado Toast', 'tag': 'avocado-toast', 'calories': 190, 'protein': 5,
+         'carbs': 15, 'fat': 10, 'mealType': 'breakfast', 'healthRating': '3', 'isDefault': True, 'isActive': True}]
+
+    defaultContainers = [
+        {'id': 'default-1', 'amount': 250, 'label': 'Small Glass (250ml)', 'icon': 'fa-tint-slash', 'isActive': True},
+        {'id': 'default-2', 'amount': 500, 'label': 'Large Glass (500ml)', 'icon': 'fa-tint', 'isActive': True},
+        {'id': 'default-3', 'amount': 750, 'label': 'Bottle (750ml)', 'icon': 'fa-glass-water', 'isActive': True},
+        {'id': 'default-4', 'amount': 1000, 'label': 'Large Bottle (1000ml)', 'icon': 'fa-bottle-water',
+         'isActive': True}]
+
+    # Create or update default foods
+    for item in defaultItems:
+        if len(default_food_list) > 0 and item['tag'] not in default_food_list:
+            item['isActive'] = False
+
+        food, created = FoodEntry.objects.get_or_create(user=user, entry_id=item['id'])
+
+        food.entry_id = item['id']
+        food.user = user
+        food.food_name = item['foodName']
+        food.calories = item['calories']
+        food.protein = item['protein']
+        food.carbs = item['carbs']
+        food.fat = item['fat']
+        food.meal_type = item['mealType']
+        food.health_rating = item['healthRating']
+        food.is_default = item['isDefault']
+        food.is_active = item['isActive'] if item['isActive'] is not None else True
+        food.is_quick_add = True
+
+        food.save()
+
+    # Create or update default containers
+    for item in defaultContainers:
+
+        container, created = WaterContainer.objects.get_or_create(user=user, container_id=item['id'])
+
+        container.container_id = item['id']
+        container.user = user
+        container.amount = item['amount']
+        container.label = item['label']
+        container.icon = item['icon']
+        container.is_active = item['isActive'] if item['isActive'] is not None else True
+        container.is_default = True
+
+        container.save()

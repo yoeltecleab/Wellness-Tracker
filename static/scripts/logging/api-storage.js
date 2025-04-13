@@ -6,18 +6,8 @@ class StorageManager {
     constructor() {
         // Initialize API client
         this.apiClient = new ApiClient();
-
-        // Clean up any existing data
-        this.cleanupData();
     }
 
-    /**
-     * Clean up data and ensure all entries have the expected fields
-     */
-    cleanupData() {
-        // This method is replaced with server-side data validation
-        // console.log('API Storage Manager initialized');
-    }
 
     /**
      * Gets the date key in YYYY-MM-DD format
@@ -50,6 +40,7 @@ class StorageManager {
         if (!foodEntry.id) {
             foodEntry.id = this.generateUniqueId();
         }
+        await this.updateStreak();
 
         return await this.apiClient.addFoodEntry(foodEntry, date);
     }
@@ -133,10 +124,12 @@ class StorageManager {
 
         // Check if there are entries for today
         const todayEntries = await this.getFoodEntries(today);
+        console.log("Today entries count: ", todayEntries.length);
 
         if (todayEntries.length > 0) {
             // Check if there were entries yesterday
             const yesterdayEntries = await this.getFoodEntries(yesterday);
+            console.log("Yesterday entries count: ", yesterdayEntries.length);
 
             if (yesterdayEntries.length > 0) {
                 // Continue streak
@@ -147,8 +140,18 @@ class StorageManager {
             }
 
             // Save updated streak
-            await this.apiClient.setSetting('streak', streak);
+
+        } else {
+            // Reset streak
+            streak = 0;
         }
+
+        let data = {
+            'streak': streak
+        }
+
+        await this.apiClient.setSetting(data);
+
     }
 
     /**
@@ -303,14 +306,6 @@ class StorageManager {
         return await this.apiClient.getSetting(key);
     }
 
-    /**
-     * Sets a setting
-     * @param {string} key - Setting key
-     * @param {any} value - Setting value
-     */
-    async setSetting(key, value) {
-        return await this.apiClient.setSetting(key, value);
-    }
 
     /**
      * Get goals
@@ -328,7 +323,25 @@ class StorageManager {
         return await this.apiClient.updateGoals(goals);
     }
 
-    // async getCalorieGoal() {
-    //     return (await this.getGoals()).f
-    // }
+    /**
+     * Clear user data
+     * @returns {Promise<Array>} - Promise resolving to an array of goals
+     */
+    async clearData() {
+        return await this.apiClient.clearData();
+    }
+    /**
+     * Exports user data
+     * @returns {Promise<Array>} - Promise resolving to an array of goals
+     */
+    async exportData() {
+        return await this.apiClient.exportData();
+    }
+    /**
+     * Imports user data
+     * @returns {Promise<Array>} - Promise resolving to an array of goals
+     */
+    async importData(jsonData) {
+        return await this.apiClient.importData(jsonData);
+    }
 }
