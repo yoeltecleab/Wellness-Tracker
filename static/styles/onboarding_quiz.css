@@ -1,371 +1,383 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap");
 
 * {
-    font-family: "Outfit", sans-serif;
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 :root {
-    --clr-primary: #171821;
-    --clr-secondary: #21222d;
-    --clr-light-green: #a9dfd8;
-    --clr-gray-200: #e8e8e8;
-    --clr-gray-300: #d2d2d2;
-    --clr-gray-400: #a0a0a0;
-    --clr-gray-500: #87888c;
-    --clr-gray-800: #2c2d33;
-    --clr-yellow-400: #fcb859;
-    --clr-yellow-500: #feb95a;
-    --clr-pink: #f2c8ed;
-    --clr-light-blue: #20aef3;
-    --clr-black: #000;
-    ---clr-white: #fff;
-    --grey: #00b9ff;
-    --dark-grey: #8D8D8D;
-    --light: #fff;
-    --dark: #000;
-    --green: #81D43A;
-    --light-green: #E3FFCB;
-    --blue: #1775F1;
-    --light-blue: #D0E4FF;
-    --dark-blue: #0C5FCD;
-    --red: #FC3B56;
-    --value: 80%;
-    --third-color: linear-gradient(130deg, #022c65, #157be5, #022c65);
-    --secondary-color: linear-gradient(45deg, #1e549f, #5fc9f3, #1e549f);
-    --dark-color: linear-gradient(180deg, #1e549f, #0d3359, #1e549f);
-    --white-color: #020346;
-    --light-gray-color: #f2f2f2;
-    --logo-color: linear-gradient(to top, #031331, #1d5dd7);
-    --main-color: #c41e67;
-    --step-color: #ced7e0;
-    --step-size: 32px;
-    --steps: 4;
-    --progress-width: calc((var(--steps) - 1) / var(--steps) * 100%);
+  --clr-primary: #171821;
+  --clr-secondary: #21222d;
+  --clr-light-green: #a9dfd8;
+  --clr-gray-200: #e8e8e8;
+  --clr-gray-300: #d2d2d2;
+  --clr-gray-400: #a0a0a0;
+  --clr-gray-500: #87888c;
+  --clr-gray-800: #2c2d33;
+  --clr-yellow-400: #fcb859;
+  --clr-yellow-500: #feb95a;
+  --clr-pink: #f2c8ed;
+  --clr-light-blue: #20aef3;
+  --clr-black: #000;
+  ---clr-white: #fff;
+  --grey: #00b9ff;
+  --dark-grey: #8d8d8d;
+  --light: #fff;
+  --dark: #000;
+  --green: #81d43a;
+  --light-green: #e3ffcb;
+  --blue: #1775f1;
+  --light-blue: #d0e4ff;
+  --dark-blue: #0c5fcd;
+  --red: #fc3b56;
+  --value: 80%;
+  --third-color: linear-gradient(130deg, #022c65, #157be5, #022c65);
+  --secondary-color: linear-gradient(45deg, #1e549f, #5fc9f3, #1e549f);
+  --dark-color: linear-gradient(180deg, #1e549f, #0d3359, #1e549f);
+  --white-color: #020346;
+  --light-gray-color: #f2f2f2;
+  --logo-color: linear-gradient(to top, #031331, #1d5dd7);
+  --main-color: #c41e67;
+  --step-color: #ced7e0;
+  --step-size: 32px;
+  --steps: 4;
+  --progress-width: calc((var(--steps) - 1) / var(--steps) * 100%);
 }
 
 body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: var(--dark-color);
-    color: #000000;
-    justify-content: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #c0d6df !important;
+  color: #000000;
+  justify-content: center;
 }
 
-
 h1 {
-    text-align: center;
-    margin-bottom: 16px;
+  text-align: center;
+  margin-bottom: 16px;
 }
 
 h3 {
-    margin-bottom: 16px;
-    text-transform: uppercase;
-    font-size: clamp(1rem, 2vw + 1rem, 1.25rem);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  font-size: clamp(1rem, 2vw + 1rem, 1.25rem);
 }
 
 label {
-    display: inline-block;
-    margin-bottom: 4px;
+  display: inline-block;
+  margin-bottom: 4px;
 }
 
 input,
 textarea {
-    outline-color: dodgerblue;
-    border: 1px solid lightgray;
-    padding: 8px 16px;
-    border-radius: 4px;
-    width: 100%;
-    font-size: 1rem;
-    text-align: start;
+  outline-color: dodgerblue;
+  border: 1px solid lightgray;
+  padding: 8px 16px;
+  border-radius: 4px;
+  width: 100%;
+  font-size: 1rem;
+  text-align: start;
 }
 
 input:not([type="radio"]):not([type="checkbox"]) {
-    width: 100%;
+  width: 100%;
 }
 
 input[type="tel"] {
-    direction: inherit;
+  direction: inherit;
 }
 
 textarea {
-    resize: none;
+  resize: none;
 }
 
 button {
-    cursor: pointer;
-    border: none;
-    border-radius: 16px;
-    padding: 8px 16px;
-    background: var(--dark);
-    color: #fff;
-    font-size: 0.875rem;
-    transition: 0.3s;
+  cursor: pointer;
+  border: none;
+  border-radius: 16px;
+  padding: 8px 16px;
+  background: var(--dark);
+  color: #fff;
+  font-size: 0.875rem;
+  transition: 0.3s;
 }
 
 button:active,
 button:hover {
-    background: var(--third-color);
+  background: #4f6d7a !important;
 }
 
 button:disabled {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 button:focus {
-    outline-color: #333;
+  outline-color: #333;
 }
 
 button[type="submit"] {
-    background-color: #333;
+  background-color: #333;
 }
 
 button[type="submit"]:hover,
 button[type="submit"]:active {
-    background-color: #444;
+  background-color: #444;
 }
 
 form {
-    position: relative;
-    border-radius: 8px;
-    width: min(500px, 90%);
-    box-shadow: 0 4px 16px rgba(167, 21, 84, 0.1);
-
+  position: relative;
+  border-radius: 8px;
+  width: min(500px, 90%);
+  box-shadow: 0 4px 16px rgba(167, 21, 84, 0.1);
 }
 
 /* form styles */
 
 .form-wizard {
-    position: relative;
-    background: var(--secondary-color);
-    padding: 2rem;
-    border-radius: 3.3rem;
-    width: min(700px, 90%);
-    box-shadow: 0 60px 40px -30px rgba(0, 0, 0, 0.27);
-    margin-top: 2rem;
+  position: relative;
+  background: #4f6d7a !important;
+  padding: 2rem;
+  border-radius: 3.3rem;
+  width: min(700px, 90%);
+  box-shadow: 0 60px 40px -30px rgba(0, 0, 0, 0.27);
+  margin-top: 2rem;
 }
 
-
 .progress-container {
-    position: relative;
+  position: relative;
 }
 
 .progress-container::before {
-    content: "";
-    height: 4px;
-    width: var(--progress-width);
-    background-color: var(--step-color);
-    position: absolute;
-    top: calc(var(--step-size) / 2);
-    left: 50%;
-    translate: -50% -50%;
+  content: "";
+  height: 4px;
+  width: var(--progress-width);
+  background-color: var(--step-color);
+  position: absolute;
+  top: calc(var(--step-size) / 2);
+  left: 50%;
+  translate: -50% -50%;
 }
 
 .progress-container .progress {
-    height: 4px;
-    width: var(--progress-width);
-    background: var(--dark-color);
-    position: absolute;
-    top: calc(var(--step-size) / 2);
-    left: 50%;
-    translate: -50% -50%;
-    z-index: 2;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: 0.3s;
+  height: 4px;
+  width: var(--progress-width);
+  background: #4f6d7a !important;
+  position: absolute;
+  top: calc(var(--step-size) / 2);
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 2;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: 0.3s;
 }
 
 /* if page is rtl adjust the transform origin */
 html[dir="rtl"] .progress-container .progress {
-    transform-origin: right;
+  transform-origin: right;
 }
 
 .progress-container ol {
-    list-style-type: none;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    counter-reset: step-number;
-    position: relative;
-    z-index: 3;
+  list-style-type: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  counter-reset: step-number;
+  position: relative;
+  z-index: 3;
 }
 
 .progress-container li {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: var(--step-color);
-    transition: 0.3s linear 0.3s;
-    text-align: center;
-    font-size: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--step-color);
+  transition: 0.3s linear 0.3s;
+  text-align: center;
+  font-size: 0;
 }
 
 .progress-container li::before {
-    counter-increment: step-number;
-    content: counter(step-number);
-    background-color: var(--step-color);
-    width: var(--step-size);
-    height: var(--step-size);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    color: #fff;
-    transition: 0.3s linear 0.3s;
-    font-size: 1rem;
+  counter-increment: step-number;
+  content: counter(step-number);
+  background-color: var(--step-color);
+  width: var(--step-size);
+  height: var(--step-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  transition: 0.3s linear 0.3s;
+  font-size: 1rem;
 }
 
 @media (min-width: 480px) {
-    .progress-container li {
-        font-size: 1rem;
-        gap: 8px;
-    }
+  .progress-container li {
+    font-size: 1rem;
+    gap: 8px;
+  }
 }
 
 .progress-container li:where(.done, .current) {
-    color: #333;
-    font-weight: 500;
+  color: black;
+  font-weight: 500;
 }
 
 .progress-container li.done::before {
-    background: var(--dark-color);
+  background: #c0d6df !important;
+  color: black !important;
+  box-shadow: 0 0 0 3px rgba(167, 21, 84, 0.25);
+}
+
+.questionnaires::before {
+  color: black !important;
 }
 
 .progress-container li.current::before {
-    background: var(--third-color);
-    box-shadow: 0 0 0 3px rgba(167, 21, 84, 0.25);
+  background: #c0d6df !important;
+  color: black !important;
+  box-shadow: 0 0 0 3px rgba(167, 21, 84, 0.25);
 }
 
 .steps-container {
-    display: flex;
-    overflow: hidden;
-    min-height: 40rem;
+  display: flex;
+  overflow: hidden;
+  min-height: 40rem;
 }
 
 .step {
-    flex: 1 0 100%;
-    padding: 24px 8px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    height: 100%;
-    display: grid;
-    gap: 8px;
+  flex: 1 0 100%;
+  padding: 24px 8px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  height: 100%;
+  display: grid;
+  gap: 8px;
 }
 
 .step.current {
-    opacity: 1;
+  opacity: 1;
 }
 
 .controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-top: 16px;
-    padding-inline: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  padding-inline: 8px;
 }
 
 .controls button {
-    flex: 1;
+  flex: 1;
 }
 
 .completed {
-    text-align: center;
+  text-align: center;
 }
 
 .completed h3 {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .completed svg {
-    width: 100px;
-    height: 100px;
-    stroke: yellowgreen;
+  width: 100px;
+  height: 100px;
+  stroke: yellowgreen;
 }
 
 .completed:not([hidden]) ~ * {
-    display: none;
+  display: none;
+}
+
+.prev-btn,
+.next-btn,
+.cancel-btn {
+  background: #8ecc8e !important;
+  color: black !important;
 }
 
 .close-btn {
-    position: relative;
-    top: 16px;
-    right: 16px;
-    cursor: pointer;
-    color: var(--step-color);
-    transition: 0.3s;
+  position: relative;
+  top: 16px;
+  right: 16px;
+  cursor: pointer;
+  color: var(--step-color);
+  transition: 0.3s;
 }
 
 .close-btn a {
-    text-decoration: none;
-    color: white;
+  text-decoration: none;
+  color: white;
 }
 
 .form-control {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .form-control > label {
-    display: block;
-    margin-bottom: 12px;
-    font-weight: 500;
-    color: var(--white-color);
-    font-size: 1rem;
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 500;
+  color: white !important;
+  font-size: 1rem;
 }
 
 .radio-group,
 .checkbox-group {
-    color: var(--white-color);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  color: var(--white-color);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .radio-option,
 .checkbox-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: flex-start;
-    margin-left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+  margin-left: 20px;
 }
 
 .radio-option input[type="radio"],
 .checkbox-option input[type="checkbox"] {
-    width: auto;
-    margin: 0;
-    cursor: pointer;
+  width: auto;
+  margin: 0;
+  cursor: pointer;
 }
 
 .radio-option label,
 .checkbox-option label {
-    margin: 0;
-    font-weight: normal;
-    cursor: pointer;
+  margin: 0;
+  font-weight: normal;
+  cursor: pointer;
+  color: white !important;
 }
 
 input[type="text"] {
-    margin-top: 8px;
+  margin-top: 8px;
 }
 
 .show-hide-password {
-    position: relative;
-    top: -1.2rem;
-    right: -33rem;
-    transform: translateY(-50%);
-    cursor: pointer;
-    width: 2rem;
+  position: relative;
+  top: -1.2rem;
+  right: -33rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: 2rem;
 }
 
 .open {
-    display: none;
+  display: none;
 }
 
 .close {
-    display: block;
+  display: block;
 }
