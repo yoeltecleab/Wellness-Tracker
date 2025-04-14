@@ -1,5 +1,6 @@
 import calendar
 import uuid
+from collections import defaultdict
 from datetime import date, timedelta, datetime
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,6 +11,7 @@ from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from core.api.location import Location
 from core.models import User, FoodEntry, Store, WaterContainer, WaterEntry, Profile, Goal
 
 MULTIPLIER = 0.314159265358979
@@ -121,23 +123,34 @@ def dashboard_data_todays_intake(request):
 def dashboard_top_foods(request, count: int):
     user = request.user
 
-    top_n_foods = FoodEntry.objects.filter(user=user,
-                                           is_active=True,
-                                           is_quick_add=False).order_by('-frequency')[:count]
+    # Get ALL food entries for the user
+    all_foods = FoodEntry.objects.filter(
+        user=user,
+        is_active=True,
+        is_quick_add=False
+    )
 
+    # Group by food_name
+    food_groups = defaultdict(list)
+    for food in all_foods:
+        food_groups[food.food_name].append(food)
+
+    # Build response with unique food_name entries
     response = []
-    i = 1
-    for food in top_n_foods:
+    for i, (food_name, logs) in enumerate(food_groups.items(), start=1):
         response.append({
-            'id': "0" + str(i) if i < 10 else str(i),
-            'name': food.food_name,
-            'frequency': food.frequency,
-            'max_calorie': max(log.calories for log in top_n_foods),
-            'min_calorie': min(log.calories for log in top_n_foods),
+            'id': f"{i:02}",
+            'name': food_name,
+            'frequency': len(logs),
+            'max_calorie': max(log.calories for log in logs),
+            'min_calorie': min(log.calories for log in logs),
         })
-        i += 1
 
-    return Response(response)
+    # Sort by frequency (descending) and take top `count`
+    response.sort(key=lambda x: x['frequency'], reverse=True)
+    top_response = response[:count]
+
+    return Response(top_response)
 
 
 # returns data for top right card of the dashboard
@@ -154,6 +167,7 @@ def dashboard_top_stores(request, count):
         response.append({
             'name': store.name,
             'address': store.address,
+            'distance': store.distance,
             'visits': store.visits,
             'popularity': round((store.visits / popular_stores_count) * 100),
         })
@@ -291,10 +305,12 @@ def food_entries(request, date=None, entryId=None):
         if data.get('store'):
             store, store_created = Store.objects.get_or_create(user=request.user, name=data.get('store'))
             if store_created:
+                address = Location.get_nearest_location(request.user.full_address, data.get('store'))
                 store.name = data.get('store')
                 store.visits = 1
                 store.user = request.user
-                store.address = '123 Main St New York, NY 10001'
+                store.address = address['address']
+                store.distance = address['distance']
                 store.save()
             else:
                 store.visits += 1
@@ -315,6 +331,7 @@ def food_entries(request, date=None, entryId=None):
         entry = request.user.food_entries.get(Q(entry_id__exact=entryId))
         if entry.purchased_from:
             entry.purchased_from.visits -= 1
+            entry.purchased_from.save()
         entry.delete()
         return Response({'success': True})
 
@@ -358,7 +375,7 @@ def food_database(request):
             if result.food_name not in already_added:
                 response.append({
                     'id': result.entry_id,
-                    'foodName': result.food_name,
+                    'name': result.food_name,
                     'calories': result.calories,
                     'purchased': result.purchased,
                     'healthRating': switchHealthRatingToNumbers(result.health_rating),
@@ -437,12 +454,24 @@ def quick_add_foods(request, itemId=None):
         entry.is_quick_add = True
 
         entry.save()
+
+        if entry.is_default:
+            defaults = request.user.user_profile.default_foods.split(", ")
+
+            if entry.food_name in defaults:
+                defaults.remove(entry.food_name)
+            else:
+                defaults.append(entry.food_name)
+            request.user.user_profile.default_foods = ", ".join(defaults)
+            request.user.user_profile.save()
+
         return Response({'success': True})
 
     elif request.method == 'DELETE':
         # entryId for deletion
         entry = request.user.food_entries.get(entry_id=itemId)
         entry.is_active = False
+
         entry.save()
         return Response({'success': True})
 

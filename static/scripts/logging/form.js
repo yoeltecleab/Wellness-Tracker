@@ -128,6 +128,8 @@ class FormManager {
     showAutocomplete(input, suggestionsList, items) {
         const value = input['value'].toLowerCase();
 
+        window.item = items
+
         // Clear previous suggestions
         suggestionsList.innerHTML = '';
         suggestionsList.style.display = 'none';
@@ -137,7 +139,7 @@ class FormManager {
         // Filter items based on input value
         const matchingItems = [];
         items.forEach(item => {
-                name = item.foodName
+                name = item.name
                 if (name.toLowerCase().includes(value))
                     matchingItems.push(item);
             }
@@ -148,11 +150,11 @@ class FormManager {
         // Create suggestion elements
         matchingItems.forEach(item => {
             const div = document.createElement('div');
-            div.textContent = item.foodName;
+            div.textContent = item.name;
             div.style.color = '#f2f2f2';
             div.style.background = 'linear-gradient(to right, #1e549f, #5fc9f3, #1e549f)';
             div.addEventListener('click', () => {
-                input.value = item.foodName;
+                input.value = item.name;
                 suggestionsList.style.display = 'none';
 
                 // If it's a food item, try to autofill calories

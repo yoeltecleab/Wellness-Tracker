@@ -106,6 +106,33 @@
         </div>
     </div>
     <div class="step">
+        <h3>Address</h3>
+
+        <div class="form-control">
+            <label for="addl1">Address Line 1</label>
+            <input type="text" id="addl1" name="addressLine1" value="{{ user.location_address.addressLine1|default_if_none:'' }}"
+                   required/>
+        </div>
+        <div class="form-control">
+            <label for="addl2">Address Line 2</label>
+            <input type="text" id="addl2" name="addressLine2" value="{{ user.location_address.addressLine2|default_if_none:'' }}"/>
+        </div>
+        <div class="form-control">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" value="{{ user.location_address.city|default_if_none:'' }}"
+                   required/>
+        </div>
+        <div class="form-control">
+            <label for="state">State</label>
+            <input type="text" id="state" name="state" value="{{ user.location_address.state|default_if_none:'' }}" required/>
+        </div>
+        <div class="form-control">
+            <label for="zipcode">Zip Code</label>
+            <input type="text" id="zipcode" name="zipcode" value="{{ user.location_address.zipcode|default_if_none:'' }}" required/>
+
+        </div>
+    </div>
+    <div class="step">
         <h3>Health Assessment Quiz</h3>
 
         <div class="form-control">
@@ -509,8 +536,8 @@
                             type="checkbox"
                             id="default-apple"
                             name="default-foods"
-                            value="apple"
-                            {% if 'apple' in user.user_profile.default_foods %}checked{% endif %}
+                            value="Apple"
+                            {% if 'Apple' in user.user_profile.default_foods %}checked{% endif %}
                     />
                     <label for="default-apple">Apple</label>
                 </div>
@@ -519,8 +546,8 @@
                             type="checkbox"
                             id="default-banana"
                             name="default-foods"
-                            value="banana"
-                            {% if 'banana' in user.user_profile.default_foods %}checked{% endif %}
+                            value="Banana"
+                            {% if 'Banana' in user.user_profile.default_foods %}checked{% endif %}
                     />
                     <label for="default-banana">Banana</label>
                 </div>
@@ -529,8 +556,8 @@
                             type="checkbox"
                             id="default-chicken-breast"
                             name="default-foods"
-                            value="chicken-breast"
-                            {% if 'chicken-breast' in user.user_profile.default_foods %}checked{% endif %}
+                            value="Chicken Breast"
+                            {% if 'Chicken Breast' in user.user_profile.default_foods %}checked{% endif %}
                     />
                     <label for="default-chicken-breast">Chicken Breast</label>
                 </div>
@@ -539,8 +566,8 @@
                             type="checkbox"
                             id="default-salad"
                             name="default-foods"
-                            value="salad"
-                            {% if 'salad' in user.user_profile.default_foods %}checked{% endif %}
+                            value="Salad"
+                            {% if 'Salad' in user.user_profile.default_foods %}checked{% endif %}
                     />
                     <label for="default-salad">Salad</label>
                 </div>
@@ -549,8 +576,8 @@
                             type="checkbox"
                             id="default-oatmeal"
                             name="default-foods"
-                            value="oatmeal"
-                            {% if 'oatmeal' in user.user_profile.default_foods %}checked{% endif %}
+                            value="Oatmeal"
+                            {% if 'Oatmeal' in user.user_profile.default_foods %}checked{% endif %}
                     />
                     <label for="default-oatmeal">Oatmeal</label>
                 </div>
@@ -559,8 +586,8 @@
                             type="checkbox"
                             id="default-greek-yogurt"
                             name="default-foods"
-                            value="greek-yogurt"
-                            {% if 'greek-yogurt' in user.user_profile.default_foods %}checked{% endif %}
+                            value="Greek Yogurt"
+                            {% if 'Greek Yogurt' in user.user_profile.default_foods %}checked{% endif %}
                     />
                     <label for="default-greek-yogurt">Greek Yogurt</label>
                 </div>
@@ -569,8 +596,8 @@
                             type="checkbox"
                             id="default-eggs"
                             name="default-foods"
-                            value="eggs"
-                            {% if 'eggs' in user.user_profile.default_foods %}checked{% endif %}
+                            value="Eggs (2)"
+                            {% if 'Eggs (2)' in user.user_profile.default_foods %}checked{% endif %}
                     />
                     <label for="default-eggs">Eggs</label>
                 </div>
@@ -579,8 +606,8 @@
                             type="checkbox"
                             id="default-avocado-toast"
                             name="default-foods"
-                            value="avocado-toast"
-                            {% if 'avocado-toast' in user.user_profile.default_foods %}checked{% endif %}
+                            value="Avocado Toast"
+                            {% if 'Avocado Toast' in user.user_profile.default_foods %}checked{% endif %}
                     />
                     <label for="default-avocado-toast">Avocado Toast</label>
                 </div>

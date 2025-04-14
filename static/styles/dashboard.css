@@ -187,7 +187,7 @@ body {
 }
 
 .nearest-locations {
-    max-height: 15rem;
+    max-height: 18rem;
     overflow-y: auto;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
@@ -395,9 +395,20 @@ td {
 
 .nearest-locations td:nth-child(3),
 .nearest-locations th:nth-child(3) {
+    padding-left: 8rem;
+    color: #afdfff;
+}
+
+.nearest-locations td:nth-child(2).map-link-cell{
+    color: #0dda36;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.nearest-locations td:nth-child(4),
+.nearest-locations th:nth-child(4) {
     padding-left: 5rem;
     color: #afdfff;
-    width: 2fr; /* make the third column twice as large as the second column */
 }
 
 @media screen and (min-width: 1280px) {
