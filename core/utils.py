@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 
 from django.utils.timezone import make_aware
 
-from .models import User, Profile, WaterEntry, FoodEntry, Store, Goal, WaterContainer
+from .api.location import Location
+from .models import User, Profile, WaterEntry, FoodEntry, Store, Goal, WaterContainer, LocationAddress
 
 
 def get_random_time(log_date_base):
@@ -40,6 +41,7 @@ class CreateDemoUser:
             first_name="Demo",
             last_name="User",
             phone="1234567890",
+            full_address="9201 University City Blvd, Charlotte, NC",
             dob=datetime(1995, 5, 15).date(),
             avatar="avatar.svg",
         )
@@ -58,6 +60,16 @@ class CreateDemoUser:
             dietary_restrictions='none',
             exercise='none',
             usual_store='Supermarket',
+            streak=random.randint(10, 50),
+        )
+
+        LocationAddress.objects.create(
+            user=user,
+            addressLine1="9201 University City Blvd",
+            addressLine2="",
+            city="Charlotte",
+            state="NC",
+            zipcode="28223",
         )
 
         Goal.objects.create(
@@ -76,10 +88,12 @@ class CreateDemoUser:
 
         stores = []
         for name in store_names:
+            address = Location.get_nearest_location(user.full_address, name)
             store = Store.objects.create(
                 user=user,
                 name=name,
-                address=f"{random.randint(100, 999)} Main St, ZIP {random.randint(10000, 99999)}",
+                address=address['address'],
+                distance=address['distance'],
                 visits=random.randint(1, 297),
             )
             stores.append(store)
@@ -117,8 +131,8 @@ class CreateDemoUser:
                 log_date = get_random_time(log_date_base)
                 food_name = random.choice(food_names)
                 purchased = random.choice([True, False])
-                calories = random.randint(350, 750) if purchased else random.randint(200, 4500)
-                health_rating = random.choice(['1', '2', '3', '4'])
+                calories = random.randint(350, 750) if purchased else random.randint(200, 450)
+                health_rating = random.choice(['1', '2', '3'])
                 meal_type = random.choice(['Breakfast', 'Lunch', 'Dinner', 'Snack'])
                 notes = random.choice([None, 'Extra cheese', 'Lightly seasoned'])
                 protein = random.randint(5, 30)

@@ -41,13 +41,21 @@ urlpatterns = [
     path('water-containers/', views.water_containers),
     path('water-containers/<str:containerId>/', views.water_containers),
 
-    # Setting APIs
-    path('settings/', views.settings),
-    path('settings/<str:key>/', views.settings),
 
     # Weekly Data APIs
     path('weekly-data/<int:daysBack>/', views.weekly_data),
 
     # Goals APIs
     path('goals/', views.goals),
+
+    # Settings APIs
+    path('settings/', views.settings),
+
+    # Clear Data API
+    path('clear-data/', views.clear_data),
+
+    path('import-data/', views.import_data_from_json),
+    path('export-data/', views.export_data_to_json),
+
+    path('data/', views.exported_data),
 ]

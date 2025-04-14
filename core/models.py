@@ -15,6 +15,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
     dob = models.DateField(null=True, blank=True)
+    full_address = models.CharField(max_length=100, blank=True, null=True)
 
     avatar = models.ImageField(null=True, default="avatar.svg")
 
@@ -40,6 +41,7 @@ class Profile(models.Model):
     usual_store = models.CharField(max_length=100, blank=True, null=True)
     default_foods = models.CharField(max_length=100, blank=True, null=True)
     default_water_containers = models.CharField(max_length=100, blank=True, null=True)
+    streak = models.IntegerField(blank=True, null=True, default=0)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user_profile')
 
@@ -98,6 +100,7 @@ class Store(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
     visits = models.IntegerField(blank=True, null=True)
+    distance = models.FloatField(blank=True, null=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='stores')
 
@@ -140,3 +143,18 @@ class WaterContainer(models.Model):
     class Meta:
         verbose_name = 'Water Container'
         verbose_name_plural = 'Water Containers'
+
+
+class LocationAddress(models.Model):
+    addressLine1 = models.CharField(max_length=100, blank=True, null=True)
+    addressLine2 = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=100, blank=True, null=True)
+    zipcode = models.CharField(max_length=100, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='location_address')
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'location address'
+        verbose_name_plural = 'location addresses'

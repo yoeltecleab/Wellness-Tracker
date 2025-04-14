@@ -4,6 +4,7 @@ const stepsContainer = form.querySelector(".steps-container");
 const steps = form.querySelectorAll(".step");
 const stepIndicators = form.querySelectorAll(".progress-container li");
 const prevButton = form.querySelector(".prev-btn");
+const skipButton = form.querySelector(".skip-btn");
 const cancelButton = form.querySelector(".cancel-btn");
 const nextButton = form.querySelector(".next-btn");
 const submitButton = form.querySelector(".submit-btn");
@@ -40,6 +41,7 @@ const updateButtons = () => {
   prevButton.hidden = currentStep === 0;
   nextButton.hidden = currentStep >= steps.length - 1;
   submitButton.hidden = !nextButton.hidden;
+  skipButton.hidden = currentStep !== 0;
 };
 
 const isValidStep = () => {
@@ -138,3 +140,7 @@ closeEye.forEach(btn =>
         openEye.forEach(op => op.style.display = "block");
     })
 )
+
+skipButton.addEventListener("click", () => {
+    window.location.href = "http://localhost:8000/dashboard/";
+})

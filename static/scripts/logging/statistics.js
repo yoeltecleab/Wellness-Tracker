@@ -4,36 +4,112 @@
 class StatisticsManager {
     constructor(storageManager) {
         this.storageManager = storageManager;
-        
+
         // Initialize charts when the weekly stats modal is opened
-        document.getElementById('weeklyStatsBtn').addEventListener('click', () => {
-            setTimeout(async () => {
-                await this.initWeeklyCharts();
-                await this.updateWeeklyStats();
-            }, 5); // Small delay to ensure DOM is ready
+        let weeklyStatsBtn = document.getElementById('weeklyStatsBtn');
+
+        if (weeklyStatsBtn) {
+            weeklyStatsBtn.addEventListener('click', () => {
+                setTimeout(async () => {
+                    await this.initWeeklyCharts();
+                    await this.updateWeeklyStats();
+                }, 5); // Small delay to ensure DOM is ready
+            });
+        }
+
+        // Navbar
+// PROFILE DROPDOWN
+        const profile = document.querySelector('.right-nav .profile');
+        const imgProfile = profile.querySelector('.right-nav .profile img');
+        const dropdownProfile = profile.querySelector('.profile-link');
+
+        imgProfile.addEventListener('click', function () {
+            dropdownProfile.classList.toggle('show');
+        })
+
+
+// MENU
+        const allMenu = document.querySelectorAll('main .content-data .head .menu');
+
+        allMenu.forEach(item => {
+            const icon = item.querySelector('.icon');
+            const menuLink = item.querySelector('.menu-link');
+
+            icon.addEventListener('click', function () {
+                menuLink.classList.toggle('show');
+            })
+        })
+
+
+        window.addEventListener('click', function (e) {
+            if (e.target !== imgProfile) {
+                if (e.target !== dropdownProfile) {
+                    if (dropdownProfile.classList.contains('show')) {
+                        dropdownProfile.classList.remove('show');
+                    }
+                }
+            }
+
+            allMenu.forEach(item => {
+                const icon = item.querySelector('.icon');
+                const menuLink = item.querySelector('.menu-link');
+
+                if (e.target !== icon) {
+                    if (e.target !== menuLink) {
+                        if (menuLink.classList.contains('show')) {
+                            menuLink.classList.remove('show')
+                        }
+                    }
+                }
+            })
+        })
+
+// SIDEBAR
+        const openBtn = document.querySelector(".open-btn");
+        const closeBtn = document.querySelector(".close-btn");
+        const sidebar = document.querySelector(".sidebar");
+        const navLinks = document.querySelectorAll(".nav-links a");
+
+// open sidebar
+        openBtn.addEventListener("click", function () {
+            sidebar.classList.add("open");
         });
+
+// close sidebar
+        closeBtn.addEventListener("click", function () {
+            sidebar.classList.remove("open");
+        });
+
+// control active nav-link
+        navLinks.forEach((navLink) => {
+            navLink.addEventListener("click", function () {
+                navLinks.forEach((l) => l.classList.remove("active"));
+                this.classList.add("active");
+            });
+        });
+
     }
-    
+
     /**
      * Initializes all weekly charts
      */
-    initWeeklyCharts() {
-        this.initWeeklyCaloriesChart();
-        this.initWeeklyNutritionChart();
-        this.initWeeklyHealthChart();
+    async initWeeklyCharts() {
+        await this.initWeeklyCaloriesChart();
+        await this.initWeeklyNutritionChart();
+        await this.initWeeklyHealthChart();
     }
-    
+
     /**
      * Initializes the weekly calories chart
      */
-    initWeeklyCaloriesChart() {
+    async initWeeklyCaloriesChart() {
         const ctx = document.getElementById('weeklyCaloriesChart').getContext('2d');
-        const data = this.getWeeklyCalorieData();
-        
+        const data = await this.getWeeklyCalorieData();
+
         if (this.weeklyCaloriesChart) {
             this.weeklyCaloriesChart.destroy();
         }
-        
+
         this.weeklyCaloriesChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -75,18 +151,18 @@ class StatisticsManager {
             }
         });
     }
-    
+
     /**
      * Initializes the weekly nutrition chart
      */
-    initWeeklyNutritionChart() {
+    async initWeeklyNutritionChart() {
         const ctx = document.getElementById('weeklyNutritionChart').getContext('2d');
-        const data = this.getWeeklyNutritionData();
-        
+        const data = await this.getWeeklyNutritionData();
+
         if (this.weeklyNutritionChart) {
             this.weeklyNutritionChart.destroy();
         }
-        
+
         this.weeklyNutritionChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -142,18 +218,18 @@ class StatisticsManager {
             }
         });
     }
-    
+
     /**
      * Initializes the weekly health score chart
      */
-    initWeeklyHealthChart() {
+    async initWeeklyHealthChart() {
         const ctx = document.getElementById('weeklyHealthChart').getContext('2d');
-        const data = this.getWeeklyHealthData();
-        
+        const data = await this.getWeeklyHealthData();
+
         if (this.weeklyHealthChart) {
             this.weeklyHealthChart.destroy();
         }
-        
+
         this.weeklyHealthChart = new Chart(ctx, {
             type: 'radar',
             data: {
@@ -185,7 +261,7 @@ class StatisticsManager {
             }
         });
     }
-    
+
     /**
      * Gets weekly calorie data for the last 7 days
      * @returns {Object} - Object with labels and calorie data
@@ -194,20 +270,20 @@ class StatisticsManager {
         const weeklyData = await this.storageManager.getWeeklyData();
         const labels = [];
         const calories = [];
-        
+
         weeklyData.forEach(day => {
             // Convert date string to readable format (e.g., "Mon", "Tue")
             const date = new Date(day.date);
-            labels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
-            
+            labels.push(date.toLocaleDateString('en-US', {weekday: 'short'}));
+
             // Calculate total calories for the day
             const totalCalories = day.entries.reduce((sum, entry) => sum + parseInt(entry.calories, 10), 0);
             calories.push(totalCalories);
         });
-        
-        return { labels, calories };
+
+        return {labels, calories};
     }
-    
+
     /**
      * Gets weekly nutrition data for the last 7 days
      * @returns {Object} - Object with labels and nutrition data
@@ -242,7 +318,7 @@ class StatisticsManager {
 
         return {labels, protein, carbs, fat};
     }
-    
+
     /**
      * Gets weekly health data
      * @returns {Object} - Object with health score data
@@ -250,7 +326,8 @@ class StatisticsManager {
     async getWeeklyHealthData() {
         // Calculate health scores based on last week's data
         const weeklyData = await this.storageManager.getWeeklyData();
-        const calorieGoal = parseInt(localStorage.getItem('calorieGoal') || '3000', 10);
+        const goals = await this.storageManager.getGoals();
+        const calorieGoal = goals.calorieGoal;
 
         // Default scores
         const scores = {
@@ -276,7 +353,7 @@ class StatisticsManager {
             snack: 0
         };
 
-        weeklyData.forEach(day => {
+        for (const day of weeklyData) {
             if (day.entries.length > 0) {
                 daysWithEntries++;
 
@@ -304,11 +381,12 @@ class StatisticsManager {
                 totalEntries += day.entries.length;
 
                 // Calculate water intake (from localStorage)
-                const waterKey = `waterIntake_${day.date}`;
-                const dailyWater = parseInt(localStorage.getItem(waterKey) || '0', 10);
-                waterTotal += dailyWater;
+                let waterEntries = await this.storageManager.getWaterEntries(new Date(day.date));
+                waterEntries.forEach(entry => {
+                    waterTotal += entry.amount;
+                })
             }
-        });
+        }
 
         // Calculate scores if we have data
         if (daysWithEntries > 0) {
@@ -334,7 +412,7 @@ class StatisticsManager {
 
         return scores;
     }
-    
+
     /**
      * Updates the weekly statistics summary
      */
@@ -346,6 +424,7 @@ class StatisticsManager {
         let totalHealthyFoods = 0;
         let totalEntries = 0;
         let daysWithEntries = 0;
+        let bestDay = weeklyData[0].entries[0];
 
         weeklyData.forEach(day => {
             if (day.entries.length > 0) {
@@ -355,6 +434,9 @@ class StatisticsManager {
                 day.entries.forEach(entry => {
                     totalCalories += parseInt(entry.calories, 10);
                     if (entry.healthRating === '3') {
+                        if (entry.calories > bestDay.calories) {
+                            bestDay = entry
+                        }
                         totalHealthyFoods++;
                     }
                 });
@@ -366,42 +448,40 @@ class StatisticsManager {
         const healthyFoodPercentage = totalEntries > 0 ? Math.round((totalHealthyFoods / totalEntries) * 100) : 0;
 
         // Update the weekly summary
-        document.getElementById('weeklyTotalCalories').textContent = totalCalories;
-        document.getElementById('weeklyAvgCalories').textContent = String(avgCaloriesPerDay);
-        document.getElementById('weeklyDaysLogged').textContent = String(daysWithEntries);
-        document.getElementById('weeklyHealthyPercentage').textContent = `${healthyFoodPercentage}%`;
+        document.getElementById('avgCaloriesWeekly').textContent = String(avgCaloriesPerDay);
+        document.getElementById('totalFoodsWeekly').textContent = String(daysWithEntries);
+        document.getElementById('bestDayWeekly').textContent = bestDay.createdAt
+        document.getElementById('avgHealthScoreWeekly').textContent = `${healthyFoodPercentage}%`;
 
-        // Get current streak
-        document.getElementById('weeklyCurrStreak').textContent = await this.storageManager.getStreak();
     }
-    
+
     /**
      * Updates the nutrition counters on the main page
      * @param {Date} date - The date to show nutrition data for
      */
     async updateNutritionSummary(date) {
         const nutrition = await this.storageManager.getTotalNutrition(date);
-        
+
         // Get goals from settings or use defaults
         const proteinGoal = parseInt(localStorage.getItem('proteinGoal') || '150', 10);
         const carbsGoal = parseInt(localStorage.getItem('carbsGoal') || '300', 10);
         const fatGoal = parseInt(localStorage.getItem('fatGoal') || '65', 10);
-        
+
         // Update nutrition displays
         document.getElementById('proteinCount').textContent = `${nutrition.protein}g`;
         document.getElementById('carbsCount').textContent = `${nutrition.carbs}g`;
         document.getElementById('fatCount').textContent = `${nutrition.fat}g`;
-        
+
         // Update progress bars
         const proteinPercent = Math.min((nutrition.protein / proteinGoal) * 100, 100);
         const carbsPercent = Math.min((nutrition.carbs / carbsGoal) * 100, 100);
         const fatPercent = Math.min((nutrition.fat / fatGoal) * 100, 100);
-        
+
         document.getElementById('proteinProgress').style.width = `${proteinPercent}%`;
         document.getElementById('carbsProgress').style.width = `${carbsPercent}%`;
         document.getElementById('fatProgress').style.width = `${fatPercent}%`;
     }
-    
+
     /**
      * Updates the stat cards on the main page
      * @param {Date} date - The date to show stats for

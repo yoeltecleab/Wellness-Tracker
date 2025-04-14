@@ -4,17 +4,36 @@
 class FoodIntakeApp {
     constructor() {
         // Initialize managers
-        this.storageManager = new StorageManager();
+        if (typeof StorageManager !== 'undefined') {
+            this.storageManager = new StorageManager();
+        }
 
 
         // Add a small delay to ensure DOM is fully loaded
         setTimeout(async () => {
-            this.chartManager = new ChartManager(this.storageManager);
-            this.confettiManager = new ConfettiManager();
-            this.statisticsManager = new StatisticsManager(this.storageManager);
-            this.settingsManager = new SettingsManager(this.storageManager);
-            this.waterTrackingManager = new WaterTrackingManager(this.storageManager);
-            new FormManager(this.storageManager);
+            if (typeof ChartManager !== 'undefined') {
+                this.chartManager = new ChartManager(this.storageManager);
+            }
+
+            if (typeof ConfettiManager !== 'undefined') {
+                this.confettiManager = new ConfettiManager();
+            }
+
+            if (typeof StatisticsManager !== 'undefined') {
+                this.statisticsManager = new StatisticsManager(this.storageManager);
+            }
+
+            if (typeof SettingsManager !== 'undefined') {
+                this.settingsManager = new SettingsManager(this.storageManager);
+            }
+
+            if (typeof WaterTrackingManager !== 'undefined' ) {
+                this.waterTrackingManager = new WaterTrackingManager(this.storageManager);
+            }
+
+            if (typeof FormManager !== 'undefined') {
+                new FormManager(this.storageManager);
+            }
 
             // Current date being displayed (default to today)
             this.currentDisplayDate = new Date();
@@ -145,8 +164,10 @@ class FoodIntakeApp {
     async refreshUI() {
         await this.updateFoodLog();
         await this.updateCalorieData();
-        await this.statisticsManager.updateNutritionSummary(this.currentDisplayDate);
-        await this.statisticsManager.updateStatCards(this.currentDisplayDate);
+        if(this.statisticsManager) {
+            await this.statisticsManager.updateNutritionSummary(this.currentDisplayDate);
+            await this.statisticsManager.updateStatCards(this.currentDisplayDate);
+        }
     }
 
     /**
@@ -350,75 +371,4 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         window.app = new FoodIntakeApp();
     }, 3);
-});
-
-// Navbar
-// PROFILE DROPDOWN
-const profile = document.querySelector('.right-nav .profile');
-const imgProfile = profile.querySelector('.right-nav .profile img');
-const dropdownProfile = profile.querySelector('.profile-link');
-
-imgProfile.addEventListener('click', function () {
-    dropdownProfile.classList.toggle('show');
-})
-
-
-// MENU
-const allMenu = document.querySelectorAll('main .content-data .head .menu');
-
-allMenu.forEach(item => {
-    const icon = item.querySelector('.icon');
-    const menuLink = item.querySelector('.menu-link');
-
-    icon.addEventListener('click', function () {
-        menuLink.classList.toggle('show');
-    })
-})
-
-
-window.addEventListener('click', function (e) {
-    if (e.target !== imgProfile) {
-        if (e.target !== dropdownProfile) {
-            if (dropdownProfile.classList.contains('show')) {
-                dropdownProfile.classList.remove('show');
-            }
-        }
-    }
-
-    allMenu.forEach(item => {
-        const icon = item.querySelector('.icon');
-        const menuLink = item.querySelector('.menu-link');
-
-        if (e.target !== icon) {
-            if (e.target !== menuLink) {
-                if (menuLink.classList.contains('show')) {
-                    menuLink.classList.remove('show')
-                }
-            }
-        }
-    })
-})
-
-// SIDEBAR
-const openBtn = document.querySelector(".open-btn");
-const closeBtn = document.querySelector(".close-btn");
-const sidebar = document.querySelector(".sidebar");
-const navLinks = document.querySelectorAll(".nav-links a");
-
-// open sidebar
-openBtn.addEventListener("click", function () {
-    sidebar.classList.add("open");
-});
-
-// close sidebar
-closeBtn.addEventListener("click", function () {
-    sidebar.classList.remove("open");
-});
-
-// control active nav-link
-navLinks.forEach((navLink) => {
-    navLink.addEventListener("click", function () {
-        navLinks.forEach((l) => l.classList.remove("active"));
-        this.classList.add("active");
-    });
 });

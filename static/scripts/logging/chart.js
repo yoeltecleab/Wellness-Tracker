@@ -17,7 +17,6 @@ class ChartManager {
     initChart() {
         const canvas = document.getElementById('calorieChart');
         if (!canvas) {
-            console.error('Could not find canvas element: calorieChart');
             return;
         }
         
@@ -72,7 +71,7 @@ class ChartManager {
 
         // Get the latest calorie goal (in case it was updated in settings)
         const goals = await this.storageManager.getGoals();
-        this.calorieGoal = goals.calorieGoal
+        this.calorieGoal = goals.calorieGoal || 0;
 
         // Calculate remaining calories
         let remaining = this.calorieGoal - consumedCalories;

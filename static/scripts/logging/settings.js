@@ -36,8 +36,12 @@ class SettingsManager {
             await this.storageManager.updateGoals(goals);
 
             // Update the application
-            await app.chartManager.updateChart(await app.storageManager.getTotalCalories(app.currentDisplayDate));
-            await app.statisticsManager.updateNutritionSummary(app.currentDisplayDate);
+            if(app.chartManager) {
+                await app.chartManager.updateChart(await app.storageManager.getTotalCalories(app.currentDisplayDate));
+            }
+            if (app.statisticsManager) {
+                await app.statisticsManager.updateNutritionSummary(app.currentDisplayDate);
+            }
 
             // Update water tracking if it exists
             if (app.waterTrackingManager) {
@@ -52,7 +56,6 @@ class SettingsManager {
             // Show success message
             this.showToast('Settings saved successfully', 'success');
         });
-
 
 
         // Open settings modal - load current settings
@@ -121,23 +124,9 @@ class SettingsManager {
         });
 
         // Clear data button
-        document.getElementById('clearDataBtn').addEventListener('click', () => {
+        document.getElementById('clearDataBtn').addEventListener('click', async () => {
             if (confirm('Are you sure you want to clear all data? This cannot be undone!')) {
-                localStorage.clear();
-
-                // Reinitialize with default values
-                localStorage.setItem('calorieGoal', '3000');
-                localStorage.setItem('proteinGoal', '150');
-                localStorage.setItem('carbsGoal', '300');
-                localStorage.setItem('fatGoal', '65');
-                localStorage.setItem('waterGoal', '8');
-                localStorage.setItem('foodHistory', JSON.stringify({}));
-                localStorage.setItem('foodDatabase', JSON.stringify([]));
-                localStorage.setItem('storeDatabase', JSON.stringify([]));
-
-                // Show success message
-                this.showToast('All data has been cleared', 'warning');
-
+                await this.storageManager.clearData();
                 // Refresh page
                 window.location.reload();
             }
@@ -196,40 +185,34 @@ class SettingsManager {
     /**
      * Export data as a JSON file
      */
-    exportData() {
-        const exportData = {
-            calorieGoal: localStorage.getItem('calorieGoal'),
-            proteinGoal: localStorage.getItem('proteinGoal'),
-            carbsGoal: localStorage.getItem('carbsGoal'),
-            fatGoal: localStorage.getItem('fatGoal'),
-            waterGoal: localStorage.getItem('waterGoal'),
-            foodHistory: JSON.parse(localStorage.getItem('foodHistory')),
-            foodDatabase: JSON.parse(localStorage.getItem('foodDatabase')),
-            storeDatabase: JSON.parse(localStorage.getItem('storeDatabase')),
-            streak: localStorage.getItem('streak'),
-            theme: localStorage.getItem('theme')
-        };
+    async exportData() {
+    try {
+        const response = await fetch('http://localhost:8000/api/export-data/'); // Replace with your actual API endpoint
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
 
-        // Convert to JSON string
-        const jsonData = JSON.stringify(exportData, null, 2);
+        const newWindow = window.open('http://localhost:8000/api/data', '_blank'); // Replace with the actual path to your HTML file
 
-        // Create blob and download link
-        const blob = new Blob([jsonData], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
+        if (newWindow) {
+            // Wait for the new window to be loaded
+            newWindow.onload = () => {
+                // Pass the JSON data to the new window using localStorage
+                newWindow.localStorage.setItem('exported_json_data', JSON.stringify(jsonData));
+            };
+        } else {
+            this.showToast('Failed to open a new window.', 'error');
+        }
 
-        // Create download link
-        const downloadLink = document.createElement('a');
-        downloadLink.href = url;
-        downloadLink.download = `nutritrack_export_${new Date().toISOString().slice(0, 10)}.json`;
+        this.showToast('Data will be displayed in a new window.', 'success');
 
-        // Click the link to download
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-
-        // Show success message
-        this.showToast('Data exported successfully', 'success');
+    } catch (error) {
+        console.error('Error exporting data:', error);
+        this.showToast(`Error exporting data: ${error.message}`, 'error');
     }
+}
+
 
     /**
      * Import data from a JSON file
@@ -238,26 +221,11 @@ class SettingsManager {
     importData(file) {
         const reader = new FileReader();
 
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             try {
                 const importedData = JSON.parse(e.target.result);
 
-                // Validate data
-                if (!importedData.foodHistory) {
-                    throw new Error('Invalid data format');
-                }
-
-                // Import all data
-                if (importedData.calorieGoal) localStorage.setItem('calorieGoal', importedData.calorieGoal);
-                if (importedData.proteinGoal) localStorage.setItem('proteinGoal', importedData.proteinGoal);
-                if (importedData.carbsGoal) localStorage.setItem('carbsGoal', importedData.carbsGoal);
-                if (importedData.fatGoal) localStorage.setItem('fatGoal', importedData.fatGoal);
-                if (importedData.waterGoal) localStorage.setItem('waterGoal', importedData.waterGoal);
-                if (importedData.foodHistory) localStorage.setItem('foodHistory', JSON.stringify(importedData.foodHistory));
-                if (importedData.foodDatabase) localStorage.setItem('foodDatabase', JSON.stringify(importedData.foodDatabase));
-                if (importedData.storeDatabase) localStorage.setItem('storeDatabase', JSON.stringify(importedData.storeDatabase));
-                if (importedData.streak) localStorage.setItem('streak', importedData.streak);
-                if (importedData.theme) localStorage.setItem('theme', importedData.theme);
+                await this.storageManager.importData(importedData);
 
                 // Show success message
                 this.showToast('Data imported successfully', 'success');
