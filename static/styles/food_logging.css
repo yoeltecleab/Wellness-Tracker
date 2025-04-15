@@ -419,19 +419,16 @@ body {
 }
 
 .rating__icon {
-    color: lightgray;
+  color: lightgray;
+  transition: color 0.3s;
 }
 
-.rating__input:checked ~ .rating__label .rating__icon {
-    color: lightgray;
+.rating__icon.green {
+  color: #1ffc00;
 }
 
-.rating__input:checked + .rating__label .rating__icon {
-    color: gold;
-}
-
-.rating__input--none:checked + .rating__label .rating__icon {
-    color: lightgray;
+.rating__icon.red {
+  color: red;
 }
 
 .health-rating-text {

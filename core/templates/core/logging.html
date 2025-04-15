@@ -55,31 +55,31 @@
                 </li>
 
                 {% if source == 'food' %}
-                <li class="nav-link-left">
-                    <a href="{% url 'water_logging' %}">
-                        <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
-                        <span>Log Water</span>
-                    </a>
-                </li>
-                <li class="nav-link-left">
-                    <a href="#" class="active">
-                        <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
-                        <span>Log Food</span>
-                    </a>
-                </li>
+                    <li class="nav-link-left">
+                        <a href="{% url 'water_logging' %}">
+                            <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
+                            <span>Log Water</span>
+                        </a>
+                    </li>
+                    <li class="nav-link-left">
+                        <a href="#" class="active">
+                            <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
+                            <span>Log Food</span>
+                        </a>
+                    </li>
                 {% elif source == 'water' %}
                     <li class="nav-link-left">
-                    <a href="#" class="active">
-                        <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
-                        <span>Log Water</span>
-                    </a>
-                </li>
-                <li class="nav-link-left">
-                    <a href="{% url 'food_logging' %}">
-                        <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
-                        <span>Log Food</span>
-                    </a>
-                </li>
+                        <a href="#" class="active">
+                            <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
+                            <span>Log Water</span>
+                        </a>
+                    </li>
+                    <li class="nav-link-left">
+                        <a href="{% url 'food_logging' %}">
+                            <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
+                            <span>Log Food</span>
+                        </a>
+                    </li>
                 {% endif %}
 
             </ul>
@@ -148,21 +148,21 @@
                 <div class="mb-4">
                     <ul class="nav nav-pills nav-justified tracking-tabs" id="trackingTabs">
                         {% if source == 'food' %}
-                        <li class="nav-item">
-                            <button class="nav-link active" id="food-tab" data-bs-toggle="pill"
-                                    data-bs-target="#food-tracking"
-                                    type="button">
-                                <i class="fas fa-utensils me-2"></i>Food Tracking
-                            </button>
-                        </li>
+                            <li class="nav-item">
+                                <button class="nav-link active" id="food-tab" data-bs-toggle="pill"
+                                        data-bs-target="#food-tracking"
+                                        type="button">
+                                    <i class="fas fa-utensils me-2"></i>Food Tracking
+                                </button>
+                            </li>
                         {% elif source == 'water' %}
-                        <li class="nav-item">
-                            <button class="nav-link active" id="water-tab" data-bs-toggle="pill"
-                                    data-bs-target="#water-tracking"
-                                    type="button">
-                                <i class="fas fa-tint me-2"></i>Water Tracking
-                            </button>
-                        </li>
+                            <li class="nav-item">
+                                <button class="nav-link active" id="water-tab" data-bs-toggle="pill"
+                                        data-bs-target="#water-tracking"
+                                        type="button">
+                                    <i class="fas fa-tint me-2"></i>Water Tracking
+                                </button>
+                            </li>
                         {% endif %}
                     </ul>
                 </div>
@@ -425,29 +425,26 @@
                                                         <label class="form-label">Health Rating</label>
                                                         <div class="health-rating-stars">
                                                             <div class="rating-group">
-                                                                <label aria-label="Unknown" class="rating__label"
-                                                                       for="health-0"></label>
-                                                                <input class="rating__input rating__input--none"
-                                                                       name="healthRating"
-                                                                       id="health-0" value="0" type="radio">
+                                                                <input class="rating__input" name="healthRating"
+                                                                       id="health-1" value="1" type="radio" required>
                                                                 <label aria-label="Unhealthy" class="rating__label"
-                                                                       for="health-1"><i
-                                                                        class="rating__icon rating__icon--star fa fa-leaf"></i></label>
+                                                                       for="health-1">
+                                                                    <i class="rating__icon fa fa-leaf"></i>
+                                                                </label>
+
                                                                 <input class="rating__input" name="healthRating"
-                                                                       id="health-1"
-                                                                       value="1" type="radio" required>
+                                                                       id="health-2" value="2" type="radio">
                                                                 <label aria-label="Neutral" class="rating__label"
-                                                                       for="health-2"><i
-                                                                        class="rating__icon rating__icon--star fa fa-leaf"></i></label>
+                                                                       for="health-2">
+                                                                    <i class="rating__icon fa fa-leaf"></i>
+                                                                </label>
+
                                                                 <input class="rating__input" name="healthRating"
-                                                                       id="health-2"
-                                                                       value="2" type="radio">
+                                                                       id="health-3" value="3" type="radio">
                                                                 <label aria-label="Healthy" class="rating__label"
-                                                                       for="health-3"><i
-                                                                        class="rating__icon rating__icon--star fa fa-leaf"></i></label>
-                                                                <input class="rating__input" name="healthRating"
-                                                                       id="health-3"
-                                                                       value="3" type="radio">
+                                                                       for="health-3">
+                                                                    <i class="rating__icon fa fa-leaf"></i>
+                                                                </label>
                                                             </div>
                                                             <div class="health-rating-text small text-muted mt-1">Select
                                                                 Health
