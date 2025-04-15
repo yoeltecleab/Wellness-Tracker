@@ -37,10 +37,22 @@ class FormManager {
         });
 
         // Health rating stars
-        document.querySelectorAll('.rating__input').forEach(input => {
+        document.querySelectorAll('.rating__input').forEach((input, index) => {
+
             input.addEventListener('change', () => {
                 const ratingText = document.querySelector('.health-rating-text');
                 const ratingValue = document.querySelector('input[name="healthRating"]:checked').value;
+
+                labels.forEach((label, i) => {
+                    const icon = label.querySelector('.rating__icon');
+                    icon.classList.remove('green', 'red');
+
+                    if (i <= index) {
+                        icon.classList.add('green');
+                    } else {
+                        icon.classList.add('red');
+                    }
+                });
 
                 switch (ratingValue) {
                     case '1':
@@ -93,10 +105,12 @@ class FormManager {
     async setupAutocomplete() {
         // Food name autocomplete
         this.foodNameInput.addEventListener('input', async () => {
+            let foods = await this.storageManager.getFoodDatabase();
+            console.log('Foods:', foods);
             this.showAutocomplete(
                 this.foodNameInput,
                 document.getElementById('foodNameSuggestions'),
-                await this.storageManager.getFoodDatabase()
+                foods
             );
         });
 
@@ -127,8 +141,6 @@ class FormManager {
      */
     showAutocomplete(input, suggestionsList, items) {
         const value = input['value'].toLowerCase();
-
-        window.item = items
 
         // Clear previous suggestions
         suggestionsList.innerHTML = '';
@@ -172,7 +184,7 @@ class FormManager {
      * Tries to autofill calories from previous entries
      // * @param {any} item - Name of the food
      */
-    tryAutoFillCalories(item) {
+    async tryAutoFillCalories(item) {
 
         // If we found matching entries, use the most recent one to autofill
         // Sort by timestamp, most recent first
@@ -204,6 +216,28 @@ class FormManager {
                 ratingText.textContent = 'Healthy';
                 break;
         }
+
+        window.inputs = document.querySelectorAll('.rating__input');
+
+        inputs.forEach((input, index) => {
+            if (input.id === `health-${mostRecent.healthRating}`) {
+                input.checked = true;
+
+                const labels = document.querySelectorAll('.rating__label');
+
+                labels.forEach((label, i) => {
+                    const icon = label.querySelector('.rating__icon');
+                    icon.classList.remove('green', 'red');
+
+                    if (i <= index) {
+                        icon.classList.add('green');
+                    } else {
+                        icon.classList.add('red');
+                    }
+                });
+            }
+        });
+
 
         // autofill meal type
         document.getElementById('mealType').value = mostRecent.mealType;
@@ -241,6 +275,17 @@ class FormManager {
         this.form.reset();
         this.storeField.style.display = 'none';
         document.querySelector('.health-rating-text').textContent = 'Select Health Rating';
+        const inputs = document.querySelectorAll('.rating__input');
+        const labels = document.querySelectorAll('.rating__label');
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('change', () => {
+                labels.forEach((label, i) => {
+                    const icon = label.querySelector('.rating__icon');
+                    icon.classList.remove('green', 'red');
+                });
+            });
+        });
 
         // Update UI
         await app.refreshUI();
@@ -555,7 +600,7 @@ class FormManager {
 
         // Add default items that aren't disabled
         defaultItems.forEach(item => {
-                this.addItemToQuickAddMenu(item, dropdownMenu);
+            this.addItemToQuickAddMenu(item, dropdownMenu);
         });
 
         // Add the user's custom quick add items

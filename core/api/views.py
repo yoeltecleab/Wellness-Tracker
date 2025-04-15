@@ -281,6 +281,7 @@ def food_entries(request, date=None, entryId=None):
                 'fat': entry.fat,
                 'store': entry.purchased_from.name if entry.purchased_from else None
             })
+            print('Entry: ', response if entry.food_name == 'Burger' else None)
         return Response(response)
 
     elif request.method == 'POST':
@@ -378,7 +379,7 @@ def food_database(request):
                     'name': result.food_name,
                     'calories': result.calories,
                     'purchased': result.purchased,
-                    'healthRating': switchHealthRatingToNumbers(result.health_rating),
+                    'healthRating': result.health_rating,
                     'mealType': result.meal_type,
                     'notes': result.notes,
                     'protein': result.protein,
