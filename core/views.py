@@ -78,6 +78,10 @@ def onboarding_quiz(request):
     context = {'source': 'onboarding'}
     return profile_helper(request, context, 'onboarding_quiz')
 
+@login_required(login_url='signin')
+def storePage(request):
+    context = {'source': 'store'}
+    return render(request, 'core/storePage.html', context)
 
 def register_user(request):
     form = MyUserCreationForm(request.POST)
@@ -90,7 +94,6 @@ def register_user(request):
         return redirect('onboarding_quiz')
     context = {'form': form, 'page': 'signup'}
     return render(request, 'core/signup.html', context)
-
 
 def login_user(request):
     email = request.POST['email'].lower()

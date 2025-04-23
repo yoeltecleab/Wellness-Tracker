@@ -12,6 +12,7 @@ urlpatterns = [
     path('onboarding-quiz/', views.onboarding_quiz, name='onboarding_quiz'),
     path('update-profile/', views.update_profile, name='update_profile'),
     path('food-logging/', views.food_logging, name='food_logging'),
+    path('storePage/', views.storePage, name='storePage'),
     path('demo/', views.generate_demo_user, name='generate_demo_user'),
     
 ]

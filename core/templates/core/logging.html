@@ -80,9 +80,17 @@
                             <span>Log Food</span>
                         </a>
                     </li>
+
                 {% endif %}
+                <li class="nav-link-left">
+                    <a href="{% url 'storePage' %}" class="{% if source == 'store' %}active{% endif %}">
+                        <img src="{% static 'images/SVGs/Map SVG Icon.svg' %}" alt="Store">
+                        <span>Store Map</span>
+                    </a>
+                </li>
 
             </ul>
+
         </nav>
     </aside>
     <div class="app-holder">

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Store Map</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'styles/water_logging.css' %}" />
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+            margin-top: 20px;
+            border-radius: 1rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .search-map-container input {
+            margin: 0;
+            padding: 0.6rem 1rem; /* Reapply padding here */
+            border: none;
+            outline: none;
+            box-shadow: none;
+            width: 300px;
+        }
+
+        .search-map-container h1 {
+            font-size: 2rem;
+            color: var(--primary); /* Adjust this to match your design */
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+
+        .search-map-container input,
+        .search-map-container button {
+            padding: 0.6rem 1rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            margin-right: 0.5rem;
+        }
+
+        .search-map-container input {
+            width: 300px;
+        }
+
+        .search-map-container button {
+            background-color: var(--primary);
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="global-container">
+    <aside class="sidebar">
+        <nav>
+            <!-- close btn -->
+            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="close-btn">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
+            <!-- nav links -->
+            <ul class="nav-links">
+                <li class="nav-link">
+                    <a href="{% url 'dashboard' %}">
+                        <img src="{% static 'images/SVGs/Home Vector Icon.svg' %}" alt="Dashboard">
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="{% url 'water_logging' %}">
+                        <img src="{% static 'images/SVGs/Water Bottle Icon.svg' %}" alt="Water">
+                        <span>Log Water</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="{% url 'food_logging' %}">
+                        <img src="{% static 'images/SVGs/Pasta SVG Icon.svg' %}" alt="Food">
+                        <span>Log Food</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="#" class="active">
+                        <img src="{% static 'images/SVGs/Map SVG Icon.svg' %}" alt="Map">
+                        <span>Store Map</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="main-header">
+            <div class="search-container">
+                <!-- open btn -->
+                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="open-btn">
+                    <rect x="2" y="3" width="20" height="9" rx="2" stroke="#ffffff"></rect>
+                    <path d="M16 18V18C16 19.1046 15.1046 20 14 20H10C8.89543 20 8 19.1046 8 18V18"
+                          stroke="#ffffff"></path>
+                    <path d="M19 14V14C19 15.1046 18.1046 16 17 16H7C5.89543 16 5 15.1046 5 14V14"
+                          stroke="#ffffff"></path>
+                </svg>
+            </div>
+            <nav class="right-nav">
+                <a href="#" class="nav-link">
+                    <i class='bx bxs-bell icon'></i>
+                    <span class="badge">5</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class='bx bxs-message-square-dots icon'></i>
+                    <span class="badge">8</span>
+                </a>
+                <span class="divider"></span>
+                <div class="profile">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                         alt="">
+                    <ul class="profile-link">
+                        <li><a href="#"><i class='bx bxs-user-circle icon'></i> Profile</a></li>
+                        <li><a href="#"><i class='bx bxs-cog'></i> Settings</a></li>
+                        <li><a href="{% url 'index' %}"><i class='bx bxs-log-out-circle'></i> Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <div class="search-map-container">
+            <h1>Find Stores</h1>
+            <input type="text" id="placeInput" placeholder="Search for products or stores...">
+            <button onclick="searchPlaces()">Search</button>
+            <div id="map"></div>
+        </div>
+    </main>
+</div>
+
+<script>
+    let map;
+    let markers = [];
+
+    function initMap() {
+        const charlotte = { lat: 35.2271, lng: -80.8431 };
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: charlotte,
+            zoom: 13,
+            styles: [ // Optional: dark mode theme
+                { elementType: 'geometry', stylers: [{ color: '#1d2c4d' }] },
+                { elementType: 'labels.text.fill', stylers: [{ color: '#8ec3b9' }] },
+                { elementType: 'labels.text.stroke', stylers: [{ color: '#1a3646' }] },
+                { featureType: 'administrative', elementType: 'geometry', stylers: [{ visibility: 'off' }] },
+                { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+                { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#304a7d' }] },
+                { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0e1626' }] }
+            ]
+        });
+    }
+
+    function searchPlaces() {
+        const input = document.getElementById("placeInput").value;
+        if (!input) {
+            alert("Please enter something to search.");
+            return;
+        }
+
+        const service = new google.maps.places.PlacesService(map);
+        const request = {
+            query: input,
+            fields: ["name", "geometry", "formatted_address", "price_level"]
+        };
+
+        service.textSearch(request, function (results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                markers.forEach(marker => marker.setMap(null));
+                markers = [];
+
+                results.forEach(place => {
+                    if (!place.geometry || !place.geometry.location) return;
+
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: place.geometry.location,
+                        title: place.name
+                    });
+
+                    const name = place.name || "No name available";
+                    const address = place.formatted_address || "No address found";
+                    const priceLevel = place.price_level !== undefined ? getPriceLevel(place.price_level) : "No price info available";
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: `<div style="color: black; font-size: 14px; margin: 0; padding: 0; line-height: 1.2;">
+                                    <strong>${name}</strong><br>
+                                    <span style="display: block; margin: 0;">${address}</span>
+                                    <div style="font-weight: bold; margin-top: 5px;">Price Range:</div>
+                                    <span>${priceLevel}</span>
+                                </div>`
+                    });
+
+                    marker.addListener("click", () => {
+                        infoWindow.open(map, marker);
+                    });
+
+                    markers.push(marker);
+                });
+
+                map.setCenter(results[0].geometry.location);
+            } else {
+                alert("No results found.");
+            }
+        });
+    }
+
+    function getPriceLevel(level) {
+        switch (level) {
+            case 0:
+                return "$ (Inexpensive)";
+            case 1:
+                return "$$ (Moderate)";
+            case 2:
+                return "$$$ (Expensive)";
+            case 3:
+                return "$$$$ (Very Expensive)";
+            default:
+                return "No price info available";
+        }
+    }
+
+    window.onload = initMap;
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYCyOBc6MIIhbHd5F6CmDaYWRS-Brw0DU&callback=initMap&libraries=places">
+</script>
+
+</body>
+</html>
