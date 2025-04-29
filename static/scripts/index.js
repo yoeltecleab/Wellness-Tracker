@@ -9,7 +9,12 @@ demoBtn.addEventListener('click', async () => {
         // Show loading scene immediately
         showLoading();
 
-        const checkResponse = await fetch(checkDemoUserApiUrl);
+        const checkResponse = await fetch(checkDemoUserApiUrl, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+            },
+        });
         if (!checkResponse.ok) {
             throw new Error(`HTTP error checking demo user: status ${checkResponse.status}`);
         }
@@ -43,7 +48,7 @@ async function createNewDemoUser() {
     try {
         // Initiate the request to create the demo user
         const createResponse = await fetch(createDemoUserApiUrl, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'X-CSRFToken': getCsrfToken(),
             },
