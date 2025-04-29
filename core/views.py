@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from rest_framework.decorators import api_view
 
 from core.forms import MyUserCreationForm
 from core.models import User, Profile, Goal, WaterContainer, Store, LocationAddress
@@ -241,6 +242,7 @@ def create_profile(request, user):
     profile.save()
 
 
+@api_view(['GET'])
 def generate_demo_user(request):
     CreateDemoUser.run()
     return HttpResponse("Demo user created successfully.")

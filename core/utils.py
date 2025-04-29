@@ -109,9 +109,9 @@ class CreateDemoUser:
         # Generate daily logs for the past year
         print("Today's date: ", datetime.now())
 
-        start_date = datetime.now() - timedelta(days=365)
+        start_date = datetime.now() - timedelta(days=90)
         print("Starting date: ", start_date)
-        for i in range(366):
+        for i in range(180):
             log_date_base = make_aware(start_date + timedelta(days=i))
 
             log_date = get_random_time(log_date_base)
